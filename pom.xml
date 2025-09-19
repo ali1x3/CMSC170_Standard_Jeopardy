@@ -6,7 +6,7 @@
 
   <groupId>up.tac</groupId>
   <artifactId>standard-jeopardy</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.0.1-DEV</version>
 
   <name>standard-jeopardy</name>
   <!-- FIXME change it to the project's website -->
@@ -59,6 +59,7 @@
           <configuration>
             <archive>
               <manifest>
+                <addClasspath>true</addClasspath>
                 <mainClass>up.tac.App</mainClass>
               </manifest>
             </archive>
