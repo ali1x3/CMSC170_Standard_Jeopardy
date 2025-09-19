@@ -22,3 +22,22 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Some OS-Specific stuff
+.DS_Store
+Thumbs.db
+
+# Ignore certain folders (like IDE settings folders and various settings folder, also output folders for Maven)
+.idea/
+.settings/
+.mvn/
+.classpath/
+*.iml
+nbproject/
+.vs/
+bin/
+obj/
+*.xcuserdata/
+*.xcworkspace/
+build/
+target/
