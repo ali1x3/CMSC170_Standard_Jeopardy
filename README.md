@@ -57,15 +57,29 @@ if (true) {} //do this
 if (false){} //dont do this
 ```
 
+- for if else chains (or anything resembling it), have a new line for the else:
+```java
+if (x == 0) { 
+    x++;
+}
+else if (x == 2) { // do this
+    x = 5;
+} else { // not this
+    x = 5;
+}
+
+
+```
 ### How to use the build tool, Maven:
 
-- you may opt to install maven or not, but maven will be usable for this repo even without installing maven
-- replace the mvn command with the mvnw.cmd (windows) when in the root directory of this project for the commands
+- install maven using the maven wrapper using these command
+
 ```bash
-mvn <command>    #if maven installed
-.\mvnw <command> #if maven not installed
+./mvnw clean install   # Linux/macOS
+.\mvnw.cmd clean install   # Windows
 ```
 
+- you are now able to run the following commands with maven
 - compile: 
 ```bash
 mvn compile
