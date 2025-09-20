@@ -73,7 +73,7 @@ public class GamePanel extends JPanel implements MouseListener{
         upperPanel.setPreferredSize(new Dimension(0, 200));
         upperPanel.setLayout(new GridBagLayout());
 
-        title = new JLabel("Algorithmic Avengers Inc.");
+        title = new JLabel("You are currently playing!");
         title.setForeground(java.awt.Color.lightGray);
         title.setFont(boldCustomFont);
         title.addMouseListener(this);
@@ -104,7 +104,7 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 30, 100, 425);
+        gbc.insets = new Insets(5, 30, 100, 412);
 
         upperPanel.add(title, gbc);
         
@@ -182,17 +182,7 @@ public class GamePanel extends JPanel implements MouseListener{
         } else if (e.getSource() == exitButtonLabel) {
             System.out.println("Exit Button Pressed");
             System.exit(0);
-        } else if (e.getSource() == title){
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI("https://github.com/ali1x3/CMSC170_Standard_Jeopardy"));
-                } catch (Exception e1) {
-                    System.out.println("Desktop browsing Failed.");
-                    e1.printStackTrace();
-                }
-             }
-        }
+        } 
         
     } 
 
