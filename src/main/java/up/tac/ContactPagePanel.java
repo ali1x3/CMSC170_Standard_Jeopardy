@@ -319,10 +319,8 @@ public class ContactPagePanel extends JPanel implements MouseListener{
 
         // don't proceed if bg_image is null
         if (bg_image == null) {
+            System.out.println("Background Image failed to Load");
             return;
-        }
-        else {
-            System.out.println("works");
         }
 
 
@@ -443,8 +441,6 @@ public class ContactPagePanel extends JPanel implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
     }
 
     @Override
@@ -463,11 +459,9 @@ public class ContactPagePanel extends JPanel implements MouseListener{
             homePageButton.setFont(boldCustomFont);
         }
         else if (e.getSource() == exitButtonLabel) {
-            System.out.println("Hovering Exit button");
             exitButtonLabel.setIcon(exitButtonClicked);
         }
         else if (e.getSource() == minimizeButtonLabel) {
-            System.out.println("Hovering Minimize button");
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
         }
         else if (e.getSource() == github1 || e.getSource() == github2 || e.getSource() == github3 || e.getSource() == github4 || e.getSource() == github5 || e.getSource() == github6) {
