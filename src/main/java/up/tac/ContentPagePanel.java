@@ -44,7 +44,7 @@ public class ContentPagePanel extends JPanel implements MouseListener{
         bg_image = new ImageIcon(getClass().getResource("/files/contentPage_bg.jpg")).getImage();
 
         this.setLayout(new BorderLayout());
-        
+
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
             customFont = customFont.deriveFont(Font.PLAIN, 21);
@@ -52,7 +52,8 @@ public class ContentPagePanel extends JPanel implements MouseListener{
             boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, 21);
             titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
             titleFont = titleFont.deriveFont(Font.BOLD, 50);
-        } catch (FontFormatException | IOException e) {
+        }
+        catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
 
@@ -122,7 +123,7 @@ public class ContentPagePanel extends JPanel implements MouseListener{
         gbc.insets = new Insets(5, 30, 15, 425);
 
         upperPanel.add(title, gbc);
-        
+
         gbc.gridx = 3;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 0, 18, 5);
@@ -200,7 +201,7 @@ public class ContentPagePanel extends JPanel implements MouseListener{
         gbc.insets = new Insets(10, 200, 150, 0);
         lowerPanel.add(line4, gbc);
 
-        
+
     }
 
     @Override
@@ -210,7 +211,8 @@ public class ContentPagePanel extends JPanel implements MouseListener{
         // don't proceed if bg_image is null
         if (bg_image == null) {
             return;
-        } else{
+        }
+        else {
             System.out.println("works");
         }
 
@@ -229,27 +231,32 @@ public class ContentPagePanel extends JPanel implements MouseListener{
             System.out.println("Minimize Button Pressed");
             java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
             if (window instanceof JFrame) {
-                ((JFrame) window).setState(JFrame.ICONIFIED);
+            ((JFrame) window).setState(JFrame.ICONIFIED);
             }
-        } else if (e.getSource() == exitButtonLabel) {
+        }
+        else if (e.getSource() == exitButtonLabel) {
             System.out.println("Exit Button Pressed");
             System.exit(0);
-        } else if (e.getSource() == homePageButton) {
+        }
+        else if (e.getSource() == homePageButton) {
             cardLayout.show(cardPanel, "Home Page");
-        } else if (e.getSource() == contactPageButton) {
+        }
+        else if (e.getSource() == contactPageButton) {
             cardLayout.show(cardPanel, "Contact Page");
-        } else if (e.getSource() == title){
+        }
+        else if (e.getSource() == title){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
             if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                 try {
                     desktop.browse(new URI("https://github.com/ali1x3/CMSC170_Standard_Jeopardy"));
-                } catch (Exception e1) {
+                }
+                catch (Exception e1) {
                     System.out.println("Desktop browsing Failed.");
                     e1.printStackTrace();
                 }
-             }
+            }
         }
-        
+
     }
 
     @Override
@@ -268,33 +275,41 @@ public class ContentPagePanel extends JPanel implements MouseListener{
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == contentPageButton) {
             contentPageButton.setFont(customFont);
-        } else if (e.getSource() == contactPageButton) {
+        }
+        else if (e.getSource() == contactPageButton) {
             contactPageButton.setFont(boldCustomFont);
-        } else if (e.getSource() == homePageButton) {
+        }
+        else if (e.getSource() == homePageButton) {
             homePageButton.setFont(boldCustomFont);
-        } else if (e.getSource() == exitButtonLabel) {
+        }
+        else if (e.getSource() == exitButtonLabel) {
             System.out.println("Hovering Exit button");
             exitButtonLabel.setIcon(exitButtonClicked);
-        } else if (e.getSource() == minimizeButtonLabel) {
+        }
+        else if (e.getSource() == minimizeButtonLabel) {
             System.out.println("Hovering Minimize button");
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
         }
-       
+
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == contentPageButton) {
-                contentPageButton.setFont(boldCustomFont);
-            } else if (e.getSource() == contactPageButton) {
-                contactPageButton.setFont(customFont);
-            } else if (e.getSource() == homePageButton){
-                homePageButton.setFont(customFont);
-            } else if (e.getSource() == exitButtonLabel) {
-                exitButtonLabel.setIcon(exitButton);
-            } else if (e.getSource() == minimizeButtonLabel) {
-                minimizeButtonLabel.setIcon(minimizeButton);
-                
+            contentPageButton.setFont(boldCustomFont);
+        }
+        else if (e.getSource() == contactPageButton) {
+            contactPageButton.setFont(customFont);
+        }
+        else if (e.getSource() == homePageButton){
+            homePageButton.setFont(customFont);
+        }
+        else if (e.getSource() == exitButtonLabel) {
+            exitButtonLabel.setIcon(exitButton);
+        }
+        else if (e.getSource() == minimizeButtonLabel) {
+            minimizeButtonLabel.setIcon(minimizeButton);
+
         }
     }
 }

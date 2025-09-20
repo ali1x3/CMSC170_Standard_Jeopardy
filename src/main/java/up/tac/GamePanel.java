@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements MouseListener{
         bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
 
         this.setLayout(new BorderLayout());
-        
+
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
             customFont = customFont.deriveFont(Font.PLAIN, 21);
@@ -52,7 +52,8 @@ public class GamePanel extends JPanel implements MouseListener{
             boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, 21);
             titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
             titleFont = titleFont.deriveFont(Font.BOLD, 50);
-        } catch (FontFormatException | IOException e) {
+        }
+        catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
 
@@ -107,7 +108,7 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.insets = new Insets(5, 30, 100, 412);
 
         upperPanel.add(title, gbc);
-        
+
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 0, 103, 6);
@@ -119,7 +120,7 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.insets = new Insets(5, 7, 103, 30);
         upperPanel.add(exitButtonLabel, gbc);
 
-    
+
     }
 
     private void setLowerPanel() {
@@ -148,7 +149,7 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.gridy = 1;
         lowerPanel.add(tempBackButton, gbc);
 
-        
+
     }
 
     @Override
@@ -158,7 +159,8 @@ public class GamePanel extends JPanel implements MouseListener{
         // don't proceed if bg_image is null
         if (bg_image == null) {
             return;
-        } else{
+        }
+        else {
             System.out.println("works");
         }
 
@@ -173,17 +175,17 @@ public class GamePanel extends JPanel implements MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
-       if (e.getSource() == minimizeButtonLabel) {
+        if (e.getSource() == minimizeButtonLabel) {
             System.out.println("Minimize Button Pressed");
             java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
             if (window instanceof JFrame) {
-                ((JFrame) window).setState(JFrame.ICONIFIED);
+            ((JFrame) window).setState(JFrame.ICONIFIED);
             }
-        } else if (e.getSource() == exitButtonLabel) {
+        }
+        else if (e.getSource() == exitButtonLabel) {
             System.out.println("Exit Button Pressed");
             System.exit(0);
         } 
-        
     } 
 
     @Override
@@ -204,20 +206,22 @@ public class GamePanel extends JPanel implements MouseListener{
         if (e.getSource() == exitButtonLabel) {
             System.out.println("Hovering Exit button");
             exitButtonLabel.setIcon(exitButtonClicked);
-        } else if (e.getSource() == minimizeButtonLabel) {
+        }
+        else if (e.getSource() == minimizeButtonLabel) {
             System.out.println("Hovering Minimize button");
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
         }
-       
+
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == exitButtonLabel) {
-                exitButtonLabel.setIcon(exitButton);
-            } else if (e.getSource() == minimizeButtonLabel) {
-                minimizeButtonLabel.setIcon(minimizeButton);
-                
+            exitButtonLabel.setIcon(exitButton);
+        }
+        else if (e.getSource() == minimizeButtonLabel) {
+            minimizeButtonLabel.setIcon(minimizeButton);
+
         }
     }
 }
