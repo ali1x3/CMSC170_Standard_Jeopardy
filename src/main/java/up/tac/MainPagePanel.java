@@ -1,0 +1,300 @@
+package up.tac;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.io.IOException;
+import java.net.URI;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+
+public class MainPagePanel extends JPanel implements MouseListener{
+    private JPanel cardPanel;
+    private CardLayout cardLayout;
+    private Image bg_image;
+    private JPanel upperPanel, lowerPanel;
+    private JLabel title, homePageButton, contentPageButton, contactPageButton, startButtonLabel, exitButtonLabel, minimizeButtonLabel;
+    private Font customFont = new Font("Arial", Font.PLAIN, 21);
+    private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
+    private Font titleFont = new Font("Arial", Font.BOLD, 56);
+    private ImageIcon startButton, startButtonClicked, exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
+
+    public MainPagePanel(CardLayout cardLayout, JPanel cardPanel){
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
+
+        bg_image = new ImageIcon(getClass().getResource("/files/mainPage_bg.jpg")).getImage();
+
+        this.setLayout(new BorderLayout());
+        
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
+            customFont = customFont.deriveFont(Font.PLAIN, 21);
+            boldCustomFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Bold.ttf"));
+            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, 21);
+            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
+            titleFont = titleFont.deriveFont(Font.BOLD, 56);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+
+        setUpperPanel();
+        setLowerPanel();
+
+        // add the upper and lower panels
+        add(upperPanel, BorderLayout.NORTH);
+        add(lowerPanel, BorderLayout.CENTER);
+        add(new JPanel(new BorderLayout(10, 10)), BorderLayout.SOUTH); // Filler
+
+    }
+
+    private void setUpperPanel() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        upperPanel = new JPanel();
+        upperPanel.setOpaque(false);
+        upperPanel.setPreferredSize(new Dimension(0, 200));
+        upperPanel.setLayout(new GridBagLayout());
+
+        title = new JLabel("Algorithmic Avengers Inc.");
+        title.setForeground(java.awt.Color.lightGray);
+        title.setFont(boldCustomFont);
+        title.addMouseListener(this);
+
+        homePageButton = new JLabel("Home");
+        homePageButton.setForeground(java.awt.Color.black);
+        homePageButton.setFont(boldCustomFont);
+        homePageButton.addMouseListener(this);
+
+        contentPageButton = new JLabel("Content");
+        contentPageButton.setForeground(java.awt.Color.black);
+        contentPageButton.setFont(customFont);
+        contentPageButton.addMouseListener(this);
+
+        contactPageButton = new JLabel("Contact");
+        contactPageButton.setForeground(java.awt.Color.black);
+        contactPageButton.setFont(customFont);
+        contactPageButton.addMouseListener(this);
+
+        exitButton = new ImageIcon(getClass().getResource("/files/exitButton.jpg"));
+        Image exitButtonResized = exitButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        exitButton = new ImageIcon(exitButtonResized);
+
+        minimizeButton = new ImageIcon(getClass().getResource("/files/minimizeButton.jpg"));
+        Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        minimizeButton = new ImageIcon(minimizeButtonResized);
+
+        exitButtonClicked = new ImageIcon(getClass().getResource("/files/exitButton_clicked.jpg"));
+        Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        exitButtonClicked = new ImageIcon(exitButtonClickedResized);
+
+        minimizeButtonClicked = new ImageIcon(getClass().getResource("/files/minimizeButton_clicked.jpg"));
+        Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
+
+        exitButtonLabel = new JLabel(exitButton);
+        exitButtonLabel.addMouseListener(this);
+
+        minimizeButtonLabel = new JLabel(minimizeButton);
+        minimizeButtonLabel.addMouseListener(this);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 30, 15, 425);
+
+        upperPanel.add(title, gbc);
+        
+        gbc.gridx = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 0, 18, 5);
+
+        upperPanel.add(minimizeButtonLabel, gbc);
+
+        gbc.gridx = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 0, 18, 30);
+        upperPanel.add(exitButtonLabel, gbc);
+
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 0;
+        gbc.gridwidth = 1;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+
+        gbc.insets = new Insets(5, 30, 55, 10); // left padding
+        upperPanel.add(homePageButton, gbc);
+
+        gbc.insets = new Insets(5, 10, 55, 10); // left padding
+        gbc.gridx = 1;
+        upperPanel.add(contentPageButton, gbc);
+
+        gbc.gridx = 2;
+        upperPanel.add(contactPageButton, gbc);
+
+        gbc.gridx = 3;
+        gbc.weightx = 1;
+        upperPanel.add(new JLabel(), gbc);
+    }
+
+    private void setLowerPanel() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        lowerPanel = new JPanel();
+        lowerPanel.setPreferredSize(new Dimension(0, 400));
+        lowerPanel.setOpaque(false);
+        lowerPanel.setLayout(new GridBagLayout());
+
+        JLabel title = new JLabel("ARTIFICIAL INTELLIGENCE");
+        title.setForeground(new Color(0x0057cc));
+        title.setFont(titleFont);
+
+        JLabel header1 = new JLabel("JEOPARDY GAME");
+        Font biggerFont = customFont.deriveFont(Font.PLAIN, 30); 
+        header1.setFont(biggerFont);
+
+        startButton = new ImageIcon(getClass().getResource("/files/startButton.jpg"));
+        Image startButtonImageResized = startButton.getImage().getScaledInstance(150, 41, Image.SCALE_DEFAULT);
+        startButton = new ImageIcon(startButtonImageResized);
+        
+        startButtonClicked = new ImageIcon(getClass().getResource("/files/startButton_clicked.jpg"));
+        Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance(150, 41, Image.SCALE_SMOOTH);
+        startButtonClicked = new ImageIcon(startButtonClickedImageResized);        
+
+        startButtonLabel = new JLabel(startButton);
+        startButtonLabel.addMouseListener(this);
+
+        gbc.insets = new Insets(0, 0, 0, 0);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.NORTH;
+        lowerPanel.add(title, gbc);
+
+        gbc.gridy = 1;
+        gbc.insets = new Insets(30, 0, 0, 0);
+        lowerPanel.add(header1, gbc);
+        gbc.insets = new Insets(50, 0, 150, 0);
+        gbc.gridy = 2;
+        lowerPanel.add(startButtonLabel, gbc);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // don't proceed if bg_image is null
+        if (bg_image == null) {
+            return;
+        } else{
+            System.out.println("works");
+        }
+
+
+        // proceed if bg_image is not null
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.drawImage(bg_image, 0, 0, getWidth(), getHeight(), this);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getSource() == startButtonLabel) {
+            cardLayout.show(cardPanel, "Game Panel");
+        } else if (e.getSource() == minimizeButtonLabel) {
+            System.out.println("Minimize Button Pressed");
+            java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+            if (window instanceof JFrame) {
+                ((JFrame) window).setState(JFrame.ICONIFIED);
+            }
+        } else if (e.getSource() == exitButtonLabel) {
+            System.out.println("Exit Button Pressed");
+            System.exit(0);
+        } else if (e.getSource() == contactPageButton) {
+            cardLayout.show(cardPanel, "Contact Page");
+        } else if (e.getSource() == contentPageButton) {
+            cardLayout.show(cardPanel, "Content Page");
+        } else if (e.getSource() == title){
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("https://github.com/ali1x3/CMSC170_Standard_Jeopardy"));
+                } catch (Exception e1) {
+                    System.out.println("Desktop browsing Failed.");
+                    e1.printStackTrace();
+                }
+             }
+        }
+        
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (e.getSource() == startButtonLabel){
+            startButtonLabel.setIcon(startButton);
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        if (e.getSource() == contentPageButton) {
+            contentPageButton.setFont(boldCustomFont);
+        } else if (e.getSource() == contactPageButton) {
+            contactPageButton.setFont(boldCustomFont);
+        } else if (e.getSource() == homePageButton) {
+            homePageButton.setFont(customFont);
+        } else if (e.getSource() == startButtonLabel) {
+            startButtonLabel.setIcon(startButtonClicked);
+        } else if (e.getSource() == exitButtonLabel) {
+            System.out.println("Hovering Exit button");
+            exitButtonLabel.setIcon(exitButtonClicked);
+        } else if (e.getSource() == minimizeButtonLabel) {
+            System.out.println("Hovering Minimize button");
+            minimizeButtonLabel.setIcon(minimizeButtonClicked);
+        }
+       
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        if (e.getSource() == contentPageButton) {
+                contentPageButton.setFont(customFont);
+            } else if (e.getSource() == contactPageButton) {
+                contactPageButton.setFont(customFont);
+            } else if (e.getSource() == homePageButton){
+                homePageButton.setFont(boldCustomFont);
+            } else if (e.getSource() == startButtonLabel){
+                startButtonLabel.setIcon(startButton);
+            } else if (e.getSource() == exitButtonLabel) {
+                exitButtonLabel.setIcon(exitButton);
+            } else if (e.getSource() == minimizeButtonLabel) {
+                minimizeButtonLabel.setIcon(minimizeButton);
+                
+        }
+    }
+}
