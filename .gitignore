@@ -31,7 +31,6 @@ Thumbs.db
 # also output folders forMaven)
 .idea/
 .settings/
-.mvn/
 .classpath/
 *.iml
 nbproject/
