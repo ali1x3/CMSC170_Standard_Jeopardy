@@ -135,3 +135,64 @@ git switch main
 git rebase feature
 ```
 
+### Git commands that will be useful:
+
+- for checking commit history:
+```git
+git log
+```
+
+- updates current branch with the online branch:
+```git
+git fetch
+```
+
+- updates current branch and merges with the online branch:
+```git
+git pull 
+```
+
+- stages file for commit(use . to include everything in the current file directory):
+```git
+git add <files>
+```
+
+- commits staged files:
+```git
+git commit -m "put commit message here"
+```
+
+- uploads changes of current branch with the online branch:
+```git
+git push
+```
+
+- for checking branches (* indicates current branch):
+```git
+git branch
+```
+
+- for creating a new branch and switching to it:
+```git
+git switch -c new_branch
+```
+
+- for switching to an existing branch:
+```git
+git switch
+```
+
+- merges another branch to the current branch:
+```git
+git merge branch_to_merge_on_current_branch
+```
+
+- gets commits from another branch and puts it in current branch:
+```git
+git rebase branch_to_get_commits_from
+```
+
+
+
+
+
