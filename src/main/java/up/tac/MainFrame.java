@@ -26,25 +26,29 @@ public class MainFrame extends JFrame{
         if (cursorURL != null) {
             try {
                 cursorImage = ImageIO.read(cursorURL);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
             if (cursorImage != null) {
                 Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(0,0), "Custom Cursor");
                 setCursor(customCursor);
-            } else {
+            }
+            else {
                 System.out.println("Custom Cursor Failed to Load");
             }
-        } else {
+        }
+        else {
             System.out.println("Custom Cursor Failed to Load");
         }
         
 
         URL logoURL = getClass().getClassLoader().getResource("files/icon.png");
-        if(logoURL != null) {
+        if (logoURL != null) {
             setIconImage(Toolkit.getDefaultToolkit().getImage(logoURL)); 
             System.out.println("Successfully loaded in program icon!");
-        } else { 
+        }
+        else { 
             System.out.println("URL is null. Failed to load program icon."); 
         }
         
