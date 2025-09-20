@@ -1,6 +1,5 @@
 package up.tac;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
@@ -21,10 +20,6 @@ public class AppTest {
     @Test
     public void testAdd(){
         App app = new App();
-<<<<<<< Updated upstream
-        assertEquals(5, app.add(2, 3));
-=======
         assertEquals( 5, app.add(2, 3));
->>>>>>> Stashed changes
     }
 }
