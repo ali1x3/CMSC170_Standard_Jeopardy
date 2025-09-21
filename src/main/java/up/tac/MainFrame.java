@@ -68,10 +68,7 @@ public class MainFrame extends JFrame{
         add(cardPanel);
 
         cardLayout.show(cardPanel, "Home Page");
-
-        
         setVisible(true);
-
     }
 
 }
