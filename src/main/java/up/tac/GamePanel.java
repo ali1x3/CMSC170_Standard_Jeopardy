@@ -11,16 +11,20 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.io.IOException;
 import java.net.URI;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -63,7 +67,6 @@ public class GamePanel extends JPanel implements MouseListener{
         // add the upper and lower panels
         add(upperPanel, BorderLayout.NORTH);
         add(lowerPanel, BorderLayout.CENTER);
-        add(new JPanel(new BorderLayout(10, 10)), BorderLayout.SOUTH); // Filler
 
     }
 
@@ -71,7 +74,7 @@ public class GamePanel extends JPanel implements MouseListener{
         GridBagConstraints gbc = new GridBagConstraints();
         upperPanel = new JPanel();
         upperPanel.setOpaque(false);
-        upperPanel.setPreferredSize(new Dimension(0, 200));
+        upperPanel.setPreferredSize(new Dimension(0, 80));
         upperPanel.setLayout(new GridBagLayout());
 
         title = new JLabel("You are currently playing!");
@@ -105,50 +108,113 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 30, 100, 412);
+        gbc.insets = new Insets(55, 30, 30, 412); 
 
         upperPanel.add(title, gbc);
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 0, 103, 6);
+        gbc.insets = new Insets(125, 0, 103, 6);
 
         upperPanel.add(minimizeButtonLabel, gbc);
 
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 7, 103, 30);
+        gbc.insets = new Insets(125, 7, 103, 30);
         upperPanel.add(exitButtonLabel, gbc);
 
 
     }
 
     private void setLowerPanel() {
-        GridBagConstraints gbc = new GridBagConstraints();
         lowerPanel = new JPanel();
-        lowerPanel.setPreferredSize(new Dimension(0, 400));
+        lowerPanel.setPreferredSize(new Dimension(600, 300));
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
 
-        JLabel title = new JLabel("ADD GAME PANEL UI HERE");
+        JPanel fillerPanel = new JPanel();
+        fillerPanel.setLayout(new BorderLayout(25, 15));
+        fillerPanel.setOpaque(false);
+
+        JLabel title = new JLabel("TRACKER UI HERE");
         title.setForeground(new Color(0x0057cc));
-        title.setFont(titleFont);
+        title.setFont(titleFont.deriveFont(Font.BOLD, 15));
+        
+        Border border = BorderFactory.createLineBorder(Color.black, 3);
+        JPanel rightPanel = new JPanel();
+        rightPanel.setPreferredSize(new Dimension(225, 400));
+        rightPanel.setBackground(new Color(0xd1d3d4));
+        rightPanel.setBorder(border);
+        rightPanel.add(title);
+
 
         tempBackButton = new JLabel("Temporary Back Button");
-        Font smallerFont = customFont.deriveFont(Font.BOLD, 20); 
+        Font smallerFont = customFont.deriveFont(Font.BOLD, 14); 
         tempBackButton.setFont(smallerFont);
         tempBackButton.addMouseListener(this);
 
-        gbc.insets = new Insets(0, 0, 20, 0);
-        gbc.gridx = 0;
+        rightPanel.add(tempBackButton);
+
+        
+        
+        ImageIcon normalIcon = new ImageIcon(getClass().getResource("/files/gameButton_bg.png"));
+        Image normalIconResized = normalIcon.getImage().getScaledInstance(115, 45, Image.SCALE_DEFAULT);
+        ImageIcon rolloverIcon = new ImageIcon(getClass().getResource("/files/gameButtonClicked_bg.png"));
+        Image rolloverIconResized = rolloverIcon.getImage().getScaledInstance(115, 45, Image.SCALE_DEFAULT);
+
+        JPanel leftPanel = new JPanel();
+        leftPanel.setPreferredSize(new Dimension(550, 400));
+        leftPanel.setBackground(new Color(0xd1d3d4));
+        leftPanel.setBorder(border);
+        leftPanel.setLayout(new GridLayout(7, 4, 3, 3));
+
+        
+
+        for(int i = 0; i < 4; i++) {
+            JLabel category = new JLabel("CATEGORY", JLabel.CENTER);
+            category.setFont(titleFont.deriveFont(Font.BOLD, 24));
+            leftPanel.add(category);
+        }
+
+
+        for(int i = 0; i < 24; i++) {
+            JButton tempButton = new JButton(new ImageIcon(normalIconResized));
+            tempButton.setPressedIcon(new ImageIcon(rolloverIconResized));
+            int row = i / 4;
+            int value = (row + 1) * 100;
+            tempButton.setText(String.valueOf(value));
+            tempButton.setHorizontalTextPosition(JButton.CENTER);
+            tempButton.setVerticalTextPosition(JButton.CENTER);
+            tempButton.setForeground(Color.BLACK); 
+            tempButton.setBorderPainted(false);
+            tempButton.setContentAreaFilled(false);
+            tempButton.setFont(titleFont.deriveFont(Font.BOLD, 24));
+            leftPanel.add(tempButton);
+        }
+
+
+        leftPanel.setOpaque(true);
+        rightPanel.setOpaque(true);
+
+        JPanel anotherFillerPanel = new JPanel();
+        anotherFillerPanel.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.gridx = 0; 
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        lowerPanel.add(title, gbc);
+        gbc.insets = new Insets(20, 10, 20, 10);
+        anotherFillerPanel.add(leftPanel);
 
-        gbc.insets = new Insets(10, 0, 150, 0);
-        gbc.gridy = 1;
-        lowerPanel.add(tempBackButton, gbc);
+        fillerPanel.add(anotherFillerPanel, BorderLayout.CENTER);
 
+        fillerPanel.add(rightPanel, BorderLayout.EAST);
+
+        gbc.gridx = 0; 
+        gbc.gridy = 0;
+        gbc.ipadx = 100;
+        gbc.insets = new Insets(10, 10, 30, 10);
+        lowerPanel.add(fillerPanel);
 
     }
 

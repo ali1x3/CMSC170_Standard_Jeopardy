@@ -16,7 +16,7 @@ public class App {
             FlatLightLaf.setup();
 
             // Option 2: Dark theme
-            UIManager.setLookAndFeel(new FlatDarkLaf());
+            // UIManager.setLookAndFeel(new FlatDarkLaf());
 
             // Option 3: IntelliJ themes (FlatLaf IntelliJ extension needed)
             // UIManager.setLookAndFeel(new FlatDarculaLaf());
