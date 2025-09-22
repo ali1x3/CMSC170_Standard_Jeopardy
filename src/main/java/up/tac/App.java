@@ -25,9 +25,7 @@ public class App {
             System.err.println("Failed to initialize LaF");
         }
 
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new MainFrame();
-        });
+        javax.swing.SwingUtilities.invokeLater(MainFrame::new);
         System.out.println( "Hello World!" );
     }
     
