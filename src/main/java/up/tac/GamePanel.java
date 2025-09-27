@@ -158,29 +158,29 @@ public class GamePanel extends JPanel implements MouseListener{
         
         
         ImageIcon normalIcon = new ImageIcon(getClass().getResource("/files/gameButton_bg.png"));
-        Image normalIconResized = normalIcon.getImage().getScaledInstance(115, 45, Image.SCALE_DEFAULT);
+        Image normalIconResized = normalIcon.getImage().getScaledInstance(115/2, 45, Image.SCALE_DEFAULT);
         ImageIcon rolloverIcon = new ImageIcon(getClass().getResource("/files/gameButtonClicked_bg.png"));
-        Image rolloverIconResized = rolloverIcon.getImage().getScaledInstance(115, 45, Image.SCALE_DEFAULT);
+        Image rolloverIconResized = rolloverIcon.getImage().getScaledInstance(115/2, 45, Image.SCALE_DEFAULT);
 
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(550, 400));
         leftPanel.setBackground(new Color(0xd1d3d4));
         leftPanel.setBorder(border);
-        leftPanel.setLayout(new GridLayout(7, 4, 3, 3));
+        leftPanel.setLayout(new GridLayout(7, 8, 3, 3));
 
         
 
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < 8; i++) {
             JLabel category = new JLabel("CATEGORY", JLabel.CENTER);
-            category.setFont(titleFont.deriveFont(Font.BOLD, 24));
+            category.setFont(titleFont.deriveFont(Font.BOLD, 14));
             leftPanel.add(category);
         }
 
 
-        for(int i = 0; i < 24; i++) {
+        for(int i = 0; i < 48; i++) {
             JButton tempButton = new JButton(new ImageIcon(normalIconResized));
             tempButton.setPressedIcon(new ImageIcon(rolloverIconResized));
-            int row = i / 4;
+            int row = i / 8;
             int value = (row + 1) * 100;
             tempButton.setText(String.valueOf(value));
             tempButton.setHorizontalTextPosition(JButton.CENTER);
@@ -188,7 +188,7 @@ public class GamePanel extends JPanel implements MouseListener{
             tempButton.setForeground(Color.BLACK); 
             tempButton.setBorderPainted(false);
             tempButton.setContentAreaFilled(false);
-            tempButton.setFont(titleFont.deriveFont(Font.BOLD, 24));
+            tempButton.setFont(titleFont.deriveFont(Font.BOLD, 14));
             leftPanel.add(tempButton);
         }
 
