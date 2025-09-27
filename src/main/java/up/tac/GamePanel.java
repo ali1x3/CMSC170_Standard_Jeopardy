@@ -40,24 +40,25 @@ public class GamePanel extends JPanel implements MouseListener{
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
     private Font titleFont = new Font("Arial", Font.BOLD, 50);
     private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
+    private Dimension frameDimension;
 
-    public GamePanel(CardLayout cardLayout, JPanel cardPanel){
+    public GamePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
-
+        this.frameDimension = frameDimension;
+        
         bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
 
         this.setLayout(new BorderLayout());
 
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
-            customFont = customFont.deriveFont(Font.PLAIN, 21);
+            customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
             boldCustomFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Bold.ttf"));
-            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, 21);
+            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
             titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
-            titleFont = titleFont.deriveFont(Font.BOLD, 50);
-        }
-        catch (FontFormatException | IOException e) {
+            titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
+        } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
 
@@ -74,7 +75,7 @@ public class GamePanel extends JPanel implements MouseListener{
         GridBagConstraints gbc = new GridBagConstraints();
         upperPanel = new JPanel();
         upperPanel.setOpaque(false);
-        upperPanel.setPreferredSize(new Dimension(0, 80));
+        upperPanel.setPreferredSize(new Dimension(0, (int) (frameDimension.getHeight()/7.3)));
         upperPanel.setLayout(new GridBagLayout());
 
         title = new JLabel("You are currently playing!");
@@ -84,19 +85,19 @@ public class GamePanel extends JPanel implements MouseListener{
 
 
         exitButton = new ImageIcon(getClass().getResource("/files/exitButton.jpg"));
-        Image exitButtonResized = exitButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image exitButtonResized = exitButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButton = new ImageIcon(exitButtonResized);
 
         minimizeButton = new ImageIcon(getClass().getResource("/files/minimizeButton.jpg"));
-        Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
         exitButtonClicked = new ImageIcon(getClass().getResource("/files/exitButton_clicked.jpg"));
-        Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButtonClicked = new ImageIcon(exitButtonClickedResized);
 
         minimizeButtonClicked = new ImageIcon(getClass().getResource("/files/minimizeButton_clicked.jpg"));
-        Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 
         exitButtonLabel = new JLabel(exitButton);
@@ -108,19 +109,19 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(55, 30, 30, 412); 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/11), (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/19.8), (int) (frameDimension.getWidth()/2.53)); 
 
         upperPanel.add(title, gbc);
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(125, 0, 103, 6);
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/4.9), 0, (int) (frameDimension.getHeight()/5.8), (int) (frameDimension.getWidth()/110));
 
         upperPanel.add(minimizeButtonLabel, gbc);
 
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(125, 7, 103, 30);
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/4.9), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/5.8), (int) (frameDimension.getWidth()/31.43));
         upperPanel.add(exitButtonLabel, gbc);
 
 
@@ -128,28 +129,33 @@ public class GamePanel extends JPanel implements MouseListener{
 
     private void setLowerPanel() {
         lowerPanel = new JPanel();
-        lowerPanel.setPreferredSize(new Dimension(600, 300));
+        lowerPanel.setPreferredSize(new Dimension((int) frameDimension.getHeight(), (int) (frameDimension.getHeight()/2)));
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
 
         JPanel fillerPanel = new JPanel();
-        fillerPanel.setLayout(new BorderLayout(25, 15));
+        fillerPanel.setLayout(new BorderLayout((int) (frameDimension.getWidth()/44), (int) (frameDimension.getWidth()/44)));
         fillerPanel.setOpaque(false);
 
         JLabel title = new JLabel("TRACKER UI HERE");
         title.setForeground(new Color(0x0057cc));
-        title.setFont(titleFont.deriveFont(Font.BOLD, 15));
+        title.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/48.9)));
         
         Border border = BorderFactory.createLineBorder(Color.black, 3);
+
+        Border padding = BorderFactory.createEmptyBorder((int) (frameDimension.getWidth()/137.5), (int) (frameDimension.getWidth()/137.5), (int) (frameDimension.getWidth()/137.5), (int) (frameDimension.getWidth()/137.5));
+
+        Border combinedBorder = BorderFactory.createCompoundBorder(border, padding);
+
         JPanel rightPanel = new JPanel();
-        rightPanel.setPreferredSize(new Dimension(225, 400));
+        rightPanel.setPreferredSize(new Dimension((int) (frameDimension.getWidth()/5.5), (int) (frameDimension.getHeight()/1.5)));
         rightPanel.setBackground(new Color(0xd1d3d4));
-        rightPanel.setBorder(border);
+        rightPanel.setBorder(combinedBorder);
         rightPanel.add(title);
 
 
         tempBackButton = new JLabel("Temporary Back Button");
-        Font smallerFont = customFont.deriveFont(Font.BOLD, 14); 
+        Font smallerFont = customFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/52.36)); 
         tempBackButton.setFont(smallerFont);
         tempBackButton.addMouseListener(this);
 
@@ -158,21 +164,21 @@ public class GamePanel extends JPanel implements MouseListener{
         
         
         ImageIcon normalIcon = new ImageIcon(getClass().getResource("/files/gameButton_bg.png"));
-        Image normalIconResized = normalIcon.getImage().getScaledInstance(115/2, 45, Image.SCALE_DEFAULT);
+        Image normalIconResized = normalIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/14.66), (int) (frameDimension.getHeight()/14.66), Image.SCALE_DEFAULT);
         ImageIcon rolloverIcon = new ImageIcon(getClass().getResource("/files/gameButtonClicked_bg.png"));
-        Image rolloverIconResized = rolloverIcon.getImage().getScaledInstance(115/2, 45, Image.SCALE_DEFAULT);
+        Image rolloverIconResized = rolloverIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/14.66), (int) (frameDimension.getHeight()/14.66), Image.SCALE_DEFAULT);
 
         JPanel leftPanel = new JPanel();
-        leftPanel.setPreferredSize(new Dimension(550, 400));
+        leftPanel.setPreferredSize(new Dimension((int) (frameDimension.getWidth()/1.467), (int) (frameDimension.getHeight()/1.5)));
         leftPanel.setBackground(new Color(0xd1d3d4));
-        leftPanel.setBorder(border);
+        leftPanel.setBorder(combinedBorder);
         leftPanel.setLayout(new GridLayout(7, 8, 3, 3));
 
         
 
         for(int i = 0; i < 8; i++) {
             JLabel category = new JLabel("CATEGORY", JLabel.CENTER);
-            category.setFont(titleFont.deriveFont(Font.BOLD, 14));
+            category.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/43.1)));
             leftPanel.add(category);
         }
 
@@ -188,7 +194,7 @@ public class GamePanel extends JPanel implements MouseListener{
             tempButton.setForeground(Color.BLACK); 
             tempButton.setBorderPainted(false);
             tempButton.setContentAreaFilled(false);
-            tempButton.setFont(titleFont.deriveFont(Font.BOLD, 14));
+            tempButton.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/43.1)));
             leftPanel.add(tempButton);
         }
 
@@ -203,15 +209,14 @@ public class GamePanel extends JPanel implements MouseListener{
 
         gbc.gridx = 0; 
         gbc.gridy = 0;
-        gbc.insets = new Insets(20, 10, 20, 10);
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/36.65), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/36.65), (int) (frameDimension.getWidth()/110));
         anotherFillerPanel.add(leftPanel);
 
         fillerPanel.add(anotherFillerPanel, BorderLayout.CENTER);
 
         fillerPanel.add(rightPanel, BorderLayout.EAST);
 
-        gbc.ipadx = 100;
-        gbc.insets = new Insets(10, 10, 30, 10);
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/73.3), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/18.325), (int) (frameDimension.getWidth()/110));
         lowerPanel.add(fillerPanel);
 
     }

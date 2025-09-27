@@ -7,16 +7,17 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import module java.desktop;
 
 
 public class MainFrame extends JFrame{
+    final int frameWidth = 1100, frameHeight = 733;
+
     public MainFrame() {
         // Set Up Jframe
         setTitle("AI Jeopardy");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setUndecorated(false);
-        setBounds(100, 50, 900, 600);
+        setBounds(100, 50, frameWidth, frameHeight);
         setResizable(false);
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -60,13 +61,13 @@ public class MainFrame extends JFrame{
         setVisible(true);
     }
 
-    private static JPanel getJPanel(CardLayout cardLayout) {
+    private JPanel getJPanel(CardLayout cardLayout) {
         JPanel cardPanel = new JPanel(cardLayout);
 
-        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel);
-        ContentPagePanel contentPagePanel = new ContentPagePanel(cardLayout, cardPanel);
-        ContactPagePanel contactPagePanel = new ContactPagePanel(cardLayout, cardPanel);
-        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel);
+        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel, new Dimension(frameWidth, frameHeight));
+        ContentPagePanel contentPagePanel = new ContentPagePanel(cardLayout, cardPanel, new Dimension(frameWidth, frameHeight));
+        ContactPagePanel contactPagePanel = new ContactPagePanel(cardLayout, cardPanel, new Dimension(frameWidth, frameHeight));
+        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel, new Dimension(frameWidth, frameHeight));
 
         cardPanel.add(homePagePanel, "Home Page");
         cardPanel.add(contentPagePanel, "Content Page");
