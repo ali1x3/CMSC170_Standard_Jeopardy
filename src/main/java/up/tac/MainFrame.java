@@ -1,8 +1,5 @@
 package up.tac;
-import java.awt.CardLayout;
-import java.awt.Cursor;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -10,6 +7,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import module java.desktop;
 
 
 public class MainFrame extends JFrame{
@@ -21,6 +19,7 @@ public class MainFrame extends JFrame{
         setBounds(100, 50, 900, 600);
         setResizable(false);
 
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
         BufferedImage cursorImage = null;
         URL cursorURL = getClass().getClassLoader().getResource("files/cursor.png");
         if (cursorURL != null) {
@@ -28,24 +27,24 @@ public class MainFrame extends JFrame{
                 cursorImage = ImageIO.read(cursorURL);
             }
             catch (IOException e) {
-                e.printStackTrace();
+                IO.println("Failed to import cursor image: " + e.getMessage());
             }
             if (cursorImage != null) {
-                Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(0,0), "Custom Cursor");
+                Cursor customCursor = toolkit.createCustomCursor(cursorImage, new Point(0,0), "Custom Cursor");
                 setCursor(customCursor);
             }
             else {
-                System.out.println("Custom Cursor Failed to Load");
+                System.err.println("Custom Cursor Failed to Load");
             }
         }
         else {
-            System.out.println("Custom Cursor Failed to Load");
+            System.err.println("Custom Cursor Failed to Load");
         }
         
 
         URL logoURL = getClass().getClassLoader().getResource("files/icon.png");
         if (logoURL != null) {
-            setIconImage(Toolkit.getDefaultToolkit().getImage(logoURL)); 
+            setIconImage(toolkit.getImage(logoURL));
             System.out.println("Successfully loaded in program icon!");
         }
         else { 
@@ -53,6 +52,15 @@ public class MainFrame extends JFrame{
         }
         
         CardLayout cardLayout = new CardLayout();
+        JPanel cardPanel = getJPanel(cardLayout);
+
+        add(cardPanel);
+
+        cardLayout.show(cardPanel, "Home Page");
+        setVisible(true);
+    }
+
+    private static JPanel getJPanel(CardLayout cardLayout) {
         JPanel cardPanel = new JPanel(cardLayout);
 
         MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel);
@@ -64,11 +72,7 @@ public class MainFrame extends JFrame{
         cardPanel.add(contentPagePanel, "Content Page");
         cardPanel.add(contactPagePanel, "Contact Page");
         cardPanel.add(gamePanel, "Game Panel");
-        
-        add(cardPanel);
-
-        cardLayout.show(cardPanel, "Home Page");
-        setVisible(true);
+        return cardPanel;
     }
 
 }

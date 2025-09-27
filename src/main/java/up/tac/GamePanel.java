@@ -210,8 +210,6 @@ public class GamePanel extends JPanel implements MouseListener{
 
         fillerPanel.add(rightPanel, BorderLayout.EAST);
 
-        gbc.gridx = 0; 
-        gbc.gridy = 0;
         gbc.ipadx = 100;
         gbc.insets = new Insets(10, 10, 30, 10);
         lowerPanel.add(fillerPanel);
