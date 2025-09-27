@@ -30,6 +30,7 @@ import javax.swing.border.Border;
 public class GamePanel extends JPanel implements MouseListener{
     private JPanel cardPanel;
     private CardLayout cardLayout;
+    private QuestionPanel questionPanel;
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
     private JLabel title, exitButtonLabel, minimizeButtonLabel, endButtonLabel, scoreTracker;
@@ -41,11 +42,12 @@ public class GamePanel extends JPanel implements MouseListener{
     private ScoreTrackerBar trackerBar;
     private int totalScore = 0;
 
-    public GamePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension){
+    public GamePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, QuestionPanel questionPanel){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.frameDimension = frameDimension;
-        
+        this.questionPanel = questionPanel;
+
         bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
 
         this.setLayout(new BorderLayout());
@@ -361,6 +363,9 @@ public class GamePanel extends JPanel implements MouseListener{
             scoreTracker.setText("Score: " + Integer.toString(totalScore));
             System.out.println("Button Pressed!");
             repaint();
+            cardLayout.show(cardPanel, "Question Panel");
+            questionPanel.setRemainingTime(10);
+            questionPanel.startTimer();
             
         }
     } 
