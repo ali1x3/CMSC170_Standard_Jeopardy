@@ -3,7 +3,6 @@ package up.tac;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -15,8 +14,9 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.net.URI;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -26,21 +26,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 
 public class GamePanel extends JPanel implements MouseListener{
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
-    private JLabel title, exitButtonLabel, minimizeButtonLabel, tempBackButton;
+    private JLabel title, exitButtonLabel, minimizeButtonLabel, endButtonLabel, scoreTracker;
     private Font customFont = new Font("Arial", Font.PLAIN, 21);
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
     private Font titleFont = new Font("Arial", Font.BOLD, 50);
-    private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
+    private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked, endButton, endButtonClicked;
     private Dimension frameDimension;
+    private ScoreTrackerBar trackerBar;
+    private int totalScore = 0;
 
     public GamePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension){
         this.cardLayout = cardLayout;
@@ -137,32 +136,134 @@ public class GamePanel extends JPanel implements MouseListener{
         fillerPanel.setLayout(new BorderLayout((int) (frameDimension.getWidth()/44), (int) (frameDimension.getWidth()/44)));
         fillerPanel.setOpaque(false);
 
-        JLabel title = new JLabel("TRACKER UI HERE");
-        title.setForeground(new Color(0x0057cc));
-        title.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/48.9)));
-        
         Border border = BorderFactory.createLineBorder(Color.black, 3);
 
         Border padding = BorderFactory.createEmptyBorder((int) (frameDimension.getWidth()/137.5), (int) (frameDimension.getWidth()/137.5), (int) (frameDimension.getWidth()/137.5), (int) (frameDimension.getWidth()/137.5));
 
         Border combinedBorder = BorderFactory.createCompoundBorder(border, padding);
 
+
+        // -------- RIGHT PANEL CODE STARTS HERE ---------
+
         JPanel rightPanel = new JPanel();
         rightPanel.setPreferredSize(new Dimension((int) (frameDimension.getWidth()/5.5), (int) (frameDimension.getHeight()/1.5)));
         rightPanel.setBackground(new Color(0xd1d3d4));
         rightPanel.setBorder(combinedBorder);
-        rightPanel.add(title);
+        rightPanel.setLayout(new GridBagLayout());
+
+        trackerBar = new ScoreTrackerBar(new Dimension((int) (frameDimension.getWidth()/15), (int) (frameDimension.getHeight()/2)), border);
+
+        trackerBar.setScorePercentage(totalScore/16800);
+
+        scoreTracker = new JLabel("Score: " + Integer.toString(totalScore));
+        scoreTracker.setFont(boldCustomFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
+        scoreTracker.setAlignmentX(CENTER_ALIGNMENT);
+
+        endButton = new ImageIcon(getClass().getResource("/files/endButton.jpg"));
+        Image endButtonImageResized = endButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_DEFAULT);
+        endButton = new ImageIcon(endButtonImageResized);
+
+        endButtonClicked = new ImageIcon(getClass().getResource("/files/endButton_clicked.jpg"));
+        Image endButtonClickedImageResized = endButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_AREA_AVERAGING);
+        endButtonClicked = new ImageIcon(endButtonClickedImageResized);        
+
+        endButtonLabel = new JLabel(endButton);
+        endButtonLabel.addMouseListener(this);
+
+        JPanel moreFillerPanel = new JPanel();
+        moreFillerPanel.setLayout(new GridBagLayout());
+        moreFillerPanel.setOpaque(false);
+
+        JLabel label95 = new JLabel("95%"); 
+        JLabel label85 = new JLabel("85%");
+        JLabel label75 = new JLabel("75%");
+        JLabel label65 = new JLabel("65%");
+        JLabel label55 = new JLabel("55%");
+        JLabel label45 = new JLabel("45%");
+        JLabel label35 = new JLabel("35%");
+        JLabel label25 = new JLabel("25%");
+        JLabel label15 = new JLabel("15%");
+        JLabel label05 = new JLabel("5%"); 
+
+        int fontSize = (int) (frameDimension.getHeight() / 45);
+
+        label95.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
+        label85.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
+        label75.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
+        label65.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
+        label55.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
+        label45.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
+        label35.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
+        label25.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
+        label15.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
+        label05.setFont(titleFont.deriveFont(Font.BOLD, fontSize));
 
 
-        tempBackButton = new JLabel("Temporary Back Button");
-        Font smallerFont = customFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/52.36)); 
-        tempBackButton.setFont(smallerFont);
-        tempBackButton.addMouseListener(this);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridheight = 1;
+        gbc.weighty = 1.0; 
+        gbc.anchor = GridBagConstraints.CENTER; 
 
-        rightPanel.add(tempBackButton);
+        int horizontalInset = (int) (frameDimension.getWidth() / 220); 
+        gbc.insets = new Insets(0, 0, 0, horizontalInset); 
 
+        gbc.gridy = 0;
+        moreFillerPanel.add(label95, gbc);
+
+        gbc.gridy = 1;
+        moreFillerPanel.add(label85, gbc);
+
+        gbc.gridy = 2;
+        moreFillerPanel.add(label75, gbc);
+
+        gbc.gridy = 3;
+        moreFillerPanel.add(label65, gbc);
+
+        gbc.gridy = 4;
+        moreFillerPanel.add(label55, gbc);
+
+        gbc.gridy = 5;
+        moreFillerPanel.add(label45, gbc);
+
+        gbc.gridy = 6;
+        moreFillerPanel.add(label35, gbc);
+
+        gbc.gridy = 7;
+        moreFillerPanel.add(label25, gbc);
+
+        gbc.gridy = 8;
+        moreFillerPanel.add(label15, gbc);
+
+        gbc.gridy = 9;
+        moreFillerPanel.add(label05, gbc);
+
+
+        gbc.weighty = 0.0; 
+        gbc.insets = new Insets(0, (int) (frameDimension.getWidth()/110), 0, 0);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridheight = 10;
+        moreFillerPanel.add(trackerBar, gbc);
         
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridheight = 1;
+
+        rightPanel.add(moreFillerPanel, gbc);
         
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.CENTER;
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/45), 0, 0, 0);
+
+        rightPanel.add(scoreTracker, gbc);
+
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/40), 0, 0, 0);
+        gbc.gridy = 2;
+
+        rightPanel.add(endButtonLabel, gbc);
+        
+        // -------- LEFT PANEL CODE STARTS HERE ---------
         ImageIcon normalIcon = new ImageIcon(getClass().getResource("/files/gameButton_bg.png"));
         Image normalIconResized = normalIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/14.66), (int) (frameDimension.getHeight()/14.66), Image.SCALE_DEFAULT);
         ImageIcon rolloverIcon = new ImageIcon(getClass().getResource("/files/gameButtonClicked_bg.png"));
@@ -173,8 +274,6 @@ public class GamePanel extends JPanel implements MouseListener{
         leftPanel.setBackground(new Color(0xd1d3d4));
         leftPanel.setBorder(combinedBorder);
         leftPanel.setLayout(new GridLayout(7, 8, 3, 3));
-
-        
 
         for(int i = 0; i < 8; i++) {
             JLabel category = new JLabel("CATEGORY", JLabel.CENTER);
@@ -196,16 +295,17 @@ public class GamePanel extends JPanel implements MouseListener{
             tempButton.setContentAreaFilled(false);
             tempButton.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/43.1)));
             leftPanel.add(tempButton);
+            tempButton.addMouseListener(this);
         }
 
+
+        // -------- COMBINING BOTH LEFT AND RIGHT PANELS ---------
 
         leftPanel.setOpaque(true);
         rightPanel.setOpaque(true);
 
         JPanel anotherFillerPanel = new JPanel();
         anotherFillerPanel.setLayout(new GridBagLayout());
-
-        GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.gridx = 0; 
         gbc.gridy = 0;
@@ -238,6 +338,8 @@ public class GamePanel extends JPanel implements MouseListener{
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.drawImage(bg_image, 0, 0, getWidth(), getHeight(), this);
+
+        
     }
 
     @Override
@@ -253,11 +355,23 @@ public class GamePanel extends JPanel implements MouseListener{
             System.out.println("Exit Button Pressed");
             System.exit(0);
         } 
+        else if (e.getSource() instanceof JButton) {
+            totalScore += 200;
+            trackerBar.setScorePercentage((double) totalScore/16800);
+            scoreTracker.setText("Score: " + Integer.toString(totalScore));
+            System.out.println("Button Pressed!");
+            repaint();
+            
+        }
     } 
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getSource() == tempBackButton) {
+        if (e.getSource() == endButtonLabel) {
+            totalScore = 0;
+            trackerBar.setScorePercentage((double) totalScore/16800);
+            scoreTracker.setText("Score: " + Integer.toString(totalScore));
+            repaint();
             cardLayout.show(cardPanel, "Home Page");
         }
     }
@@ -273,6 +387,9 @@ public class GamePanel extends JPanel implements MouseListener{
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
+        } 
+        else if(e.getSource() == endButtonLabel) {
+            endButtonLabel.setIcon(endButtonClicked);
         }
 
     }
@@ -281,10 +398,12 @@ public class GamePanel extends JPanel implements MouseListener{
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButton);
-        }
+        } 
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButton);
-
+        } 
+        else if(e.getSource() == endButtonLabel) {
+            endButtonLabel.setIcon(endButton);
         }
     }
 }
