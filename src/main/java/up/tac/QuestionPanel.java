@@ -19,11 +19,13 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
 
@@ -32,11 +34,11 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private CardLayout cardLayout;
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
-    private JLabel title, timer, exitButtonLabel, minimizeButtonLabel, tempBackLabel;
+    private JLabel title, timer, exitButtonLabel, minimizeButtonLabel, tempBackLabel, choice1, choice2, choice3, choice4;
     private Font customFont = new Font("Arial", Font.PLAIN, 21);
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
     private Font titleFont = new Font("Arial", Font.BOLD, 50);
-    private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
+    private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked, choiceButton, choiceClickedButton, choiceCorrectButton, choiceWrongButton;
     private Dimension frameDimension;
     private javax.swing.Timer countdownTimer; 
     private int timeRemaining;
@@ -142,13 +144,168 @@ public class QuestionPanel extends JPanel implements MouseListener{
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
 
-        tempBackLabel = new JLabel("Temporary Back Button");
+        tempBackLabel = new JLabel("HEURISTIC ALGORITHMS FOR 200");
         tempBackLabel.addMouseListener(this);
-        tempBackLabel.setFont(boldCustomFont);
+        tempBackLabel.setFont(titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25));
+        tempBackLabel.setForeground(Color.GRAY);
 
-        lowerPanel.add(tempBackLabel);
-       
+        ImageIcon questionNormalIcon = new ImageIcon(getClass().getResource("/files/questionIcon.png"));
+        Image questionNormalIconResized = questionNormalIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/10), (int) (frameDimension.getHeight()/10), Image.SCALE_DEFAULT);
+        
+        ImageIcon questionLabelNormalIcon = new ImageIcon(getClass().getResource("/files/questionLabel_bg.png"));
+        Image questionLabelNormalIconResized = questionLabelNormalIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/1.12), (int) (frameDimension.getHeight()/6.5), Image.SCALE_DEFAULT);
+        
+        ImageIcon choiceNormalIcon = new ImageIcon(getClass().getResource("/files/choiceButton_bg.png"));
+        Image choiceNormalIconResized = choiceNormalIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/5.15), (int) (frameDimension.getHeight()/2.3), Image.SCALE_DEFAULT);
+        choiceButton = new ImageIcon(choiceNormalIconResized);
 
+        ImageIcon choiceRolloverlIcon = new ImageIcon(getClass().getResource("/files/choiceButtonClicked_bg.png"));
+        Image choiceRolloverlIconResized = choiceRolloverlIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/5.15), (int) (frameDimension.getHeight()/2.3), Image.SCALE_DEFAULT);
+        choiceClickedButton = new ImageIcon(choiceRolloverlIconResized);
+
+        ImageIcon choiceCorrectIcon = new ImageIcon(getClass().getResource("/files/choiceButtonCorrect_bg.png"));
+        Image choiceCorrectIconResized = choiceCorrectIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/5.15), (int) (frameDimension.getHeight()/2.3), Image.SCALE_DEFAULT);
+        choiceCorrectIcon = new ImageIcon(choiceCorrectIconResized);
+
+        ImageIcon choiceWrongIcon = new ImageIcon(getClass().getResource("/files/choiceButtonWrong_bg.png"));
+        Image choiceWrongIconResized = choiceWrongIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/5.15), (int) (frameDimension.getHeight()/2.3), Image.SCALE_DEFAULT);
+        choiceWrongIcon = new ImageIcon(choiceWrongIconResized);
+
+        // I GOT SUPER lazy here so here's some AI SLOPPPPPPPPPPPPPPP
+        // ...
+        // Image questionLabelNormalIconResized is available here
+        // ...
+
+        JTextArea questionArea = new JTextArea();
+        questionArea.setText("The fitness number, f(n), is the cost associated with a node in the A* algorithm. It is calculated as the sum of g(n) (the cost spent reaching the node from the start) and h(n) (the estimated cost of the cheapest path from the node to the goal). Therefore, f(n) = g(n) + h(n).");
+
+        // ⭐️ REMOVE the hardcoded setPreferredSize
+        // questionArea.setPreferredSize(new Dimension(800, 100)); // <-- REMOVE THIS
+
+        // Set it to wrap lines (these are correct)
+        questionArea.setLineWrap(true);
+        questionArea.setWrapStyleWord(true);
+        questionArea.setForeground(Color.BLACK);
+
+        // Set your custom font (this is correct)
+        questionArea.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
+        questionArea.setEditable(false); 
+        questionArea.setOpaque(false); // Text area is transparent
+        questionArea.setForeground(Color.BLACK);
+
+        // --- Question Area Container Setup ---
+
+        // 1. Create a container for the question text and background image
+        JPanel questionAreaContainer = new JPanel(new GridBagLayout()); // Use GridBagLayout for centering
+        questionAreaContainer.setOpaque(false); 
+
+        // 2. Create a JLabel to hold the background image
+        JLabel questionBgLabel = new JLabel(new ImageIcon(questionLabelNormalIconResized));
+
+        // 3. Set a slight border/padding on the JTextArea to keep text off the image edges
+        questionArea.setBorder(BorderFactory.createEmptyBorder(
+            (int)(frameDimension.getHeight()/60), // Top padding
+            (int)(frameDimension.getWidth()/40),  // Left padding
+            (int)(frameDimension.getHeight()/35), // Bottom padding
+            (int)(frameDimension.getWidth()/40)   // Right padding
+        )); 
+
+        // 4. Set the JTextArea's preferred size to match the inner area of the image label
+        // We must set the JTextArea's size relative to the image size for wrapping to occur correctly.
+        questionArea.setPreferredSize(new Dimension(
+            (int) (frameDimension.getWidth()/1.15) - (int)(frameDimension.getWidth()/210),  // Image width - horizontal padding
+            (int) (frameDimension.getHeight()/6.5) - (int)(frameDimension.getHeight()/40) // Image height - vertical padding
+        ));
+
+
+        // 5. Place the JTextArea inside the image label (which uses GridBagLayout now)
+        questionBgLabel.setLayout(new GridBagLayout());
+        questionBgLabel.add(questionArea, new GridBagConstraints()); // Add with default constraints for centering
+
+        // 6. Add the combined question element (image + text) to the main container
+        questionAreaContainer.add(questionBgLabel); // Add the image label to the container
+
+
+        choice1 = new JLabel(choiceButton);
+        choice1.setText("Choice 1");
+        choice1.setHorizontalTextPosition(JLabel.CENTER);
+        choice1.setVerticalTextPosition(JLabel.CENTER);
+        choice1.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
+        choice1.addMouseListener(this);
+
+        choice2 = new JLabel(choiceButton);
+        choice2.setText("Choice 2");
+        choice2.setHorizontalTextPosition(JLabel.CENTER);
+        choice2.setVerticalTextPosition(JLabel.CENTER);
+        choice2.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
+        choice2.addMouseListener(this);
+
+        choice3 = new JLabel(choiceButton);
+        choice3.setText("Choice 3");
+        choice3.setHorizontalTextPosition(JLabel.CENTER);
+        choice3.setVerticalTextPosition(JLabel.CENTER);
+        choice3.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
+        choice3.addMouseListener(this);
+
+        choice4 = new JLabel(choiceButton);
+        choice4.setText("Choice 4");
+        choice4.setHorizontalTextPosition(JLabel.CENTER);
+        choice4.setVerticalTextPosition(JLabel.CENTER);
+        choice4.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
+        choice4.addMouseListener(this);
+        // ... (Choice labels created) ...
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(
+            (int) (frameDimension.getHeight()/50), // top spacing
+            (int) (frameDimension.getWidth()/110), // left spacing
+            (int) (frameDimension.getHeight()/50), // bottom spacing
+            (int) (frameDimension.getWidth()/110)  // right spacing
+        ); 
+
+
+        // --- 1. Question Area Container (Row 0) ---
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 4; // Span all 4 columns
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/25), 0, (int) (frameDimension.getHeight()/30), 0);
+        gbc.fill = GridBagConstraints.NONE; 
+        gbc.anchor = GridBagConstraints.CENTER; // Already set above
+
+        lowerPanel.add(questionAreaContainer, gbc); 
+
+        gbc.insets = new Insets(0,0,0,0);
+        // --- 2. Choice Buttons (Row 1) ---
+        gbc.weighty = 0.0; // Choices don't take extra vertical space
+        gbc.gridwidth = 1; // Reset width to 1 for individual buttons
+        gbc.gridy = 1;     // Move to the second row
+        gbc.insets = new Insets(0, (int) (frameDimension.getWidth()/55), 0, (int) (frameDimension.getWidth()/55));
+        // Choice 1
+        gbc.gridx = 0;
+        lowerPanel.add(choice1, gbc);
+
+        // Choice 2
+        gbc.gridx = 1;
+        lowerPanel.add(choice2, gbc);
+
+        // Choice 3
+        gbc.gridx = 2;
+        lowerPanel.add(choice3, gbc);
+
+        // Choice 4
+        gbc.gridx = 3;
+        lowerPanel.add(choice4, gbc);
+
+
+        // --- 3. Header/Back Label (Row 2) ---
+        gbc.gridx = 0;
+        gbc.gridy = 2; // Move to the third row
+        gbc.gridwidth = 4; // Span all 4 columns
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/45), 0, (int) (frameDimension.getHeight()/30), 0);; // Give this row the remaining 50% of available vertical space
+        gbc.anchor = GridBagConstraints.NORTH; // Anchor it to the top of its cell
+
+        lowerPanel.add(tempBackLabel, gbc);
     }
 
     public void setRemainingTime(int timeRemaining) {
@@ -156,7 +313,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
     }
 
     public void startTimer() {
-        tempBackLabel.setText("TEMPORARY BACK BUTTON");
+        tempBackLabel.setText("HEURISTIC ALGORITHMS FOR 200");
         timer.setText("Timer: " + timeRemaining);
         
         countdownTimer = new javax.swing.Timer(1000, e -> {
@@ -224,10 +381,34 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (e.getSource() == choice1) {
+            choice1.setIcon(choiceClickedButton);
+        }
+        else if (e.getSource() == choice2) {
+            choice2.setIcon(choiceClickedButton);
+        }
+        else if (e.getSource() == choice3) {
+            choice3.setIcon(choiceClickedButton);
+        }
+        else if (e.getSource() == choice4) {
+            choice4.setIcon(choiceClickedButton);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (e.getSource() == choice1) {
+            choice1.setIcon(choiceButton);
+        }
+        else if (e.getSource() == choice2) {
+            choice2.setIcon(choiceButton);
+        }
+        else if (e.getSource() == choice3) {
+            choice3.setIcon(choiceButton);
+        }
+        else if (e.getSource() == choice4) {
+            choice4.setIcon(choiceButton);
+        }
     }
 
     @Override
@@ -240,6 +421,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         } 
         
 
+
     }
 
     @Override
@@ -250,6 +432,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButton);
         } 
+        
         
     }
 }
