@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
 
 
 public class GamePanel extends JPanel implements MouseListener{
@@ -41,7 +42,7 @@ public class GamePanel extends JPanel implements MouseListener{
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
 
-        bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
+        bg_image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/files/gamePanel_bg.jpg"))).getImage();
 
         this.setLayout(new BorderLayout());
 
