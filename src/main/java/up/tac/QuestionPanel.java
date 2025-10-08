@@ -35,6 +35,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
     private JLabel title, timer, exitButtonLabel, minimizeButtonLabel, tempBackLabel, choice1, choice2, choice3, choice4;
+    private JLabel correctChoice;
     private Font customFont = new Font("Arial", Font.PLAIN, 21);
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
     private Font titleFont = new Font("Arial", Font.BOLD, 50);
@@ -70,6 +71,17 @@ public class QuestionPanel extends JPanel implements MouseListener{
         add(upperPanel, BorderLayout.NORTH);
         add(lowerPanel, BorderLayout.CENTER);
 
+        initializeQuestion();
+        initializeChoices();
+
+    }
+    private void initializeQuestion() {
+        // TODO: this should read from the question bank and set the question
+    }
+
+    private void initializeChoices() {
+        // TODO: this should read from the question bank and set the choices, as well as set JLabel correctChoice to the correct choice
+        correctChoice = choice2; // this is temporary for testing purposes
     }
 
     private void setUpperPanel() {
@@ -160,16 +172,22 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choiceButton = new ImageIcon(choiceNormalIconResized);
 
         ImageIcon choiceRolloverlIcon = new ImageIcon(getClass().getResource("/files/choiceButtonClicked_bg.png"));
-        Image choiceRolloverlIconResized = choiceRolloverlIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/5.15), (int) (frameDimension.getHeight()/2.3), Image.SCALE_DEFAULT);
+        Image choiceRolloverlIconResized = choiceRolloverlIcon.getImage()
+        .getScaledInstance(
+        (int) (frameDimension.getWidth()/5.15),
+        (int) (frameDimension.getHeight()/2.3),
+        Image.SCALE_DEFAULT);
         choiceClickedButton = new ImageIcon(choiceRolloverlIconResized);
 
         ImageIcon choiceCorrectIcon = new ImageIcon(getClass().getResource("/files/choiceButtonCorrect_bg.png"));
         Image choiceCorrectIconResized = choiceCorrectIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/5.15), (int) (frameDimension.getHeight()/2.3), Image.SCALE_DEFAULT);
         choiceCorrectIcon = new ImageIcon(choiceCorrectIconResized);
+        choiceCorrectButton = new ImageIcon(choiceCorrectIconResized); // note to myself, use this for green -- aliba
 
         ImageIcon choiceWrongIcon = new ImageIcon(getClass().getResource("/files/choiceButtonWrong_bg.png"));
         Image choiceWrongIconResized = choiceWrongIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/5.15), (int) (frameDimension.getHeight()/2.3), Image.SCALE_DEFAULT);
         choiceWrongIcon = new ImageIcon(choiceWrongIconResized);
+        choiceWrongButton = new ImageIcon(choiceWrongIconResized); // note to myself, use this for red -- aliba
 
         // I GOT SUPER lazy here so here's some AI SLOPPPPPPPPPPPPPPP
         // ...
@@ -315,19 +333,23 @@ public class QuestionPanel extends JPanel implements MouseListener{
     public void startTimer() {
         tempBackLabel.setText("HEURISTIC ALGORITHMS FOR 200");
         timer.setText("Timer: " + timeRemaining);
-        
-        countdownTimer = new javax.swing.Timer(1000, e -> {
+
+        // this timer is so ass but it works --aliba
+        countdownTimer = new javax.swing.Timer(1000, e -> { 
             timeRemaining--; 
 
-            if (timeRemaining >= 0) {
+            if (timeRemaining > 0) {
                 if(timeRemaining < 10) {
                     timer.setText("Timer: 0" + timeRemaining);
                 } else {
                     timer.setText("Timer: " + timeRemaining);
                 }
             } else {
+                timer.setText("Timer: 00");
                 countdownTimer.stop();
                 handleTimeUp(); 
+                showCorrectAnswer();
+                disableChoiceButtons();
             }
         });
         countdownTimer.start();
@@ -336,6 +358,29 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private void handleTimeUp() {
         System.out.println("Time is up!");
         tempBackLabel.setText("TIME IS UP! GO BACK NOW!!!");
+    }
+
+    private void showCorrectAnswer() {
+        correctChoice.setIcon(choiceCorrectButton);
+    }
+
+    private void showCorrectAndWrongAnswer(JLabel userChoice) {
+        correctChoice.setIcon(choiceCorrectButton);
+        userChoice.setIcon(choiceWrongButton);
+    }
+
+    private void disableChoiceButtons() {
+        // TODO: disable all choice buttons here
+    }
+
+    private void processAnswer(JLabel userChoice) {
+        if (userChoice == correctChoice){
+            showCorrectAnswer();
+        }
+        else {
+            showCorrectAndWrongAnswer(userChoice);
+        }
+        disableChoiceButtons();
     }
 
     @Override
@@ -393,23 +438,29 @@ public class QuestionPanel extends JPanel implements MouseListener{
         else if (e.getSource() == choice4) {
             choice4.setIcon(choiceClickedButton);
         }
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         if (e.getSource() == choice1) {
             choice1.setIcon(choiceButton);
+            processAnswer(choice1);
         }
         else if (e.getSource() == choice2) {
             choice2.setIcon(choiceButton);
+            processAnswer(choice2);
         }
         else if (e.getSource() == choice3) {
             choice3.setIcon(choiceButton);
+            processAnswer(choice3);
         }
         else if (e.getSource() == choice4) {
             choice4.setIcon(choiceButton);
+            processAnswer(choice4);
         }
     }
+
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -419,9 +470,6 @@ public class QuestionPanel extends JPanel implements MouseListener{
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
         } 
-        
-
-
     }
 
     @Override
@@ -432,7 +480,5 @@ public class QuestionPanel extends JPanel implements MouseListener{
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButton);
         } 
-        
-        
     }
 }
