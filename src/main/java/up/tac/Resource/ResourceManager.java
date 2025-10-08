@@ -67,7 +67,7 @@ public class ResourceManager {
         );
 
         imageIconHashMap.put(
-            "Contact Page BG",
+            "Contact Panel BG",
             new ImageIcon(getURLFromFiles("contactPage_bg.jpg"))
         );
         imageIconHashMap.put(

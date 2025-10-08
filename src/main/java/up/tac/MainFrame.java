@@ -25,7 +25,7 @@ public class MainFrame extends JFrame{
         setIconImage(resourceManager.getLogo()); // load the logo
         
         CardLayout cardLayout = new CardLayout();
-        JPanel cardPanel = getCardPanel(cardLayout);
+        JPanel cardPanel = getCardPanel(cardLayout, resourceManager);
 
         add(cardPanel);
 
@@ -33,13 +33,13 @@ public class MainFrame extends JFrame{
         setVisible(true);
     }
 
-    private static JPanel getCardPanel(CardLayout cardLayout) {
+    private static JPanel getCardPanel(CardLayout cardLayout, ResourceManager resourceManager) {
         JPanel cardPanel = new JPanel(cardLayout);
 
-        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel);
-        ContentPagePanel contentPagePanel = new ContentPagePanel(cardLayout, cardPanel);
-        ContactPagePanel contactPagePanel = new ContactPagePanel(cardLayout, cardPanel);
-        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel);
+        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel, resourceManager);
+        ContentPagePanel contentPagePanel = new ContentPagePanel(cardLayout, cardPanel, resourceManager);
+        ContactPagePanel contactPagePanel = new ContactPagePanel(cardLayout, cardPanel, resourceManager);
+        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel, resourceManager);
 
         cardPanel.add(homePagePanel, "Home Page");
         cardPanel.add(contentPagePanel, "Content Page");

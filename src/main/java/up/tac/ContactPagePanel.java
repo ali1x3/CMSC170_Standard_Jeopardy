@@ -1,5 +1,7 @@
 package up.tac;
 
+import up.tac.Resource.ResourceManager;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -40,24 +42,20 @@ public class ContactPagePanel extends JPanel implements MouseListener{
     private JLabel github1, github2, github3, github4, github5, github6;
     private JLabel email1, email2, email3, email4, email5, email6;
 
-    public ContactPagePanel(CardLayout cardLayout, JPanel cardPanel){
+    private ResourceManager resourceManager;
+
+    public ContactPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
+        this.resourceManager = resourceManager;
 
-        bg_image = new ImageIcon(getClass().getResource("/files/contactPage_bg.jpg")).getImage();
+        bg_image = resourceManager.getImageIcon("Contact Panel BG").getImage();
 
         this.setLayout(new BorderLayout());
 
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
-            customFont = customFont.deriveFont(Font.PLAIN, 21);
-            boldCustomFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Bold.ttf"));
-            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, 21);
-            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
-            titleFont = titleFont.deriveFont(Font.BOLD, 56);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+        customFont = resourceManager.getCousineRegular();
+        boldCustomFont = resourceManager.getCousineBold();
+        titleFont = resourceManager.getAnonymousProBold();
 
         setUpperPanel();
         setLowerPanel();
@@ -96,19 +94,19 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         contactPageButton.setFont(boldCustomFont);
         contactPageButton.addMouseListener(this);
 
-        exitButton = new ImageIcon(getClass().getResource("/files/exitButton.jpg"));
+        exitButton = resourceManager.getImageIcon("Exit Button");
         Image exitButtonResized = exitButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
         exitButton = new ImageIcon(exitButtonResized);
 
-        minimizeButton = new ImageIcon(getClass().getResource("/files/minimizeButton.jpg"));
+        minimizeButton = resourceManager.getImageIcon("Minimize Button");
         Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
-        exitButtonClicked = new ImageIcon(getClass().getResource("/files/exitButton_clicked.jpg"));
+        exitButtonClicked = resourceManager.getImageIcon("Exit Button Clicked");
         Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
         exitButtonClicked = new ImageIcon(exitButtonClickedResized);
 
-        minimizeButtonClicked = new ImageIcon(getClass().getResource("/files/minimizeButton_clicked.jpg"));
+        minimizeButtonClicked = resourceManager.getImageIcon("Minimize Button Clicked");
         Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 

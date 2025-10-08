@@ -1,9 +1,10 @@
 package up.tac;
 
+import up.tac.Resource.ResourceManager;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -15,7 +16,6 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.io.IOException;
-import java.net.URI;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -37,26 +37,20 @@ public class GamePanel extends JPanel implements MouseListener{
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
     private Font titleFont = new Font("Arial", Font.BOLD, 50);
     private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
+    private ResourceManager resourceManager;
 
-    public GamePanel(CardLayout cardLayout, JPanel cardPanel){
+    public GamePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
+        this.resourceManager = resourceManager;
 
-        bg_image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/files/gamePanel_bg.jpg"))).getImage();
+        bg_image = resourceManager.getImageIcon("Game Panel BG").getImage();
 
         this.setLayout(new BorderLayout());
 
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
-            customFont = customFont.deriveFont(Font.PLAIN, 21);
-            boldCustomFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Bold.ttf"));
-            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, 21);
-            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
-            titleFont = titleFont.deriveFont(Font.BOLD, 50);
-        }
-        catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+        customFont = resourceManager.getCousineRegular();
+        boldCustomFont = resourceManager.getCousineBold();
+        titleFont = resourceManager.getAnonymousProBold();
 
         setUpperPanel();
         setLowerPanel();
@@ -81,19 +75,19 @@ public class GamePanel extends JPanel implements MouseListener{
         title.addMouseListener(this);
 
 
-        exitButton = new ImageIcon(getClass().getResource("/files/exitButton.jpg"));
+        exitButton = resourceManager.getImageIcon("Exit Button");
         Image exitButtonResized = exitButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
         exitButton = new ImageIcon(exitButtonResized);
 
-        minimizeButton = new ImageIcon(getClass().getResource("/files/minimizeButton.jpg"));
+        minimizeButton = resourceManager.getImageIcon("Minimize Button");
         Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
-        exitButtonClicked = new ImageIcon(getClass().getResource("/files/exitButton_clicked.jpg"));
+        exitButtonClicked = resourceManager.getImageIcon("Exit Button Clicked");
         Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
         exitButtonClicked = new ImageIcon(exitButtonClickedResized);
 
-        minimizeButtonClicked = new ImageIcon(getClass().getResource("/files/minimizeButton_clicked.jpg"));
+        minimizeButtonClicked = resourceManager.getImageIcon("Minimize Button Clicked");
         Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 
