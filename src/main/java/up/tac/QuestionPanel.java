@@ -70,11 +70,13 @@ public class QuestionPanel extends JPanel implements MouseListener{
         // add the upper and lower panels
         add(upperPanel, BorderLayout.NORTH);
         add(lowerPanel, BorderLayout.CENTER);
+    }
 
+    public void initializePanel() {
         initializeQuestion();
         initializeChoices();
-
     }
+
     private void initializeQuestion() {
         // TODO: this should read from the question bank and set the question
     }
@@ -82,6 +84,10 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private void initializeChoices() {
         // TODO: this should read from the question bank and set the choices, as well as set JLabel correctChoice to the correct choice
         correctChoice = choice2; // this is temporary for testing purposes
+        choice1.setIcon(choiceButton);
+        choice2.setIcon(choiceButton);
+        choice3.setIcon(choiceButton);
+        choice4.setIcon(choiceButton);
     }
 
     private void setUpperPanel() {
@@ -350,6 +356,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
                 handleTimeUp(); 
                 showCorrectAnswer();
                 disableChoiceButtons();
+                cardLayout.show(cardPanel, "Game Panel");
             }
         });
         countdownTimer.start();

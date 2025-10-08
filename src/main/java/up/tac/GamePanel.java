@@ -364,9 +364,9 @@ public class GamePanel extends JPanel implements MouseListener{
             System.out.println("Button Pressed!");
             repaint();
             cardLayout.show(cardPanel, "Question Panel");
+            questionPanel.initializePanel();
             questionPanel.setRemainingTime(10);
             questionPanel.startTimer();
-            
         }
     } 
 
