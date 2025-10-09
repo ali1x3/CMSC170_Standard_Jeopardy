@@ -32,16 +32,17 @@ public class MainPagePanel extends JPanel implements MouseListener{
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
     private JLabel title, homePageButton, contentPageButton, contactPageButton, startButtonLabel, exitButtonLabel, minimizeButtonLabel;
-    private Font customFont = new Font("Arial", Font.PLAIN, 21);
-    private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
-    private Font titleFont = new Font("Arial", Font.BOLD, 56);
+    private Font customFont = new Font("Arial", Font.PLAIN, 30);
+    private Font boldCustomFont = new Font("Arial", Font.BOLD, 30);
+    private Font titleFont = new Font("Arial", Font.BOLD, 72);
     private ImageIcon startButton, startButtonClicked, exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
     private ImageIcon bg_gif;
+    private Dimension frameDimension;
 
-
-    public MainPagePanel(CardLayout cardLayout, JPanel cardPanel){
+    public MainPagePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
+        this.frameDimension = frameDimension;
 
         // FIX: The path must be absolute from the classpath root, starting with '/'
         bg_gif = new ImageIcon(getClass().getResource("/files/bg_img.gif"));
@@ -49,14 +50,14 @@ public class MainPagePanel extends JPanel implements MouseListener{
         //bg_image = new ImageIcon(getClass().getResource("/files/mainPage_bg.jpg")).getImage();
 
         this.setLayout(new BorderLayout());
-
+        
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
-            customFont = customFont.deriveFont(Font.PLAIN, 21);
+            customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
             boldCustomFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Bold.ttf"));
-            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, 21);
+            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
             titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
-            titleFont = titleFont.deriveFont(Font.BOLD, 56);
+            titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -67,15 +68,12 @@ public class MainPagePanel extends JPanel implements MouseListener{
         // add the upper and lower panels
         add(upperPanel, BorderLayout.NORTH);
         add(lowerPanel, BorderLayout.CENTER);
-        add(new JPanel(new BorderLayout(10, 10)), BorderLayout.SOUTH); // Filler
-
     }
 
     private void setUpperPanel() {
         GridBagConstraints gbc = new GridBagConstraints();
         upperPanel = new JPanel();
         upperPanel.setOpaque(false);
-        upperPanel.setPreferredSize(new Dimension(0, 200));
         upperPanel.setLayout(new GridBagLayout());
 
         title = new JLabel("Algorithmic Avengers Inc.");
@@ -99,19 +97,19 @@ public class MainPagePanel extends JPanel implements MouseListener{
         contactPageButton.addMouseListener(this);
 
         exitButton = new ImageIcon(getClass().getResource("/files/exitButton.jpg"));
-        Image exitButtonResized = exitButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image exitButtonResized = exitButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButton = new ImageIcon(exitButtonResized);
 
         minimizeButton = new ImageIcon(getClass().getResource("/files/minimizeButton.jpg"));
-        Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
         exitButtonClicked = new ImageIcon(getClass().getResource("/files/exitButton_clicked.jpg"));
-        Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButtonClicked = new ImageIcon(exitButtonClickedResized);
 
         minimizeButtonClicked = new ImageIcon(getClass().getResource("/files/minimizeButton_clicked.jpg"));
-        Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 
         exitButtonLabel = new JLabel(exitButton);
@@ -124,19 +122,19 @@ public class MainPagePanel extends JPanel implements MouseListener{
         gbc.gridy = 0;
         gbc.gridwidth = 3;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 30, 15, 425);
+        gbc.insets = new Insets((int) frameDimension.getHeight()/16, (int) (frameDimension.getWidth()/27.5), (int) frameDimension.getHeight()/49, (int) (frameDimension.getWidth()/2.4));
 
         upperPanel.add(title, gbc);
 
         gbc.gridx = 3;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 0, 18, 5);
+        gbc.insets = new Insets((int) frameDimension.getHeight()/18, 0, (int) (frameDimension.getHeight()/40.7), (int) (frameDimension.getWidth()/137.5));
 
         upperPanel.add(minimizeButtonLabel, gbc);
 
         gbc.gridx = 4;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 0, 18, 30);
+        gbc.insets = new Insets((int) frameDimension.getHeight()/18, 0, (int) (frameDimension.getHeight()/40.7), (int) (frameDimension.getWidth()/27.5));
         upperPanel.add(exitButtonLabel, gbc);
 
         gbc.anchor = GridBagConstraints.WEST;
@@ -146,10 +144,10 @@ public class MainPagePanel extends JPanel implements MouseListener{
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
 
-        gbc.insets = new Insets(5, 30, 55, 10); // left padding
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110)); 
         upperPanel.add(homePageButton, gbc);
 
-        gbc.insets = new Insets(5, 10, 55, 10); // left padding
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110)); 
         gbc.gridx = 1;
         upperPanel.add(contentPageButton, gbc);
 
@@ -164,7 +162,6 @@ public class MainPagePanel extends JPanel implements MouseListener{
     private void setLowerPanel() {
         GridBagConstraints gbc = new GridBagConstraints();
         lowerPanel = new JPanel();
-        lowerPanel.setPreferredSize(new Dimension(0, 400));
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
 
@@ -173,31 +170,31 @@ public class MainPagePanel extends JPanel implements MouseListener{
         title.setFont(titleFont);
 
         JLabel header1 = new JLabel("JEOPARDY GAME");
-        Font biggerFont = customFont.deriveFont(Font.PLAIN, 30); 
+        Font biggerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/18.325)); 
         header1.setFont(biggerFont);
         header1.setForeground(Color.black);
 
         startButton = new ImageIcon(getClass().getResource("/files/startButton.jpg"));
-        Image startButtonImageResized = startButton.getImage().getScaledInstance(150, 41, Image.SCALE_DEFAULT);
+        Image startButtonImageResized = startButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_DEFAULT);
         startButton = new ImageIcon(startButtonImageResized);
 
         startButtonClicked = new ImageIcon(getClass().getResource("/files/startButton_clicked.jpg"));
-        Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance(150, 41, Image.SCALE_SMOOTH);
-        startButtonClicked = new ImageIcon(startButtonClickedImageResized); 
+        // Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance(150, 41, Image.SCALE_SMOOTH);
+        Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_SMOOTH);
+        startButtonClicked = new ImageIcon(startButtonClickedImageResized);        
 
         startButtonLabel = new JLabel(startButton);
         startButtonLabel.addMouseListener(this);
 
-        gbc.insets = new Insets(0, 0, 0, 0);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.NORTH;
         lowerPanel.add(title, gbc);
 
         gbc.gridy = 1;
-        gbc.insets = new Insets(30, 0, 0, 0);
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/24.5), 0, 0, 0);
         lowerPanel.add(header1, gbc);
-        gbc.insets = new Insets(50, 0, 150, 0);
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/14.7), 0, (int) (frameDimension.getHeight()/4.9), 0);
         gbc.gridy = 2;
         lowerPanel.add(startButtonLabel, gbc);
     }
