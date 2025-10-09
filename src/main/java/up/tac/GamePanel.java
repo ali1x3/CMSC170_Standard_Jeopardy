@@ -1,5 +1,7 @@
 package up.tac;
 
+import up.tac.Resource.ResourceManager;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -26,6 +28,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Objects;
+
 
 public class GamePanel extends JPanel implements MouseListener{
     private JPanel cardPanel;
@@ -41,27 +47,25 @@ public class GamePanel extends JPanel implements MouseListener{
     private Dimension frameDimension;
     private ScoreTrackerBar trackerBar;
     private int totalScore = 0;
+    private ResourceManager resourceManager;
 
-    public GamePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, QuestionPanel questionPanel){
+    public GamePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension, QuestionPanel questionPanel){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
+        this.resourceManager = resourceManager;
         this.frameDimension = frameDimension;
         this.questionPanel = questionPanel;
 
-        bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
+        bg_image = resourceManager.getImageIcon("Game Panel BG").getImage();
 
         this.setLayout(new BorderLayout());
 
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
-            customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
-            boldCustomFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Bold.ttf"));
-            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
-            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
-            titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+        customFont = resourceManager.getCousineRegular();
+        customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
+        boldCustomFont = resourceManager.getCousineBold();
+        boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
+        titleFont = resourceManager.getAnonymousProBold();
+        titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
 
         setUpperPanel();
         setLowerPanel();
@@ -85,19 +89,19 @@ public class GamePanel extends JPanel implements MouseListener{
         title.addMouseListener(this);
 
 
-        exitButton = new ImageIcon(getClass().getResource("/files/exitButton.jpg"));
+        exitButton = resourceManager.getImageIcon("Exit Button");
         Image exitButtonResized = exitButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButton = new ImageIcon(exitButtonResized);
 
-        minimizeButton = new ImageIcon(getClass().getResource("/files/minimizeButton.jpg"));
+        minimizeButton = resourceManager.getImageIcon("Minimize Button");
         Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
-        exitButtonClicked = new ImageIcon(getClass().getResource("/files/exitButton_clicked.jpg"));
+        exitButtonClicked = resourceManager.getImageIcon("Exit Button Clicked");
         Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButtonClicked = new ImageIcon(exitButtonClickedResized);
 
-        minimizeButtonClicked = new ImageIcon(getClass().getResource("/files/minimizeButton_clicked.jpg"));
+        minimizeButtonClicked = resourceManager.getImageIcon("Minimize Button Clicked");
         Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 
@@ -110,7 +114,7 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/11), (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/19.8), (int) (frameDimension.getWidth()/2.53)); 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/11), (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/19.8), (int) (frameDimension.getWidth()/2.53));
 
         upperPanel.add(title, gbc);
 
@@ -167,7 +171,7 @@ public class GamePanel extends JPanel implements MouseListener{
 
         endButtonClicked = new ImageIcon(getClass().getResource("/files/endButton_clicked.jpg"));
         Image endButtonClickedImageResized = endButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_AREA_AVERAGING);
-        endButtonClicked = new ImageIcon(endButtonClickedImageResized);        
+        endButtonClicked = new ImageIcon(endButtonClickedImageResized);
 
         endButtonLabel = new JLabel(endButton);
         endButtonLabel.addMouseListener(this);
@@ -176,7 +180,7 @@ public class GamePanel extends JPanel implements MouseListener{
         moreFillerPanel.setLayout(new GridBagLayout());
         moreFillerPanel.setOpaque(false);
 
-        JLabel label95 = new JLabel("95%"); 
+        JLabel label95 = new JLabel("95%");
         JLabel label85 = new JLabel("85%");
         JLabel label75 = new JLabel("75%");
         JLabel label65 = new JLabel("65%");
@@ -185,7 +189,7 @@ public class GamePanel extends JPanel implements MouseListener{
         JLabel label35 = new JLabel("35%");
         JLabel label25 = new JLabel("25%");
         JLabel label15 = new JLabel("15%");
-        JLabel label05 = new JLabel("5%"); 
+        JLabel label05 = new JLabel("5%");
 
         int fontSize = (int) (frameDimension.getHeight() / 45);
 
@@ -204,11 +208,11 @@ public class GamePanel extends JPanel implements MouseListener{
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridheight = 1;
-        gbc.weighty = 1.0; 
-        gbc.anchor = GridBagConstraints.CENTER; 
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        int horizontalInset = (int) (frameDimension.getWidth() / 220); 
-        gbc.insets = new Insets(0, 0, 0, horizontalInset); 
+        int horizontalInset = (int) (frameDimension.getWidth() / 220);
+        gbc.insets = new Insets(0, 0, 0, horizontalInset);
 
         gbc.gridy = 0;
         moreFillerPanel.add(label95, gbc);
@@ -241,19 +245,19 @@ public class GamePanel extends JPanel implements MouseListener{
         moreFillerPanel.add(label05, gbc);
 
 
-        gbc.weighty = 0.0; 
+        gbc.weighty = 0.0;
         gbc.insets = new Insets(0, (int) (frameDimension.getWidth()/110), 0, 0);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.gridheight = 10;
         moreFillerPanel.add(trackerBar, gbc);
-        
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridheight = 1;
 
         rightPanel.add(moreFillerPanel, gbc);
-        
+
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.CENTER;
         gbc.insets = new Insets((int) (frameDimension.getHeight()/45), 0, 0, 0);
@@ -264,7 +268,7 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.gridy = 2;
 
         rightPanel.add(endButtonLabel, gbc);
-        
+
         // -------- LEFT PANEL CODE STARTS HERE ---------
         ImageIcon normalIcon = new ImageIcon(getClass().getResource("/files/gameButton_bg.png"));
         Image normalIconResized = normalIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/14.66), (int) (frameDimension.getHeight()/14.66), Image.SCALE_DEFAULT);
@@ -292,7 +296,7 @@ public class GamePanel extends JPanel implements MouseListener{
             tempButton.setText(String.valueOf(value));
             tempButton.setHorizontalTextPosition(JButton.CENTER);
             tempButton.setVerticalTextPosition(JButton.CENTER);
-            tempButton.setForeground(Color.BLACK); 
+            tempButton.setForeground(Color.BLACK);
             tempButton.setBorderPainted(false);
             tempButton.setContentAreaFilled(false);
             tempButton.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/43.1)));
@@ -309,7 +313,7 @@ public class GamePanel extends JPanel implements MouseListener{
         JPanel anotherFillerPanel = new JPanel();
         anotherFillerPanel.setLayout(new GridBagLayout());
 
-        gbc.gridx = 0; 
+        gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets((int) (frameDimension.getHeight()/36.65), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/36.65), (int) (frameDimension.getWidth()/110));
         anotherFillerPanel.add(leftPanel);
@@ -341,7 +345,7 @@ public class GamePanel extends JPanel implements MouseListener{
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.drawImage(bg_image, 0, 0, getWidth(), getHeight(), this);
 
-        
+
     }
 
     @Override
@@ -368,7 +372,7 @@ public class GamePanel extends JPanel implements MouseListener{
             questionPanel.setRemainingTime(10);
             questionPanel.startTimer();
         }
-    } 
+    }
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -392,7 +396,7 @@ public class GamePanel extends JPanel implements MouseListener{
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
-        } 
+        }
         else if(e.getSource() == endButtonLabel) {
             endButtonLabel.setIcon(endButtonClicked);
         }
@@ -403,10 +407,10 @@ public class GamePanel extends JPanel implements MouseListener{
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButton);
-        } 
+        }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButton);
-        } 
+        }
         else if(e.getSource() == endButtonLabel) {
             endButtonLabel.setIcon(endButton);
         }

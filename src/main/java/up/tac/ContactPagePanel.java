@@ -1,5 +1,7 @@
 package up.tac;
 
+import up.tac.Resource.ResourceManager;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -41,25 +43,25 @@ public class ContactPagePanel extends JPanel implements MouseListener{
     private JLabel email1, email2, email3, email4, email5, email6;
     private Dimension frameDimension;
 
-    public ContactPagePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension){
+    private ResourceManager resourceManager;
+
+    public ContactPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager,
+                            Dimension frameDimension){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
+        this.resourceManager = resourceManager;
         this.frameDimension = frameDimension;
 
-        bg_image = new ImageIcon(getClass().getResource("/files/contactPage_bg.jpg")).getImage();
+        bg_image = resourceManager.getImageIcon("Contact Panel BG").getImage();
 
         this.setLayout(new BorderLayout());
 
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
-            customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
-            boldCustomFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Bold.ttf"));
-            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
-            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
-            titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+        customFont = resourceManager.getCousineRegular();
+        customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
+        boldCustomFont = resourceManager.getCousineBold();
+        boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
+        titleFont = resourceManager.getAnonymousProBold();
+        titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
 
         setUpperPanel();
         setLowerPanel();
@@ -96,19 +98,19 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         contactPageButton.setFont(boldCustomFont);
         contactPageButton.addMouseListener(this);
 
-        exitButton = new ImageIcon(getClass().getResource("/files/exitButton.jpg"));
+        exitButton = resourceManager.getImageIcon("Exit Button");
         Image exitButtonResized = exitButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButton = new ImageIcon(exitButtonResized);
 
-        minimizeButton = new ImageIcon(getClass().getResource("/files/minimizeButton.jpg"));
+        minimizeButton = resourceManager.getImageIcon("Minimize Button");
         Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
-        exitButtonClicked = new ImageIcon(getClass().getResource("/files/exitButton_clicked.jpg"));
+        exitButtonClicked = resourceManager.getImageIcon("Exit Button Clicked");
         Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButtonClicked = new ImageIcon(exitButtonClickedResized);
 
-        minimizeButtonClicked = new ImageIcon(getClass().getResource("/files/minimizeButton_clicked.jpg"));
+        minimizeButtonClicked = resourceManager.getImageIcon("Minimize Button Clicked");
         Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 
@@ -144,10 +146,10 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
 
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110)); 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110));
         upperPanel.add(homePageButton, gbc);
 
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110)); 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110));
         gbc.gridx = 1;
         upperPanel.add(contentPageButton, gbc);
 
@@ -169,7 +171,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         title.setForeground(new Color(0x0057cc));
         title.setFont(titleFont);
 
-        Font smallerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/36.7)); 
+        Font smallerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/36.7));
         // For Contact 1
         JLabel name1 = new JLabel("ALEX AVILA");
         github1 = new JLabel("ali1x3");

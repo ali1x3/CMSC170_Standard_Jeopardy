@@ -1,5 +1,7 @@
 package up.tac;
 
+import up.tac.Resource.ResourceManager;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -36,31 +38,27 @@ public class MainPagePanel extends JPanel implements MouseListener{
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 30);
     private Font titleFont = new Font("Arial", Font.BOLD, 72);
     private ImageIcon startButton, startButtonClicked, exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
+    private ResourceManager resourceManager;
     private ImageIcon bg_gif;
     private Dimension frameDimension;
 
-    public MainPagePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension){
+    public MainPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
+        this.resourceManager = resourceManager;
         this.frameDimension = frameDimension;
 
-        // FIX: The path must be absolute from the classpath root, starting with '/'
-        bg_gif = new ImageIcon(getClass().getResource("/files/bg_img.gif"));
-        // bg_gif = new ImageIcon(getClass().getResource("src\\main\\resources\\files\\bg_img.gif")).getImage();
-        //bg_image = new ImageIcon(getClass().getResource("/files/mainPage_bg.jpg")).getImage();
+        bg_image = resourceManager.getImageIcon("Main Panel BG").getImage();
+        bg_gif = resourceManager.getImageIcon("Background AI GIF");
 
         this.setLayout(new BorderLayout());
-        
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
-            customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
-            boldCustomFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Bold.ttf"));
-            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
-            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
-            titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+
+        customFont = resourceManager.getCousineRegular();
+        customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
+        boldCustomFont = resourceManager.getCousineBold();
+        boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
+        titleFont = resourceManager.getAnonymousProBold();
+        titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
 
         setUpperPanel();
         setLowerPanel();
@@ -96,19 +94,19 @@ public class MainPagePanel extends JPanel implements MouseListener{
         contactPageButton.setFont(customFont);
         contactPageButton.addMouseListener(this);
 
-        exitButton = new ImageIcon(getClass().getResource("/files/exitButton.jpg"));
+        exitButton = resourceManager.getImageIcon("Exit Button");
         Image exitButtonResized = exitButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButton = new ImageIcon(exitButtonResized);
 
-        minimizeButton = new ImageIcon(getClass().getResource("/files/minimizeButton.jpg"));
+        minimizeButton = resourceManager.getImageIcon("Minimize Button");
         Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
-        exitButtonClicked = new ImageIcon(getClass().getResource("/files/exitButton_clicked.jpg"));
+        exitButtonClicked = resourceManager.getImageIcon("Exit Button Clicked");
         Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButtonClicked = new ImageIcon(exitButtonClickedResized);
 
-        minimizeButtonClicked = new ImageIcon(getClass().getResource("/files/minimizeButton_clicked.jpg"));
+        minimizeButtonClicked = resourceManager.getImageIcon("Minimize Button Clicked");
         Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 
@@ -144,10 +142,10 @@ public class MainPagePanel extends JPanel implements MouseListener{
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
 
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110)); 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110));
         upperPanel.add(homePageButton, gbc);
 
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110)); 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110));
         gbc.gridx = 1;
         upperPanel.add(contentPageButton, gbc);
 
@@ -170,15 +168,15 @@ public class MainPagePanel extends JPanel implements MouseListener{
         title.setFont(titleFont);
 
         JLabel header1 = new JLabel("JEOPARDY GAME");
-        Font biggerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/18.325)); 
+        Font biggerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/18.325));
         header1.setFont(biggerFont);
         header1.setForeground(Color.black);
 
-        startButton = new ImageIcon(getClass().getResource("/files/startButton.jpg"));
+        startButton = resourceManager.getImageIcon("Start Button");
         Image startButtonImageResized = startButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_DEFAULT);
         startButton = new ImageIcon(startButtonImageResized);
 
-        startButtonClicked = new ImageIcon(getClass().getResource("/files/startButton_clicked.jpg"));
+        startButtonClicked = resourceManager.getImageIcon("Start Button Clicked");
         // Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance(150, 41, Image.SCALE_SMOOTH);
         Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_SMOOTH);
         startButtonClicked = new ImageIcon(startButtonClickedImageResized);        
