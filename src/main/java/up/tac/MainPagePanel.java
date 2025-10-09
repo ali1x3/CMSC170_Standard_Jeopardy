@@ -49,6 +49,7 @@ public class MainPagePanel extends JPanel implements MouseListener{
         this.frameDimension = frameDimension;
 
         bg_image = resourceManager.getImageIcon("Main Panel BG").getImage();
+        bg_gif = resourceManager.getImageIcon("Background AI GIF");
 
         this.setLayout(new BorderLayout());
 
@@ -171,11 +172,11 @@ public class MainPagePanel extends JPanel implements MouseListener{
         header1.setFont(biggerFont);
         header1.setForeground(Color.black);
 
-        startButton = new ImageIcon(getClass().getResource("/files/startButton.jpg"));
+        startButton = resourceManager.getImageIcon("Start Button");
         Image startButtonImageResized = startButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_DEFAULT);
         startButton = new ImageIcon(startButtonImageResized);
 
-        startButtonClicked = new ImageIcon(getClass().getResource("/files/startButton_clicked.jpg"));
+        startButtonClicked = resourceManager.getImageIcon("Start Button Clicked");
         // Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance(150, 41, Image.SCALE_SMOOTH);
         Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_SMOOTH);
         startButtonClicked = new ImageIcon(startButtonClickedImageResized);        
