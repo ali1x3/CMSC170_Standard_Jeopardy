@@ -36,6 +36,7 @@ public class MainPagePanel extends JPanel implements MouseListener{
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 30);
     private Font titleFont = new Font("Arial", Font.BOLD, 72);
     private ImageIcon startButton, startButtonClicked, exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
+    private ImageIcon bg_gif;
     private Dimension frameDimension;
 
     public MainPagePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension){
@@ -43,7 +44,10 @@ public class MainPagePanel extends JPanel implements MouseListener{
         this.cardPanel = cardPanel;
         this.frameDimension = frameDimension;
 
-        bg_image = new ImageIcon(getClass().getResource("/files/mainPage_bg.jpg")).getImage();
+        // FIX: The path must be absolute from the classpath root, starting with '/'
+        bg_gif = new ImageIcon(getClass().getResource("/files/bg_img.gif"));
+        // bg_gif = new ImageIcon(getClass().getResource("src\\main\\resources\\files\\bg_img.gif")).getImage();
+        //bg_image = new ImageIcon(getClass().getResource("/files/mainPage_bg.jpg")).getImage();
 
         this.setLayout(new BorderLayout());
         
@@ -168,12 +172,14 @@ public class MainPagePanel extends JPanel implements MouseListener{
         JLabel header1 = new JLabel("JEOPARDY GAME");
         Font biggerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/18.325)); 
         header1.setFont(biggerFont);
+        header1.setForeground(Color.black);
 
         startButton = new ImageIcon(getClass().getResource("/files/startButton.jpg"));
         Image startButtonImageResized = startButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_DEFAULT);
         startButton = new ImageIcon(startButtonImageResized);
 
         startButtonClicked = new ImageIcon(getClass().getResource("/files/startButton_clicked.jpg"));
+        // Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance(150, 41, Image.SCALE_SMOOTH);
         Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_SMOOTH);
         startButtonClicked = new ImageIcon(startButtonClickedImageResized);        
 
@@ -197,19 +203,29 @@ public class MainPagePanel extends JPanel implements MouseListener{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // don't proceed if bg_image is null
-        if (bg_image == null) {
-            System.out.println("Background Image failed to Load");
-            return;
+        // // don't proceed if bg_image is null
+        // if (bg_image == null) {
+        //     // System.out.println("Background Image failed to Load");
+        //     // return;
+        // }
+
+
+        // // proceed if bg_image is not null
+        // // Graphics2D g2d = (Graphics2D) g;
+        // // g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        // // g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        // // g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // // g2d.drawImage(bg_image, 0, 0, getWidth(), getHeight(), this);
+
+        if(bg_gif != null){
+            Graphics2D g2d = (Graphics2D) g;
+            // Add rendering hints for better image quality when scaled
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            // Draw the GIF from position (0,0) and scale it to the panel's full width and height
+            g2d.drawImage(bg_gif.getImage(), 0, 0, getWidth(), getHeight(), this);
         }
-
-
-        // proceed if bg_image is not null
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.drawImage(bg_image, 0, 0, getWidth(), getHeight(), this);
     }
 
     @Override
