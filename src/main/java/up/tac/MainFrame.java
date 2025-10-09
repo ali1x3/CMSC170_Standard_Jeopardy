@@ -1,22 +1,15 @@
 package up.tac;
 import up.tac.Resource.ResourceManager;
 
-import java.awt.CardLayout;
-import java.awt.Cursor;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
+import java.awt.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
 public class MainFrame extends JFrame{
     private final ResourceManager resourceManager;
+    final int frameWidth = 1100, frameHeight = 733;
 
     public MainFrame() {
         setup();
@@ -25,7 +18,7 @@ public class MainFrame extends JFrame{
         setIconImage(resourceManager.getLogo()); // load the logo
         
         CardLayout cardLayout = new CardLayout();
-        JPanel cardPanel = getCardPanel(cardLayout, resourceManager);
+        JPanel cardPanel = getCardPanel(cardLayout);
 
         add(cardPanel);
 
@@ -33,18 +26,21 @@ public class MainFrame extends JFrame{
         setVisible(true);
     }
 
-    private static JPanel getCardPanel(CardLayout cardLayout, ResourceManager resourceManager) {
+    private JPanel getCardPanel(CardLayout cardLayout) {
         JPanel cardPanel = new JPanel(cardLayout);
 
-        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel, resourceManager);
-        ContentPagePanel contentPagePanel = new ContentPagePanel(cardLayout, cardPanel, resourceManager);
-        ContactPagePanel contactPagePanel = new ContactPagePanel(cardLayout, cardPanel, resourceManager);
-        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel, resourceManager);
+        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
+        ContentPagePanel contentPagePanel = new ContentPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
+        ContactPagePanel contactPagePanel = new ContactPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
+        QuestionPanel questionPanel = new QuestionPanel(cardLayout, cardPanel, new Dimension(frameWidth, frameHeight));
+        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth,
+            frameHeight), questionPanel);
 
         cardPanel.add(homePagePanel, "Home Page");
         cardPanel.add(contentPagePanel, "Content Page");
         cardPanel.add(contactPagePanel, "Contact Page");
         cardPanel.add(gamePanel, "Game Panel");
+        cardPanel.add(questionPanel, "Question Panel");
         return cardPanel;
     }
 
@@ -53,7 +49,7 @@ public class MainFrame extends JFrame{
         setTitle("AI Jeopardy");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setUndecorated(false);
-        setBounds(100, 50, 900, 600);
+        setBounds(100, 50, frameWidth, frameHeight);
         setResizable(false);
     }
 

@@ -41,21 +41,27 @@ public class ContactPagePanel extends JPanel implements MouseListener{
 
     private JLabel github1, github2, github3, github4, github5, github6;
     private JLabel email1, email2, email3, email4, email5, email6;
+    private Dimension frameDimension;
 
     private ResourceManager resourceManager;
 
-    public ContactPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager){
+    public ContactPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager,
+                            Dimension frameDimension){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.resourceManager = resourceManager;
+        this.frameDimension = frameDimension;
 
         bg_image = resourceManager.getImageIcon("Contact Panel BG").getImage();
 
         this.setLayout(new BorderLayout());
 
         customFont = resourceManager.getCousineRegular();
+        customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
         boldCustomFont = resourceManager.getCousineBold();
+        boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
         titleFont = resourceManager.getAnonymousProBold();
+        titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
 
         setUpperPanel();
         setLowerPanel();
@@ -63,7 +69,6 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         // add the upper and lower panels
         add(upperPanel, BorderLayout.NORTH);
         add(lowerPanel, BorderLayout.CENTER);
-        add(new JPanel(new BorderLayout(10, 10)), BorderLayout.SOUTH); // Filler
 
     }
 
@@ -71,7 +76,6 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         GridBagConstraints gbc = new GridBagConstraints();
         upperPanel = new JPanel();
         upperPanel.setOpaque(false);
-        upperPanel.setPreferredSize(new Dimension(0, 200));
         upperPanel.setLayout(new GridBagLayout());
 
         title = new JLabel("Algorithmic Avengers Inc.");
@@ -95,19 +99,19 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         contactPageButton.addMouseListener(this);
 
         exitButton = resourceManager.getImageIcon("Exit Button");
-        Image exitButtonResized = exitButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image exitButtonResized = exitButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButton = new ImageIcon(exitButtonResized);
 
         minimizeButton = resourceManager.getImageIcon("Minimize Button");
-        Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
         exitButtonClicked = resourceManager.getImageIcon("Exit Button Clicked");
-        Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButtonClicked = new ImageIcon(exitButtonClickedResized);
 
         minimizeButtonClicked = resourceManager.getImageIcon("Minimize Button Clicked");
-        Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance(34, 34, Image.SCALE_DEFAULT);
+        Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 
         exitButtonLabel = new JLabel(exitButton);
@@ -120,19 +124,19 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         gbc.gridy = 0;
         gbc.gridwidth = 3;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 30, 15, 425);
+        gbc.insets = new Insets((int) frameDimension.getHeight()/16, (int) (frameDimension.getWidth()/27.5), (int) frameDimension.getHeight()/49, (int) (frameDimension.getWidth()/2.4));
 
         upperPanel.add(title, gbc);
 
         gbc.gridx = 3;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 0, 18, 5);
+        gbc.insets = new Insets((int) frameDimension.getHeight()/18, 0, (int) (frameDimension.getHeight()/40.7), (int) (frameDimension.getWidth()/137.5));
 
         upperPanel.add(minimizeButtonLabel, gbc);
 
         gbc.gridx = 4;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 0, 18, 30);
+        gbc.insets = new Insets((int) frameDimension.getHeight()/18, 0, (int) (frameDimension.getHeight()/40.7), (int) (frameDimension.getWidth()/27.5));
         upperPanel.add(exitButtonLabel, gbc);
 
         gbc.anchor = GridBagConstraints.WEST;
@@ -142,10 +146,10 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
 
-        gbc.insets = new Insets(5, 30, 55, 10); // left padding
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110));
         upperPanel.add(homePageButton, gbc);
 
-        gbc.insets = new Insets(5, 10, 55, 10); // left padding
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110));
         gbc.gridx = 1;
         upperPanel.add(contentPageButton, gbc);
 
@@ -160,7 +164,6 @@ public class ContactPagePanel extends JPanel implements MouseListener{
     private void setLowerPanel() {
         GridBagConstraints gbc = new GridBagConstraints();
         lowerPanel = new JPanel();
-        lowerPanel.setPreferredSize(new Dimension(0, 600));
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
 
@@ -168,7 +171,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         title.setForeground(new Color(0x0057cc));
         title.setFont(titleFont);
 
-        Font smallerFont = customFont.deriveFont(Font.PLAIN, 15); 
+        Font smallerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/36.7));
         // For Contact 1
         JLabel name1 = new JLabel("ALEX AVILA");
         github1 = new JLabel("ali1x3");
@@ -229,7 +232,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         github6.addMouseListener(this);
         email6.addMouseListener(this);
 
-        gbc.insets = new Insets(0, 0, 20, 0);
+        gbc.insets = new Insets(0, 0, (int) (frameDimension.getHeight()/49), 0);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;
@@ -243,7 +246,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         gbc.gridy = 1;
         gbc.ipady = 3;
 
-        gbc.insets = new Insets(20, 20, 0, 20);
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/49), (int) (frameDimension.getWidth()/55), 0, (int) (frameDimension.getWidth()/55));
         lowerPanel.add(name1, gbc);
 
         gbc.gridx = 1;
@@ -252,7 +255,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         gbc.gridx = 2;
         lowerPanel.add(email1, gbc);
 
-        gbc.insets = new Insets(10, 20, 0, 20);
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/73), (int) (frameDimension.getWidth()/55), 0, (int) (frameDimension.getWidth()/55));
         gbc.gridy = 2;
 
         gbc.gridx = 0;
@@ -297,7 +300,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         gbc.gridx = 2;
         lowerPanel.add(email5, gbc);
 
-        gbc.insets = new Insets(10, 0, 150, 0);
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/73), 0, (int) (frameDimension.getHeight()/4.9), 0);
         gbc.gridy = 6;
 
         gbc.gridx = 0;

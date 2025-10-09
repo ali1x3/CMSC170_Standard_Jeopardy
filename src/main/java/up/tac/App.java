@@ -16,7 +16,7 @@ public class App {
             FlatLightLaf.setup();
 
             // Option 2: Dark theme
-            UIManager.setLookAndFeel(new FlatDarkLaf());
+            // UIManager.setLookAndFeel(new FlatDarkLaf());
 
             // Option 3: IntelliJ themes (FlatLaf IntelliJ extension needed)
             // UIManager.setLookAndFeel(new FlatDarculaLaf());
@@ -25,9 +25,7 @@ public class App {
             System.err.println("Failed to initialize LaF");
         }
 
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new MainFrame();
-        });
+        javax.swing.SwingUtilities.invokeLater(MainFrame::new);
         System.out.println( "Hello World!" );
     }
     
