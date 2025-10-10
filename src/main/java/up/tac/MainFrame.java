@@ -28,7 +28,8 @@ public class MainFrame extends JFrame{
 
         cardLayout.show(cardPanel, "Home Page");
         setVisible(true);
-        audioPlayer("/files/AI_voice_welcome.wav");
+        AudioPlayer.play("/files/AI_voice_welcome.wav", false);
+        AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
     }
 
     private JPanel getCardPanel(CardLayout cardLayout) {
@@ -56,18 +57,6 @@ public class MainFrame extends JFrame{
         setUndecorated(false);
         setBounds(100, 50, frameWidth, frameHeight);
         setResizable(false);
-    }
-    
-    private void audioPlayer(String filePath) {
-        try{
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(filePath));
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
-        }
     }
 
 }

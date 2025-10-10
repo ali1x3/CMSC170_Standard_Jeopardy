@@ -202,18 +202,6 @@ public class MainPagePanel extends JPanel implements MouseListener{
         lowerPanel.add(startButtonLabel, gbc);
     }
 
-    private void audioPlayer(String filePath) {
-        try{
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(filePath));
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
-        }
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -246,8 +234,10 @@ public class MainPagePanel extends JPanel implements MouseListener{
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == startButtonLabel) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Panel");
-            audioPlayer("/files/AI_voice_start_game.wav");
+            AudioPlayer.play("/files/AI_voice_start_game.wav", true);
+            AudioPlayer.playBGM("/files/BGM_game_panel.wav");
         }
         else if (e.getSource() == minimizeButtonLabel) {
             System.out.println("Minimize Button Pressed");
@@ -261,12 +251,14 @@ public class MainPagePanel extends JPanel implements MouseListener{
             System.exit(0);
         }
         else if (e.getSource() == contactPageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Contact Page");
-            audioPlayer("/files/AI_voice_contact.wav");
+            AudioPlayer.play("/files/AI_voice_contact.wav", true);
         }
         else if (e.getSource() == contentPageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Content Page");
-            audioPlayer("/files/AI_voice_content.wav");
+            AudioPlayer.play("/files/AI_voice_content.wav", true);
         }
         else if (e.getSource() == title){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -313,6 +305,13 @@ public class MainPagePanel extends JPanel implements MouseListener{
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
+        }
+
+        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton)) {
+            AudioPlayer.play("/files/SFX_button_1.wav", false);
+        } 
+        else if (!(e.getSource() == title || e.getSource() == homePageButton)) {
+            AudioPlayer.play("/files/SFX_button_2.wav", false);
         }
 
     }

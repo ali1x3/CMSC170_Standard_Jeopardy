@@ -317,18 +317,6 @@ public class ContactPagePanel extends JPanel implements MouseListener{
 
     }
 
-    private void audioPlayer(String filePath) {
-        try{
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(filePath));
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
-        }
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -362,12 +350,14 @@ public class ContactPagePanel extends JPanel implements MouseListener{
             System.exit(0);
         }
         else if (e.getSource() == homePageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Home Page");
-            audioPlayer("/files/AI_voice_home.wav");
+            AudioPlayer.play("/files/AI_voice_home.wav", true);
         }
         else if (e.getSource() == contentPageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Content Page");
-            audioPlayer("/files/AI_voice_content.wav");
+            AudioPlayer.play("/files/AI_voice_content.wav", true);
         }
         else if (e.getSource() == github1){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -485,6 +475,13 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         else if (e.getSource() == github1 || e.getSource() == github2 || e.getSource() == github3 || e.getSource() == github4 || e.getSource() == github5 || e.getSource() == github6) {
             ((Component) e.getSource()).setForeground(java.awt.Color.blue);
         } 
+
+        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton)) {
+            AudioPlayer.play("/files/SFX_button_1.wav", false);
+        } 
+        else if (!(e.getSource() == title || e.getSource() == contactPageButton)) {
+            AudioPlayer.play("/files/SFX_button_2.wav", false);
+        }
 
     }
 
