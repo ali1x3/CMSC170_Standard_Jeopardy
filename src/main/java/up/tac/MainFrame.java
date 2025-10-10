@@ -3,6 +3,10 @@ import up.tac.Resource.ResourceManager;
 
 import java.awt.*;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -24,6 +28,7 @@ public class MainFrame extends JFrame{
 
         cardLayout.show(cardPanel, "Home Page");
         setVisible(true);
+        audioPlayer("/files/AI_voice_welcome.wav");
     }
 
     private JPanel getCardPanel(CardLayout cardLayout) {
@@ -51,6 +56,18 @@ public class MainFrame extends JFrame{
         setUndecorated(false);
         setBounds(100, 50, frameWidth, frameHeight);
         setResizable(false);
+    }
+    
+    private void audioPlayer(String filePath) {
+        try{
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(filePath));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
     }
 
 }

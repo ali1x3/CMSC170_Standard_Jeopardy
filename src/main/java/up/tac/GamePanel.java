@@ -20,6 +20,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -368,9 +371,22 @@ public class GamePanel extends JPanel implements MouseListener{
             System.out.println("Button Pressed!");
             repaint();
             cardLayout.show(cardPanel, "Question Panel");
+            audioPlayer("/files/AI_voice_timer.wav");
             questionPanel.initializePanel();
             questionPanel.setRemainingTime(10);
             questionPanel.startTimer();
+        }
+    }
+
+    private void audioPlayer(String filePath) {
+        try{
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(filePath));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
         }
     }
 
@@ -382,6 +398,7 @@ public class GamePanel extends JPanel implements MouseListener{
             scoreTracker.setText("Score: " + Integer.toString(totalScore));
             repaint();
             cardLayout.show(cardPanel, "Home Page");
+            audioPlayer("/files/AI_voice_end_game.wav");
         }
     }
 

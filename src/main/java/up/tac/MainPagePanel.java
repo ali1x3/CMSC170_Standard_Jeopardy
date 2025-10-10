@@ -16,9 +16,14 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Scanner;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -197,6 +202,18 @@ public class MainPagePanel extends JPanel implements MouseListener{
         lowerPanel.add(startButtonLabel, gbc);
     }
 
+    private void audioPlayer(String filePath) {
+        try{
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(filePath));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -230,6 +247,7 @@ public class MainPagePanel extends JPanel implements MouseListener{
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == startButtonLabel) {
             cardLayout.show(cardPanel, "Game Panel");
+            audioPlayer("/files/AI_voice_start_game.wav");
         }
         else if (e.getSource() == minimizeButtonLabel) {
             System.out.println("Minimize Button Pressed");
@@ -244,9 +262,11 @@ public class MainPagePanel extends JPanel implements MouseListener{
         }
         else if (e.getSource() == contactPageButton) {
             cardLayout.show(cardPanel, "Contact Page");
+            audioPlayer("/files/AI_voice_contact.wav");
         }
         else if (e.getSource() == contentPageButton) {
             cardLayout.show(cardPanel, "Content Page");
+            audioPlayer("/files/AI_voice_content.wav");
         }
         else if (e.getSource() == title){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;

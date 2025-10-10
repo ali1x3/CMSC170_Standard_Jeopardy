@@ -22,6 +22,9 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -314,6 +317,18 @@ public class ContactPagePanel extends JPanel implements MouseListener{
 
     }
 
+    private void audioPlayer(String filePath) {
+        try{
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(filePath));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -348,9 +363,11 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         }
         else if (e.getSource() == homePageButton) {
             cardLayout.show(cardPanel, "Home Page");
+            audioPlayer("/files/AI_voice_home.wav");
         }
         else if (e.getSource() == contentPageButton) {
             cardLayout.show(cardPanel, "Content Page");
+            audioPlayer("/files/AI_voice_content.wav");
         }
         else if (e.getSource() == github1){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
