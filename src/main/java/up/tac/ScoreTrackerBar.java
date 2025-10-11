@@ -22,6 +22,9 @@ public class ScoreTrackerBar extends JPanel {
         repaint(); 
     }
 
+    public double getScorePercentage() {
+        return scorePercentage;
+    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

@@ -16,18 +16,25 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.SwingUtilities;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 
-public class GamePanel extends JPanel implements MouseListener{
+public class GamePanel extends JPanel implements MouseListener, Runnable{
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private QuestionPanel questionPanel;
@@ -41,12 +48,93 @@ public class GamePanel extends JPanel implements MouseListener{
     private Dimension frameDimension;
     private ScoreTrackerBar trackerBar;
     private int totalScore = 0;
+    private BufferedImage robotImage;
+    private int robotX = 20;
+    private int robotY = 100;
+
+    public void setRobotPosition(int x, int y) {
+        this.robotX = x;
+        this.robotY = y;
+        repaint();
+    }
+
+    public void resetRobotPosition() {
+        this.robotX = 20;
+        this.robotY = 100;
+        repaint();
+    }
+
+    // --- Animation helper ---
+    private Timer robotTimer;
+    
+    public void animateRobotTo(int x, int y, int durationMs) {
+        stopRobotAnimation();
+        // estimate draw size similar to paint logic
+        int drawH = Math.max(12, getHeight() / 10);
+        int drawW = (int) ((double) robotImage.getWidth() * drawH / robotImage.getHeight());
+
+        
+
+        final int targetX = Math.max(0, Math.min(x, Math.max(0, getWidth() - drawW)));
+        final int targetY = Math.max(0, Math.min(y, Math.max(0, getHeight() - drawH)));
+
+        final int steps = Math.max(4, durationMs / 25);
+        final int delay = Math.max(10, durationMs / steps);
+
+        robotTimer = new Timer(delay, null);
+        final long startTime = System.currentTimeMillis();
+
+        robotTimer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                float t = (float) (System.currentTimeMillis() - startTime) / (float) durationMs;
+                if (t >= 1f) {
+                    setRobotPosition(targetX, targetY);
+                    stopRobotAnimation();
+                    return;
+                }
+                // simple ease-in-out interpolator
+                float tt = (t < 0.5f) ? (2f * t * t) : (1f - (float) Math.pow(-2f * t + 2f, 2) / 2f);
+                int currX = Math.round(robotX + (targetX - robotX) * tt);
+                int currY = Math.round(robotY + (targetY - robotY) * tt);
+                setRobotPosition(currX, currY);
+            }
+        });
+        robotTimer.setInitialDelay(0);
+        robotTimer.start();
+    }
+
+    public void stopRobotAnimation() {
+        if (robotTimer != null && robotTimer.isRunning()) {
+            robotTimer.stop();
+        }
+        robotTimer = null;
+        System.out.println("Score Percentage: " + trackerBar.getScorePercentage());
+                if(trackerBar.getScorePercentage() >= 0.05 && trackerBar.getScorePercentage() < 0.1) {
+                    try {
+                        robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_2.png"));
+                        repaint();
+                        revalidate();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if(trackerBar.getScorePercentage() >= 0.1) {
+                    try {
+                        robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_3.png"));
+                        repaint();
+                        revalidate();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+    }
 
     public GamePanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, QuestionPanel questionPanel){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.frameDimension = frameDimension;
         this.questionPanel = questionPanel;
+        
 
         bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
 
@@ -63,12 +151,20 @@ public class GamePanel extends JPanel implements MouseListener{
             e.printStackTrace();
         }
 
+        try {
+            robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         setUpperPanel();
         setLowerPanel();
 
         // add the upper and lower panels
         add(upperPanel, BorderLayout.NORTH);
         add(lowerPanel, BorderLayout.CENTER);
+        Thread thread = new Thread(this);
+        thread.start();
 
     }
 
@@ -251,6 +347,8 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.EAST;
+        gbc.insets = new Insets(0, 50, 0, 0);
 
         rightPanel.add(moreFillerPanel, gbc);
         
@@ -341,7 +439,42 @@ public class GamePanel extends JPanel implements MouseListener{
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.drawImage(bg_image, 0, 0, getWidth(), getHeight(), this);
 
-        
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        // paint the component and its children first
+        super.paint(g);
+
+        if (robotImage != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            int drawH = Math.max(12, getHeight() / 10); // at least 12px tall
+            int drawW = (int) ((double) robotImage.getWidth() * drawH / robotImage.getHeight());
+
+            // or centered when coordinates are negative
+            int drawX;
+            int drawY;
+            if (robotX >= 0 && robotY >= 0) {
+                drawX = robotX;
+                drawY = robotY;
+            } else {
+                drawX = (getWidth() - drawW) / 2;
+                drawY = (getHeight() - drawH) / 2;
+            }
+
+            // clamp to component bounds so the robot is never drawn completely off-screen
+            drawX = Math.max(0, Math.min(drawX, Math.max(0, getWidth() - drawW)));
+            drawY = Math.max(0, Math.min(drawY, Math.max(0, getHeight() - drawH)));
+
+            g2d.drawImage(robotImage, drawX, drawY, drawW, drawH, this);
+            g2d.dispose();
+        } else {
+            System.out.println(" Robot Image Null");
+        }
     }
 
     @Override
@@ -409,6 +542,34 @@ public class GamePanel extends JPanel implements MouseListener{
         } 
         else if(e.getSource() == endButtonLabel) {
             endButtonLabel.setIcon(endButton);
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(1000); 
+            while (!Thread.currentThread().isInterrupted()) {
+                // Animate to the top-right
+                SwingUtilities.invokeLater(() -> animateRobotTo((int) (frameDimension.getWidth() - 80), 90, 100000));
+                Thread.sleep(20000); 
+
+                // Animate to the bottom-right
+                SwingUtilities.invokeLater(() -> animateRobotTo((int) (frameDimension.getWidth() - 80), (int) (frameDimension.getHeight() - 10), 50000));
+                Thread.sleep(10000); 
+
+                // Animate to the bottom-left
+                SwingUtilities.invokeLater(() -> animateRobotTo(20, (int) (frameDimension.getHeight() - 10), 100000));
+                Thread.sleep(20000); 
+
+                // Animate back to the top-left
+                SwingUtilities.invokeLater(() -> animateRobotTo(20, 90, 50000));
+                Thread.sleep(10000); 
+
+                
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }
