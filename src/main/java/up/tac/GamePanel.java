@@ -309,6 +309,7 @@ public class GamePanel extends JPanel implements MouseListener{
         }
 
 
+        // TODO: make this load a different question for each button
         for(int i = 0; i < 48; i++) {
             JButton tempButton = new JButton(new ImageIcon(normalIconResized));
             tempButton.setPressedIcon(new ImageIcon(rolloverIconResized));
@@ -413,6 +414,7 @@ public class GamePanel extends JPanel implements MouseListener{
             System.out.println("Exit Button Pressed");
             System.exit(0);
         } 
+        // TODO: make this the total score increment based on the value of the question
         else if (e.getSource() instanceof JButton) {
             totalScore += 200;
             trackerBar.setScorePercentage((double) totalScore/16800);
