@@ -313,28 +313,24 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choice1.setHorizontalTextPosition(JLabel.CENTER);
         choice1.setVerticalTextPosition(JLabel.CENTER);
         choice1.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
-        choice1.addMouseListener(this);
 
         choice2 = new JLabel(choiceButton);
         choice2.setText("Choice 2");
         choice2.setHorizontalTextPosition(JLabel.CENTER);
         choice2.setVerticalTextPosition(JLabel.CENTER);
         choice2.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
-        choice2.addMouseListener(this);
 
         choice3 = new JLabel(choiceButton);
         choice3.setText("Choice 3");
         choice3.setHorizontalTextPosition(JLabel.CENTER);
         choice3.setVerticalTextPosition(JLabel.CENTER);
         choice3.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
-        choice3.addMouseListener(this);
 
         choice4 = new JLabel(choiceButton);
         choice4.setText("Choice 4");
         choice4.setHorizontalTextPosition(JLabel.CENTER);
         choice4.setVerticalTextPosition(JLabel.CENTER);
         choice4.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
-        choice4.addMouseListener(this);
         // ... (Choice labels created) ...
 
         GridBagConstraints gbc = new GridBagConstraints();
