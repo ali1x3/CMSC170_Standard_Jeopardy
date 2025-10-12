@@ -362,6 +362,7 @@ public class GamePanel extends JPanel implements MouseListener{
             System.out.println("Exit Button Pressed");
             System.exit(0);
         } 
+        // TODO: make this the total score increment based on the value of the question
         else if (e.getSource() instanceof JButton) {
             totalScore += 200;
             trackerBar.setScorePercentage((double) totalScore/16800);
