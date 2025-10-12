@@ -19,9 +19,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -449,6 +446,13 @@ public class GamePanel extends JPanel implements MouseListener{
             //scoreTracker.setText("Score: " + Integer.toString(totalScore));
             //System.out.println("Button Pressed!");
             //repaint();
+            // checking the state by casting
+            QuestionButton clickedButton = (QuestionButton) e.getSource();
+            if (!clickedButton.isEnabled()) {
+                return;
+            }
+           
+            clickedQuestionbutton = clickedButton;
             cardLayout.show(cardPanel, "Question Panel");
             AudioPlayer.play("/files/AI_voice_timer.wav", true);
             AudioPlayer.playBGM("/files/BGM_question_panel.wav");
@@ -560,6 +564,14 @@ public class GamePanel extends JPanel implements MouseListener{
         }
         else if(e.getSource() == endButtonLabel) {
             endButtonLabel.setIcon(endButton);
+        }
+    }
+
+    public void disableClickedButton() {
+        if (clickedQuestionbutton != null) {
+            clickedQuestionbutton.setEnabled(false);
+            clickedQuestionbutton.setDisabledIcon(clickedQuestionbutton.getPressedIcon());
+            clickedQuestionbutton.setText(""); 
         }
     }
 }

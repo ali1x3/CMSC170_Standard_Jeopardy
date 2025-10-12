@@ -96,11 +96,32 @@ public class QuestionPanel extends JPanel implements MouseListener{
         questionArea.setText(question);
     }
 
+
     private void initializeChoices() {
-        // TODO: we just have to set the labels for the choices and set the correct choice
         choices = clickedQuestionButton.getJeopardyQuestion().getOptions();
         correctAnswer = clickedQuestionButton.getJeopardyQuestion().getCorrectAnswer();
-        correctChoice = choice2; // this is temporary for testing purposes
+
+        JLabel[] choiceLabels = {choice1, choice2, choice3, choice4};
+
+        int imageWidth = choiceButton.getIconWidth();
+        int horizontalPadding = 25; 
+        int textWidth = imageWidth - (horizontalPadding * 2);
+
+        this.correctChoice = null;
+        for (int i = 0; i < choiceLabels.length; i++) {
+            if (i < choices.length) {
+                String choiceText = choices[i];
+                String formattedText = "<html><body style='width: " + textWidth + "px; text-align: center; padding: 10px;'>"
+                                    + choiceText
+                                    + "</body></html>";
+
+                choiceLabels[i].setText(formattedText);
+                if (choiceText.equals(correctAnswer)) {
+                    this.correctChoice = choiceLabels[i];
+                }
+            }
+        }
+        
         choice1.setIcon(choiceButton);
         choice2.setIcon(choiceButton);
         choice3.setIcon(choiceButton);
@@ -109,6 +130,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choice2.addMouseListener(this);
         choice3.addMouseListener(this);
         choice4.addMouseListener(this);
+
         backButtonLabel.setIcon(backButtonClicked);
         backButtonLabel.removeMouseListener(this);
     }
@@ -427,21 +449,26 @@ public class QuestionPanel extends JPanel implements MouseListener{
         backButtonLabel.setIcon(backButton);
     }
 
+
     private void processAnswer(JLabel userChoice) {
+        gamePanel = (GamePanel) cardPanel.getComponent(3); 
+
         if (userChoice == correctChoice){
             showCorrectAnswer();
             AudioPlayer.play("/files/SFX_correct_answer.wav", false);
-            gamePanel = (GamePanel) cardPanel.getComponent(3);
             gamePanel.onCorrectAnswer();
         }
         else {
             showCorrectAndWrongAnswer(userChoice);
             AudioPlayer.play("/files/SFX_wrong_answer.wav", false);
         }
+
+        gamePanel.disableClickedButton(); 
+
         disableChoiceButtons();
         enableBackButton();
     }
-
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
