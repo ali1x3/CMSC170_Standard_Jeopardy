@@ -154,12 +154,13 @@ public class ResourceManager {
     }
 
     public URL getFromKnowledgeBase(String file) {
-        return Objects.requireNonNull(
-            getClass().getClassLoader().getResource(
-                KNOWLEDGEBASE_PATH + file
-            )
-        );
+        URL url = getClass().getClassLoader().getResource(KNOWLEDGEBASE_PATH + file);
+        if (url == null) {
+            System.err.println("⚠️ Resource not found: " + KNOWLEDGEBASE_PATH + file);
+        }
+        return url;
     }
+ 
 
     public Cursor getCursor() {
         return cursor;

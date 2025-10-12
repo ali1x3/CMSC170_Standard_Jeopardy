@@ -3,23 +3,31 @@ package up.tac;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ReadCsv {
-    private String filePath;
+    private URL filePath;
     private List<JeopardyQuestion> questions;
 
-    public ReadCsv(String filePath) {
+    public ReadCsv(URL filePath) {
         this.filePath = filePath;
         this.questions = new ArrayList<>();
     }
 
     public List<JeopardyQuestion> loadQuestions() {
         String line = "";
+
+        if (filePath == null) {
+            System.err.println("filePath is null (resource not found)");
+            return this.questions; 
+        }
         
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(filePath.openStream()))) {
+
 
             while ((line = br.readLine()) != null) {
                

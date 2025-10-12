@@ -1,6 +1,7 @@
 package up.tac;
 
 import java.util.List;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -9,13 +10,17 @@ public class Backend {
 
     private List<JeopardyQuestion> gameQuestions;
 
-    public Backend(String csvFilePath) {
+    public Backend(URL csvFilePath) {
         ReadCsv reader = new ReadCsv(csvFilePath);
         this.gameQuestions = reader.loadQuestions();
     }
 
     public List<JeopardyQuestion> getGameQuestions() {
         return gameQuestions;
+    }
+    
+    public JeopardyQuestion getGameQuestion(int index) {
+        return gameQuestions.get(index);
     }
 
     public List<String> getQuestions() {

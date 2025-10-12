@@ -1,15 +1,21 @@
 package up.tac;
 
 import org.junit.Test;
+
+import up.tac.Resource.ResourceManager;
+
 import static org.junit.Assert.*; // Imports static methods like assertEquals, assertTrue, etc.
 
+import java.net.URL;
 import java.util.List;
 
 public class BackendTest {
+    ResourceManager resourceManager = new ResourceManager();
 
     @Test
     public void testSuccessfulLoadOfCsv() {
-        Backend backend = new Backend("src\\main\\resources\\knowledge_base\\module_1\\analysis.csv");
+        URL path = resourceManager.getFromKnowledgeBase("module_1/knowledge.csv");
+        Backend backend = new Backend(path);
 
         List<JeopardyQuestion> questions = backend.getGameQuestions();
 
@@ -21,7 +27,8 @@ public class BackendTest {
 
     @Test
     public void testGracefulHandlingOfNonexistentFile() {
-        Backend backend = new Backend("this_file_does_not_exist.csv");
+        URL path = resourceManager.getFromKnowledgeBase("nonsense");
+        Backend backend = new Backend(path);
 
         List<JeopardyQuestion> questions = backend.getGameQuestions();
 

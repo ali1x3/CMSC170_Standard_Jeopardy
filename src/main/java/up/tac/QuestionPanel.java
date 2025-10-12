@@ -53,6 +53,9 @@ public class QuestionPanel extends JPanel implements MouseListener{
 	private JLabel backButtonLabel;
 	private QuestionButton clickedQuestionButton;
     private GamePanel gamePanel; //lord forgive me
+    private String question, correctAnswer;
+    private String[] choices;
+	private JTextArea questionArea;
 
     public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
@@ -89,11 +92,14 @@ public class QuestionPanel extends JPanel implements MouseListener{
     }
 
     private void initializeQuestion() {
-        // TODO: this should read from the question bank and set the question
+        question = clickedQuestionButton.getJeopardyQuestion().getQuestion();
+        questionArea.setText(question);
     }
 
     private void initializeChoices() {
-        // TODO: this should read from the question bank and set the choices, as well as set JLabel correctChoice to the correct choice
+        // TODO: we just have to set the labels for the choices and set the correct choice
+        choices = clickedQuestionButton.getJeopardyQuestion().getOptions();
+        correctAnswer = clickedQuestionButton.getJeopardyQuestion().getCorrectAnswer();
         correctChoice = choice2; // this is temporary for testing purposes
         choice1.setIcon(choiceButton);
         choice2.setIcon(choiceButton);
@@ -227,7 +233,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         // Image questionLabelNormalIconResized is available here
         // ...
 
-        JTextArea questionArea = new JTextArea();
+        questionArea = new JTextArea();
         questionArea.setEditable(false);
         questionArea.setText("The fitness number, f(n), is the cost associated with a node in the A* algorithm. It is calculated as the sum of g(n) (the cost spent reaching the node from the start) and h(n) (the estimated cost of the cheapest path from the node to the goal). Therefore, f(n) = g(n) + h(n).");
 

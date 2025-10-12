@@ -315,7 +315,7 @@ public class GamePanel extends JPanel implements MouseListener{
             int row = (i / 8) + 1;
             int column = (i % 8) + 1;
             int questionValue = (row) * 100;
-            QuestionButton tempButton = new QuestionButton(questionValue, row, column, frameDimension);
+            QuestionButton tempButton = new QuestionButton(questionValue, row, column, frameDimension, resourceManager);
             tempButton.setText(String.valueOf(questionValue));
             tempButton.setHorizontalTextPosition(JButton.CENTER);
             tempButton.setVerticalTextPosition(JButton.CENTER);
