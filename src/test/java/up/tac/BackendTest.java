@@ -8,7 +8,7 @@ import java.util.List;
 public class BackendTest {
 
     @Test
-    public void testSuccessfulLoadOfApplicationCsv() {
+    public void testSuccessfulLoadOfCsv() {
         Backend backend = new Backend("src\\main\\resources\\knowledge_base\\module_1\\analysis.csv");
 
         List<JeopardyQuestion> questions = backend.getGameQuestions();
@@ -18,16 +18,6 @@ public class BackendTest {
         assertEquals("The list should contain exactly 10 questions.", 10, questions.size());
     }
 
-    @Test
-    public void testSuccessfulLoadOfAnalysisCsv() {
-        Backend backend = new Backend("src\\main\\resources\\knowledge_base\\module_1\\analysis.csv");
-
-        List<JeopardyQuestion> questions = backend.getGameQuestions();
-
-        assertNotNull("The list of questions should not be null.", questions);
-        assertFalse("The list should not be empty.", questions.isEmpty());
-        assertEquals("The list should contain exactly 10 questions.", 10, questions.size());
-    }
 
     @Test
     public void testGracefulHandlingOfNonexistentFile() {
