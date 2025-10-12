@@ -52,6 +52,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
 	private ImageIcon backButton, backButtonClicked;
 	private JLabel backButtonLabel;
 	private QuestionButton clickedQuestionButton;
+    private GamePanel gamePanel; //lord forgive me
 
     public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
@@ -76,6 +77,9 @@ public class QuestionPanel extends JPanel implements MouseListener{
         // add the upper and lower panels
         add(upperPanel, BorderLayout.NORTH);
         add(lowerPanel, BorderLayout.CENTER);
+    }
+
+    private void getGamePanel() {
     }
 
     public void initializePanel(QuestionButton questionButton) {
@@ -420,6 +424,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
         if (userChoice == correctChoice){
             showCorrectAnswer();
             AudioPlayer.play("/files/SFX_correct_answer.wav", false);
+            gamePanel = (GamePanel) cardPanel.getComponent(3);
+            gamePanel.onCorrectAnswer();
         }
         else {
             showCorrectAndWrongAnswer(userChoice);

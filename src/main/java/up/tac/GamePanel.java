@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements MouseListener{
     private int initialRobotY = 0;
     private int robotMidHeight = 0, robotHeight = 0;
     private boolean biggerRobot = false;
+	private QuestionButton clickedQuestionbutton;
 
     public void setRobotPosition(int x, int y) {
         this.robotX = x;
@@ -414,46 +415,82 @@ public class GamePanel extends JPanel implements MouseListener{
             System.out.println("Exit Button Pressed");
             System.exit(0);
         } 
-        // TODO: make this the total score increment based on the value of the question
+        // GOD help me on this function i have no idea how to make this block of code execute when a correct answer is made
+        // -- aliba
         else if (e.getSource() instanceof QuestionButton) {
-            QuestionButton clickedQuestionbutton = (QuestionButton) e.getSource();
-            totalScore += clickedQuestionbutton.getQuestionValue();
-            System.out.println("row: " + clickedQuestionbutton.getRow() + " col: " + clickedQuestionbutton.getColumn());
-            System.out.println("value: " + clickedQuestionbutton.getQuestionValue());
-            trackerBar.setScorePercentage((double) totalScore/16800);
+            clickedQuestionbutton = (QuestionButton) e.getSource();
+            //totalScore += clickedQuestionbutton.getQuestionValue();
+            //System.out.println("row: " + clickedQuestionbutton.getRow() + " col: " + clickedQuestionbutton.getColumn());
+            //System.out.println("value: " + clickedQuestionbutton.getQuestionValue());
+            //trackerBar.setScorePercentage((double) totalScore/16800);
 
-            try {
-                double percentage = (double) totalScore / 16800;
-                if (percentage >= 0.95) {
-                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_5.png"));
-                } else if (percentage >= 0.75) {
-                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_4.png"));
-                } else if (percentage >= 0.5) {
-                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_3.png"));
-                    biggerRobot = true;
-                } else if (percentage >= 0.25) {
-                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_2.png"));
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } 
-            revalidate();
-            repaint();
+            //try {
+            //    double percentage = (double) totalScore / 16800;
+            //    if (percentage >= 0.95) {
+            //        robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_5.png"));
+            //    } else if (percentage >= 0.75) {
+            //        robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_4.png"));
+            //    } else if (percentage >= 0.5) {
+            //        robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_3.png"));
+            //        biggerRobot = true;
+            //    } else if (percentage >= 0.25) {
+            //        robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_2.png"));
+            //    }
+            //} catch (IOException e1) {
+            //    e1.printStackTrace();
+            //} 
+            //revalidate();
+            //repaint();
 
-            System.out.println("rel Y of Robot: " + (initialRobotY - robotY) + " Max Y of robot: " + frameDimension.getHeight()/2.40327868852);
-            if ((trackerBar.getScoreTrackerHeight() >= robotMidHeight) && ((initialRobotY - robotY) <= frameDimension.getHeight()/2.40327868852)){
-                setRobotPosition(robotX, initialRobotY - trackerBar.getScoreTrackerHeight() + robotMidHeight);
-            }
-            scoreTracker.setText("Score: " + Integer.toString(totalScore));
-            System.out.println("Button Pressed!");
-            repaint();
+            //System.out.println("rel Y of Robot: " + (initialRobotY - robotY) + " Max Y of robot: " + frameDimension.getHeight()/2.40327868852);
+            //if ((trackerBar.getScoreTrackerHeight() >= robotMidHeight) && ((initialRobotY - robotY) <= frameDimension.getHeight()/2.40327868852)){
+            //    setRobotPosition(robotX, initialRobotY - trackerBar.getScoreTrackerHeight() + robotMidHeight);
+            //}
+            //scoreTracker.setText("Score: " + Integer.toString(totalScore));
+            //System.out.println("Button Pressed!");
+            //repaint();
             cardLayout.show(cardPanel, "Question Panel");
             AudioPlayer.play("/files/AI_voice_timer.wav", true);
             AudioPlayer.playBGM("/files/BGM_question_panel.wav");
+
             questionPanel.initializePanel(clickedQuestionbutton);
             questionPanel.setRemainingTime(10);
             questionPanel.startTimer();
         }
+    }
+
+    // god forgive me for what i am about to do
+    public void onCorrectAnswer() {
+        totalScore += clickedQuestionbutton.getQuestionValue();
+        System.out.println("row: " + clickedQuestionbutton.getRow() + " col: " + clickedQuestionbutton.getColumn());
+        System.out.println("value: " + clickedQuestionbutton.getQuestionValue());
+        trackerBar.setScorePercentage((double) totalScore/16800);
+
+        try {
+            double percentage = (double) totalScore / 16800;
+            if (percentage >= 0.95) {
+                robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_5.png"));
+            } else if (percentage >= 0.75) {
+                robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_4.png"));
+            } else if (percentage >= 0.5) {
+                robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_3.png"));
+                biggerRobot = true;
+            } else if (percentage >= 0.25) {
+                robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_2.png"));
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } 
+        revalidate();
+        repaint();
+
+        System.out.println("rel Y of Robot: " + (initialRobotY - robotY) + " Max Y of robot: " + frameDimension.getHeight()/2.40327868852);
+        if ((trackerBar.getScoreTrackerHeight() >= robotMidHeight) && ((initialRobotY - robotY) <= frameDimension.getHeight()/2.40327868852)){
+            setRobotPosition(robotX, initialRobotY - trackerBar.getScoreTrackerHeight() + robotMidHeight);
+        }
+        scoreTracker.setText("Score: " + Integer.toString(totalScore));
+        System.out.println("Button Pressed!");
+        repaint();
     }
 
     @Override

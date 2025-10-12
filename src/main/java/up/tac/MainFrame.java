@@ -40,8 +40,8 @@ public class MainFrame extends JFrame{
         ContactPagePanel contactPagePanel = new ContactPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
         QuestionPanel questionPanel = new QuestionPanel(cardLayout, cardPanel, new Dimension(frameWidth, frameHeight), resourceManager);
         GamePanel gamePanel = new GamePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth,
-            frameHeight), questionPanel);
-
+            frameHeight), questionPanel);   
+        gamePanel.setName("gamePanel");
         cardPanel.add(homePagePanel, "Home Page");
         cardPanel.add(contentPagePanel, "Content Page");
         cardPanel.add(contactPagePanel, "Contact Page");
