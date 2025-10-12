@@ -39,20 +39,20 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private CardLayout cardLayout;
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
-    private JLabel title, timer, exitButtonLabel, minimizeButtonLabel, tempBackLabel, choice1, choice2, choice3, choice4;
+    private JLabel title, timer, backButtonLabel, minimizeButtonLabel, tempBackLabel, choice1, choice2, choice3, choice4;
     private JLabel correctChoice;
     private Font customFont = new Font("Arial", Font.PLAIN, 21);
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
     private Font titleFont = new Font("Arial", Font.BOLD, 50);
-    private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked, choiceButton, choiceClickedButton, choiceCorrectButton, choiceWrongButton;
+    private ImageIcon backButton, backButtonClicked, minimizeButton, minimizeButtonClicked, choiceButton, choiceClickedButton, choiceCorrectButton, choiceWrongButton;
     private Dimension frameDimension;
     private javax.swing.Timer countdownTimer; 
     private int timeRemaining;
 	private ResourceManager resourceManager;
-	private ImageIcon backButton, backButtonClicked;
-	private JLabel backButtonLabel;
+	//private ImageIcon backButton, backButtonClicked;
 	private QuestionButton clickedQuestionButton;
     private GamePanel gamePanel; //lord forgive me
+    private boolean backEnabled = true;
     private String question, correctAnswer;
     private String[] choices;
 	private JTextArea questionArea;
@@ -109,8 +109,10 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choice2.addMouseListener(this);
         choice3.addMouseListener(this);
         choice4.addMouseListener(this);
+        // disable the back button until an answer is processed
         backButtonLabel.setIcon(backButtonClicked);
-        backButtonLabel.removeMouseListener(this);
+        backEnabled = false;
+        revalidate();
     }
 
     private void setUpperPanel() {
@@ -130,24 +132,24 @@ public class QuestionPanel extends JPanel implements MouseListener{
         timer.setFont(boldCustomFont);
 
 
-        exitButton = resourceManager.getImageIcon("Exit Button");
-        Image exitButtonResized = exitButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
-        exitButton = new ImageIcon(exitButtonResized);
+        backButton = resourceManager.getImageIcon("Back Button");
+        Image backButtonResized = backButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
+        backButton = new ImageIcon(backButtonResized);
 
         minimizeButton = resourceManager.getImageIcon("Minimize Button");
         Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
-        exitButtonClicked = resourceManager.getImageIcon("Exit Button Clicked");
-        Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
-        exitButtonClicked = new ImageIcon(exitButtonClickedResized);
+        backButtonClicked = resourceManager.getImageIcon("Back Button Clicked");
+        Image backButtonClickedResized = backButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
+        backButtonClicked = new ImageIcon(backButtonClickedResized);
 
         minimizeButtonClicked = resourceManager.getImageIcon("Minimize Button Clicked");
         Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 
-        exitButtonLabel = new JLabel(exitButton);
-        exitButtonLabel.addMouseListener(this);
+        backButtonLabel = new JLabel(backButton);
+        backButtonLabel.addMouseListener(this);
 
         minimizeButtonLabel = new JLabel(minimizeButton);
         minimizeButtonLabel.addMouseListener(this);
@@ -174,7 +176,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         gbc.gridx = 3;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets((int) (frameDimension.getHeight()/4.9), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/5.8), (int) (frameDimension.getWidth()/31.43));
-        upperPanel.add(exitButtonLabel, gbc);
+        upperPanel.add(backButtonLabel, gbc);
 
 
     }
@@ -219,15 +221,15 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choiceWrongIcon = new ImageIcon(choiceWrongIconResized);
         choiceWrongButton = new ImageIcon(choiceWrongIconResized); // note to myself, use this for red -- aliba
 
-        backButton = new ImageIcon(getClass().getResource("/files/endButton.jpg"));
-        Image endButtonImageResized = backButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_DEFAULT);
-        backButton = new ImageIcon(endButtonImageResized);
+        // backButton = new ImageIcon(getClass().getResource("/files/endButton.jpg"));
+        // Image endButtonImageResized = backButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_DEFAULT);
+        // backButton = new ImageIcon(endButtonImageResized);
 
-        backButtonClicked = new ImageIcon(getClass().getResource("/files/endButton_clicked.jpg"));
-        Image endButtonClickedImageResized = backButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_AREA_AVERAGING);
-        backButtonClicked = new ImageIcon(endButtonClickedImageResized);
+        // backButtonClicked = new ImageIcon(getClass().getResource("/files/endButton_clicked.jpg"));
+        // Image endButtonClickedImageResized = backButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_AREA_AVERAGING);
+        // backButtonClicked = new ImageIcon(endButtonClickedImageResized);
 
-        backButtonLabel = new JLabel(backButtonClicked);
+        // backButtonLabel = new JLabel(backButtonClicked);
         // I GOT SUPER lazy here so here's some AI SLOPPPPPPPPPPPPPPP
         // ...
         // Image questionLabelNormalIconResized is available here
@@ -361,13 +363,10 @@ public class QuestionPanel extends JPanel implements MouseListener{
         gbc.gridy = 2; // Move to the third row
         gbc.gridwidth = 3; // Span all 4 columns
         gbc.insets = new Insets((int) (frameDimension.getHeight()/45), 0, (int) (frameDimension.getHeight()/30), 0);; // Give this row the remaining 50% of available vertical space
-        gbc.anchor = GridBagConstraints.NORTH; // Anchor it to the top of its cell
+        gbc.anchor = GridBagConstraints.CENTER; // Anchor it to the top of its cell
 
         lowerPanel.add(tempBackLabel, gbc);
 
-        gbc.gridx = 2;
-        gbc.anchor = GridBagConstraints.CENTER; // Anchor it to the top of its cell
-        lowerPanel.add(backButtonLabel, gbc);
     }
 
     public void setRemainingTime(int timeRemaining) {
@@ -423,7 +422,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
     }
 
     private void enableBackButton() {
-        backButtonLabel.addMouseListener(this);
+        // enable the back button (allow clicks) and update icon
+        backEnabled = true;
         backButtonLabel.setIcon(backButton);
     }
 
@@ -473,11 +473,9 @@ public class QuestionPanel extends JPanel implements MouseListener{
             }
             AudioPlayer.stop();
         }
-        else if (e.getSource() == exitButtonLabel) {
-            System.out.println("Exit Button Pressed");
-            System.exit(0);
-        } 
         else if(e.getSource() == backButtonLabel) {
+            // only respond if back button is enabled
+            if (!backEnabled) return;
             countdownTimer.stop();
             cardLayout.show(cardPanel, "Game Panel");
             AudioPlayer.stop();
@@ -525,14 +523,14 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (e.getSource() == exitButtonLabel) {
-            exitButtonLabel.setIcon(exitButtonClicked);
+        if (e.getSource() == backButtonLabel) {
+            backButtonLabel.setIcon(backButtonClicked);
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
         } 
 
-        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == exitButtonLabel || e.getSource() == title)) {
+        if (!(e.getSource() == backButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == backButtonLabel || e.getSource() == title)) {
             AudioPlayer.play("/files/SFX_button_1.wav", false);
         } 
         else if (e.getSource() != title) {
@@ -543,8 +541,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (e.getSource() == exitButtonLabel) {
-            exitButtonLabel.setIcon(exitButton);
+        if (e.getSource() == backButtonLabel) {
+            backButtonLabel.setIcon(backButton);
         } 
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButton);

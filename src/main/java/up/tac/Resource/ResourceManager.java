@@ -118,6 +118,14 @@ public class ResourceManager {
             "End Button",
             new ImageIcon(getURLFromFiles("endButton.jpg"))
         );
+        imageIconHashMap.put(
+            "Back Button",
+            new ImageIcon(getURLFromFiles("backButton.jpg"))
+        );
+        imageIconHashMap.put(
+            "Back Button Clicked",
+            new ImageIcon(getURLFromFiles("backButton_Clicked.jpg"))
+        );
         IO.println("Image Icons loaded successfully!");
     }
 
