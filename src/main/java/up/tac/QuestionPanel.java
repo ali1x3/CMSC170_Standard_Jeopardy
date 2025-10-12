@@ -402,7 +402,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         String classificaion = clickedQuestionButton.getClassifcation();
         classificaion = classificaion.replace("/", " ");
         classificaion = classificaion.replace(".csv", "");
-        classificaion = classificaion.substring(0, 1).toUpperCase() + classificaion.substring(1);
+        classificaion = classificaion.substring(0, 2).toUpperCase() + classificaion.substring(2);
         String value = "" + clickedQuestionButton.getQuestionValue();
         tempBackLabel.setText(module + classificaion + " for " + value + " points");
         timer.setText("Timer: " + timeRemaining);
