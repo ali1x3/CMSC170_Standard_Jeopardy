@@ -19,6 +19,9 @@ import java.awt.RenderingHints;
 import java.io.IOException;
 import java.net.URI;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -235,10 +238,14 @@ public class ContentPagePanel extends JPanel implements MouseListener{
             System.exit(0);
         }
         else if (e.getSource() == homePageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Home Page");
+            AudioPlayer.play("/files/AI_voice_home.wav", true);
         }
         else if (e.getSource() == contactPageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Contact Page");
+            AudioPlayer.play("/files/AI_voice_contact.wav", true);
         }
         else if (e.getSource() == title){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -279,6 +286,13 @@ public class ContentPagePanel extends JPanel implements MouseListener{
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
+        }
+
+        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton)) {
+            AudioPlayer.play("/files/SFX_button_1.wav", false);
+        } 
+        else if (!(e.getSource() == title || e.getSource() == contentPageButton)) {
+            AudioPlayer.play("/files/SFX_button_2.wav", false);
         }
 
     }

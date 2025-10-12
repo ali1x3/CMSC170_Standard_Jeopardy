@@ -1,13 +1,10 @@
 package up.tac;
 
-import up.tac.Resource.ResourceManager;
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -18,8 +15,10 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,9 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.Objects;
+import up.tac.Resource.ResourceManager;
 
 
 public class GamePanel extends JPanel implements MouseListener{
@@ -368,6 +365,8 @@ public class GamePanel extends JPanel implements MouseListener{
             System.out.println("Button Pressed!");
             repaint();
             cardLayout.show(cardPanel, "Question Panel");
+            AudioPlayer.play("/files/AI_voice_timer.wav", false);
+            AudioPlayer.playBGM("/files/BGM_question_panel.wav");
             questionPanel.initializePanel();
             questionPanel.setRemainingTime(10);
             questionPanel.startTimer();
@@ -382,6 +381,8 @@ public class GamePanel extends JPanel implements MouseListener{
             scoreTracker.setText("Score: " + Integer.toString(totalScore));
             repaint();
             cardLayout.show(cardPanel, "Home Page");
+            AudioPlayer.play("/files/AI_voice_end_game.wav", false);
+            AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
         }
     }
 
@@ -391,14 +392,18 @@ public class GamePanel extends JPanel implements MouseListener{
 
     @Override
     public void mouseEntered(MouseEvent e) {
+
         if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButtonClicked);
+            AudioPlayer.play("/files/SFX_button_2.wav", false);
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
+            AudioPlayer.play("/files/SFX_button_2.wav", false);
         }
         else if(e.getSource() == endButtonLabel) {
             endButtonLabel.setIcon(endButtonClicked);
+            AudioPlayer.play("/files/SFX_button_1.wav", false);
         }
 
     }

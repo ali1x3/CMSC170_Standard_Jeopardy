@@ -18,6 +18,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -357,6 +360,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
                 showCorrectAnswer();
                 disableChoiceButtons();
                 cardLayout.show(cardPanel, "Game Panel");
+                AudioPlayer.playBGM("/files/BGM_game_panel.wav");
             }
         });
         countdownTimer.start();
@@ -383,9 +387,11 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private void processAnswer(JLabel userChoice) {
         if (userChoice == correctChoice){
             showCorrectAnswer();
+            AudioPlayer.play("/files/SFX_correct_answer.wav", false);
         }
         else {
             showCorrectAndWrongAnswer(userChoice);
+            AudioPlayer.play("/files/SFX_wrong_answer.wav", false);
         }
         disableChoiceButtons();
     }
@@ -477,6 +483,14 @@ public class QuestionPanel extends JPanel implements MouseListener{
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
         } 
+
+        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == exitButtonLabel || e.getSource() == title)) {
+            AudioPlayer.play("/files/SFX_button_1.wav", false);
+        } 
+        else if (e.getSource() != title) {
+            AudioPlayer.play("/files/SFX_button_2.wav", false);
+        }
+
     }
 
     @Override

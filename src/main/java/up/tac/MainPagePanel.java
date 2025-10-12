@@ -16,9 +16,14 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Scanner;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -229,7 +234,10 @@ public class MainPagePanel extends JPanel implements MouseListener{
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == startButtonLabel) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Panel");
+            AudioPlayer.play("/files/AI_voice_start_game.wav", true);
+            AudioPlayer.playBGM("/files/BGM_game_panel.wav");
         }
         else if (e.getSource() == minimizeButtonLabel) {
             System.out.println("Minimize Button Pressed");
@@ -243,10 +251,14 @@ public class MainPagePanel extends JPanel implements MouseListener{
             System.exit(0);
         }
         else if (e.getSource() == contactPageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Contact Page");
+            AudioPlayer.play("/files/AI_voice_contact.wav", true);
         }
         else if (e.getSource() == contentPageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Content Page");
+            AudioPlayer.play("/files/AI_voice_content.wav", true);
         }
         else if (e.getSource() == title){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -293,6 +305,13 @@ public class MainPagePanel extends JPanel implements MouseListener{
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
+        }
+
+        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton)) {
+            AudioPlayer.play("/files/SFX_button_1.wav", false);
+        } 
+        else if (!(e.getSource() == title || e.getSource() == homePageButton)) {
+            AudioPlayer.play("/files/SFX_button_2.wav", false);
         }
 
     }

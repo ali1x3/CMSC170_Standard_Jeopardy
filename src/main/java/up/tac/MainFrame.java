@@ -3,6 +3,10 @@ import up.tac.Resource.ResourceManager;
 
 import java.awt.*;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -24,6 +28,8 @@ public class MainFrame extends JFrame{
 
         cardLayout.show(cardPanel, "Home Page");
         setVisible(true);
+        AudioPlayer.play("/files/AI_voice_welcome.wav", false);
+        AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
     }
 
     private JPanel getCardPanel(CardLayout cardLayout) {

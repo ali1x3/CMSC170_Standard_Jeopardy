@@ -22,6 +22,9 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -347,10 +350,14 @@ public class ContactPagePanel extends JPanel implements MouseListener{
             System.exit(0);
         }
         else if (e.getSource() == homePageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Home Page");
+            AudioPlayer.play("/files/AI_voice_home.wav", true);
         }
         else if (e.getSource() == contentPageButton) {
+            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Content Page");
+            AudioPlayer.play("/files/AI_voice_content.wav", true);
         }
         else if (e.getSource() == github1){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -468,6 +475,13 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         else if (e.getSource() == github1 || e.getSource() == github2 || e.getSource() == github3 || e.getSource() == github4 || e.getSource() == github5 || e.getSource() == github6) {
             ((Component) e.getSource()).setForeground(java.awt.Color.blue);
         } 
+
+        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton)) {
+            AudioPlayer.play("/files/SFX_button_1.wav", false);
+        } 
+        else if (!(e.getSource() == title || e.getSource() == contactPageButton)) {
+            AudioPlayer.play("/files/SFX_button_2.wav", false);
+        }
 
     }
 
