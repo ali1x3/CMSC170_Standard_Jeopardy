@@ -3,6 +3,8 @@ package up.tac;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -16,20 +18,24 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+
+import com.formdev.flatlaf.FlatLaf;
 
 import up.tac.Resource.ResourceManager;
 
@@ -41,6 +47,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private JPanel upperPanel, lowerPanel;
     private JLabel title, timer, exitButtonLabel, minimizeButtonLabel, tempBackLabel, choice1, choice2, choice3, choice4;
     private JLabel correctChoice;
+    private JDialog exitPopup;
     private Font customFont = new Font("Arial", Font.PLAIN, 21);
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
     private Font titleFont = new Font("Arial", Font.BOLD, 50);
@@ -395,7 +402,11 @@ public class QuestionPanel extends JPanel implements MouseListener{
                 showCorrectAnswer();
                 disableChoiceButtons();
                 cardLayout.show(cardPanel, "Game Panel");
+                AudioPlayer.stop();
                 AudioPlayer.playBGM("/files/BGM_game_panel.wav");
+                if (exitPopup != null) {
+                    exitPopup.dispose();
+                }
             }
         });
         countdownTimer.start();
@@ -475,16 +486,59 @@ public class QuestionPanel extends JPanel implements MouseListener{
         }
         else if (e.getSource() == exitButtonLabel) {
             System.out.println("Exit Button Pressed");
-            System.exit(0);
+            UIManager.put("OptionPane.background", new Color(209, 211, 212));
+            JOptionPane optionPane = new JOptionPane(
+                "<html>Are you sure?<br>Leaving would result in a<br>score of 0 for this question.</html>",
+                JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.YES_NO_OPTION
+            );
+            Font font = titleFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight() / 40);
+            styleComponents(optionPane, font);
+
+            exitPopup = optionPane.createDialog("Exit Confirmation");
+            exitPopup.setVisible(true);
+
+            int option = (optionPane.getValue() instanceof Integer) ? (int) optionPane.getValue() : JOptionPane.NO_OPTION;
+            if (option == JOptionPane.YES_OPTION) {
+                countdownTimer.stop();
+                cardLayout.show(cardPanel, "Game Panel");
+                AudioPlayer.stop();
+                AudioPlayer.playBGM("/files/BGM_game_panel.wav");
+            } 
+            
         } 
         else if(e.getSource() == backButtonLabel) {
             countdownTimer.stop();
             cardLayout.show(cardPanel, "Game Panel");
             AudioPlayer.stop();
+            AudioPlayer.playBGM("/files/BGM_game_panel.wav");
+            if (exitPopup != null) {
+                exitPopup.dispose();
+            }
         }
         
     } 
 
+    private void styleComponents(Container container, Font font) {
+        for(Component c : container.getComponents()){
+            switch (c) {
+                case JButton b -> {
+                    b.setFont(font);
+                    b.setBackground(new Color(210, 211, 212));
+                    b.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+                }
+                case JLabel l -> {
+                    l.setFont(font);
+                }
+                case Container cont -> {
+                    styleComponents(cont, font);
+                }
+                default -> {
+                }
+            }
+        }
+    }
+    
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == choice1) {
