@@ -464,7 +464,6 @@ public class GamePanel extends JPanel implements MouseListener{
            
             clickedQuestionbutton = clickedButton;
             cardLayout.show(cardPanel, "Question Panel");
-            AudioPlayer.play("/files/AI_voice_timer.wav", true);
             AudioPlayer.playBGM("/files/BGM_question_panel.wav");
 
             questionPanel.initializePanel(clickedQuestionbutton);

@@ -414,7 +414,12 @@ public class QuestionPanel extends JPanel implements MouseListener{
             if (timeRemaining > 0) {
                 if(timeRemaining < 10) {
                     timer.setText("Timer: 0" + timeRemaining);
-                } else {
+                } 
+                else if (timeRemaining == 10) {
+                    AudioPlayer.play("/files/AI_voice_timer.wav", true);
+                    timer.setText("Timer: " + timeRemaining);
+                }
+                else {
                     timer.setText("Timer: " + timeRemaining);
                 }
             } else {
