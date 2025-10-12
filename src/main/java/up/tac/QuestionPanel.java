@@ -51,6 +51,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
 	private ResourceManager resourceManager;
 	private ImageIcon backButton, backButtonClicked;
 	private JLabel backButtonLabel;
+	private QuestionButton clickedQuestionButton;
 
     public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
@@ -77,7 +78,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
         add(lowerPanel, BorderLayout.CENTER);
     }
 
-    public void initializePanel() {
+    public void initializePanel(QuestionButton questionButton) {
+        this.clickedQuestionButton = questionButton;
         initializeQuestion();
         initializeChoices();
     }
@@ -97,6 +99,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choice2.addMouseListener(this);
         choice3.addMouseListener(this);
         choice4.addMouseListener(this);
+        backButtonLabel.setIcon(backButtonClicked);
     }
 
     private void setUpperPanel() {

@@ -92,6 +92,10 @@ mvn test
 ```bash
 mvn package
 ```
+- package into jar with dependencies:
+```bash
+mvn clean compile assembly:single
+```
 - to run the code, we can run the jar file
 ```bash
 java -jar path\to\jarfile
