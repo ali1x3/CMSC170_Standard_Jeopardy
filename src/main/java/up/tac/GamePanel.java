@@ -15,7 +15,10 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -45,6 +48,18 @@ public class GamePanel extends JPanel implements MouseListener{
     private ScoreTrackerBar trackerBar;
     private int totalScore = 0;
     private ResourceManager resourceManager;
+    private BufferedImage robotImage;
+    private int robotX = 0;
+    private int robotY = 0;
+    private int initialRobotY = 0;
+    private int robotMidHeight = 0, robotHeight = 0;
+    private boolean biggerRobot = false;
+
+    public void setRobotPosition(int x, int y) {
+        this.robotX = x;
+        this.robotY = y;
+        repaint();
+    }
 
     public GamePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension, QuestionPanel questionPanel){
         this.cardLayout = cardLayout;
@@ -52,6 +67,9 @@ public class GamePanel extends JPanel implements MouseListener{
         this.resourceManager = resourceManager;
         this.frameDimension = frameDimension;
         this.questionPanel = questionPanel;
+        this.robotX = (int) (frameDimension.getWidth()/1.31);
+        this.robotY = (int) (frameDimension.getHeight()/1.54315789474);
+        this.initialRobotY = (int) (frameDimension.getHeight()/1.54315789474);
 
         bg_image = resourceManager.getImageIcon("Game Panel BG").getImage();
 
@@ -63,6 +81,12 @@ public class GamePanel extends JPanel implements MouseListener{
         boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
         titleFont = resourceManager.getAnonymousProBold();
         titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
+
+        try {
+            robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         setUpperPanel();
         setLowerPanel();
@@ -209,7 +233,7 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.anchor = GridBagConstraints.CENTER;
 
         int horizontalInset = (int) (frameDimension.getWidth() / 220);
-        gbc.insets = new Insets(0, 0, 0, horizontalInset);
+        gbc.insets = new Insets(0, (int) (frameDimension.getWidth()/30), 0, horizontalInset);
 
         gbc.gridy = 0;
         moreFillerPanel.add(label95, gbc);
@@ -346,6 +370,37 @@ public class GamePanel extends JPanel implements MouseListener{
     }
 
     @Override
+    public void paint(Graphics g) {
+        // paint the component and its children first
+        super.paint(g);
+
+        if (robotImage != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            int drawH, drawW;
+            if (!biggerRobot) {
+                drawH = (int) frameDimension.getHeight()/12; 
+                drawW = (int) ((double) robotImage.getWidth() * drawH / robotImage.getHeight());
+            } else {
+                drawH = (int) frameDimension.getHeight()/8; 
+                drawW = (int) ((double) robotImage.getWidth() * drawH / robotImage.getHeight());
+            }
+            
+            robotHeight = drawH;
+            robotMidHeight = drawH/2 - (int) frameDimension.getHeight()/40;
+
+
+            g2d.drawImage(robotImage, robotX, robotY, drawW, drawH, this);
+            g2d.dispose();
+        } else {
+            System.out.println(" Robot Image Null");
+        }
+    }
+
+    @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == minimizeButtonLabel) {
             System.out.println("Minimize Button Pressed");
@@ -361,11 +416,34 @@ public class GamePanel extends JPanel implements MouseListener{
         else if (e.getSource() instanceof JButton) {
             totalScore += 200;
             trackerBar.setScorePercentage((double) totalScore/16800);
+
+            try {
+                double percentage = (double) totalScore / 16800;
+                if (percentage >= 0.95) {
+                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_5.png"));
+                } else if (percentage >= 0.75) {
+                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_4.png"));
+                } else if (percentage >= 0.5) {
+                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_3.png"));
+                    biggerRobot = true;
+                } else if (percentage >= 0.25) {
+                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_2.png"));
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } 
+            revalidate();
+            repaint();
+
+            System.out.println("rel Y of Robot: " + (initialRobotY - robotY) + " Max Y of robot: " + frameDimension.getHeight()/2.40327868852);
+            if ((trackerBar.getScoreTrackerHeight() >= robotMidHeight) && ((initialRobotY - robotY) <= frameDimension.getHeight()/2.40327868852)){
+                setRobotPosition(robotX, initialRobotY - trackerBar.getScoreTrackerHeight() + robotMidHeight);
+            }
             scoreTracker.setText("Score: " + Integer.toString(totalScore));
             System.out.println("Button Pressed!");
             repaint();
             cardLayout.show(cardPanel, "Question Panel");
-            AudioPlayer.play("/files/AI_voice_timer.wav", false);
+            AudioPlayer.play("/files/AI_voice_timer.wav", true);
             AudioPlayer.playBGM("/files/BGM_question_panel.wav");
             questionPanel.initializePanel();
             questionPanel.setRemainingTime(10);
@@ -378,6 +456,28 @@ public class GamePanel extends JPanel implements MouseListener{
         if (e.getSource() == endButtonLabel) {
             totalScore = 0;
             trackerBar.setScorePercentage((double) totalScore/16800);
+            try {
+                double percentage = (double) totalScore / 16800;
+                if (percentage >= 0.95) {
+                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_5.png"));
+                } else if (percentage >= 0.75) {
+                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_4.png"));
+                } else if (percentage >= 0.5) {
+                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_3.png"));
+                    biggerRobot = true;
+                } else if (percentage >= 0.25) {
+                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_2.png"));
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } 
+            revalidate();
+            repaint();
+
+            System.out.println("rel Y of Robot: " + (initialRobotY - robotY) + " Max Y of robot: " + frameDimension.getHeight()/2.40327868852);
+            if ((trackerBar.getScoreTrackerHeight() >= robotMidHeight) && ((initialRobotY - robotY) <= frameDimension.getHeight()/2.40327868852)){
+                setRobotPosition(robotX, initialRobotY - trackerBar.getScoreTrackerHeight() + robotMidHeight);
+            }
             scoreTracker.setText("Score: " + Integer.toString(totalScore));
             repaint();
             cardLayout.show(cardPanel, "Home Page");

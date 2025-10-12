@@ -8,13 +8,17 @@ import java.awt.*;
 public class ScoreTrackerBar extends JPanel {
 
     private double scorePercentage = 1.0; 
-    
+    private int fillHeight = 0;
     private Color fillColor = Color.YELLOW;
 
     public ScoreTrackerBar(Dimension preferredSize, Border border) {
         setPreferredSize(preferredSize);
         setOpaque(false); 
         setBorder(border); 
+    }
+
+    public int getScoreTrackerHeight() {
+        return fillHeight;
     }
 
     public void setScorePercentage(double percentage) {
@@ -28,7 +32,7 @@ public class ScoreTrackerBar extends JPanel {
 
         int width = getWidth();
         int height = getHeight();
-        int fillHeight = (int) (height * scorePercentage);
+        fillHeight = (int) (height * scorePercentage);
         int startY = height - fillHeight; 
         Graphics2D g2d = (Graphics2D) g; 
 
