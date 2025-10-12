@@ -31,6 +31,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
+import up.tac.Resource.ResourceManager;
+
 
 public class QuestionPanel extends JPanel implements MouseListener{
     private JPanel cardPanel;
@@ -46,26 +48,26 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private Dimension frameDimension;
     private javax.swing.Timer countdownTimer; 
     private int timeRemaining;
+	private ResourceManager resourceManager;
+	private ImageIcon backButton, backButtonClicked;
+	private JLabel backButtonLabel;
 
-    public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension){
+    public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.frameDimension = frameDimension;
+        this.resourceManager = resourceManager;
         
         bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
 
         this.setLayout(new BorderLayout());
 
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Regular.ttf"));
-            customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
-            boldCustomFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/Cousine-Bold.ttf"));
-            boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
-            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/files/AnonymousPro-Bold.ttf"));
-            titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+        customFont = resourceManager.getCousineRegular();
+        customFont = customFont.deriveFont(Font.PLAIN, (int) frameDimension.getHeight()/25);
+        boldCustomFont = resourceManager.getCousineBold();
+        boldCustomFont = boldCustomFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25);
+        titleFont = resourceManager.getAnonymousProBold();
+        titleFont = titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/10);
 
         setUpperPanel();
         setLowerPanel();
@@ -91,6 +93,10 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choice2.setIcon(choiceButton);
         choice3.setIcon(choiceButton);
         choice4.setIcon(choiceButton);
+        choice1.addMouseListener(this);
+        choice2.addMouseListener(this);
+        choice3.addMouseListener(this);
+        choice4.addMouseListener(this);
     }
 
     private void setUpperPanel() {
@@ -110,19 +116,19 @@ public class QuestionPanel extends JPanel implements MouseListener{
         timer.setFont(boldCustomFont);
 
 
-        exitButton = new ImageIcon(getClass().getResource("/files/exitButton.jpg"));
+        exitButton = resourceManager.getImageIcon("Exit Button");
         Image exitButtonResized = exitButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButton = new ImageIcon(exitButtonResized);
 
-        minimizeButton = new ImageIcon(getClass().getResource("/files/minimizeButton.jpg"));
+        minimizeButton = resourceManager.getImageIcon("Minimize Button");
         Image minimizeButtonResized = minimizeButton.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButton = new ImageIcon(minimizeButtonResized);
 
-        exitButtonClicked = new ImageIcon(getClass().getResource("/files/exitButton_clicked.jpg"));
+        exitButtonClicked = resourceManager.getImageIcon("Exit Button Clicked");
         Image exitButtonClickedResized = exitButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         exitButtonClicked = new ImageIcon(exitButtonClickedResized);
 
-        minimizeButtonClicked = new ImageIcon(getClass().getResource("/files/minimizeButton_clicked.jpg"));
+        minimizeButtonClicked = resourceManager.getImageIcon("Minimize Button Clicked");
         Image minimizeButtonClickedResized = minimizeButtonClicked.getImage().getScaledInstance((int) frameDimension.getWidth()/25, (int) frameDimension.getWidth()/25, Image.SCALE_DEFAULT);
         minimizeButtonClicked = new ImageIcon(minimizeButtonClickedResized);
 
@@ -170,6 +176,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         tempBackLabel.setFont(titleFont.deriveFont(Font.BOLD, (int) frameDimension.getHeight()/25));
         tempBackLabel.setForeground(Color.GRAY);
 
+        // TODO: refactor all dis shitt to use resource manager
         ImageIcon questionNormalIcon = new ImageIcon(getClass().getResource("/files/questionIcon.png"));
         Image questionNormalIconResized = questionNormalIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/10), (int) (frameDimension.getHeight()/10), Image.SCALE_DEFAULT);
         
@@ -198,12 +205,22 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choiceWrongIcon = new ImageIcon(choiceWrongIconResized);
         choiceWrongButton = new ImageIcon(choiceWrongIconResized); // note to myself, use this for red -- aliba
 
+        backButton = new ImageIcon(getClass().getResource("/files/endButton.jpg"));
+        Image endButtonImageResized = backButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_DEFAULT);
+        backButton = new ImageIcon(endButtonImageResized);
+
+        backButtonClicked = new ImageIcon(getClass().getResource("/files/endButton_clicked.jpg"));
+        Image endButtonClickedImageResized = backButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_AREA_AVERAGING);
+        backButtonClicked = new ImageIcon(endButtonClickedImageResized);
+
+        backButtonLabel = new JLabel(backButtonClicked);
         // I GOT SUPER lazy here so here's some AI SLOPPPPPPPPPPPPPPP
         // ...
         // Image questionLabelNormalIconResized is available here
         // ...
 
         JTextArea questionArea = new JTextArea();
+        questionArea.setEditable(false);
         questionArea.setText("The fitness number, f(n), is the cost associated with a node in the A* algorithm. It is calculated as the sum of g(n) (the cost spent reaching the node from the start) and h(n) (the estimated cost of the cheapest path from the node to the goal). Therefore, f(n) = g(n) + h(n).");
 
         // ⭐️ REMOVE the hardcoded setPreferredSize
@@ -328,11 +345,15 @@ public class QuestionPanel extends JPanel implements MouseListener{
         // --- 3. Header/Back Label (Row 2) ---
         gbc.gridx = 0;
         gbc.gridy = 2; // Move to the third row
-        gbc.gridwidth = 4; // Span all 4 columns
+        gbc.gridwidth = 3; // Span all 4 columns
         gbc.insets = new Insets((int) (frameDimension.getHeight()/45), 0, (int) (frameDimension.getHeight()/30), 0);; // Give this row the remaining 50% of available vertical space
         gbc.anchor = GridBagConstraints.NORTH; // Anchor it to the top of its cell
 
         lowerPanel.add(tempBackLabel, gbc);
+
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.CENTER; // Anchor it to the top of its cell
+        lowerPanel.add(backButtonLabel, gbc);
     }
 
     public void setRemainingTime(int timeRemaining) {
@@ -381,7 +402,15 @@ public class QuestionPanel extends JPanel implements MouseListener{
     }
 
     private void disableChoiceButtons() {
-        // TODO: disable all choice buttons here
+        choice1.removeMouseListener(this);
+        choice2.removeMouseListener(this);
+        choice3.removeMouseListener(this);
+        choice4.removeMouseListener(this);
+    }
+
+    private void enableBackButton() {
+        backButtonLabel.addMouseListener(this);
+        backButtonLabel.setIcon(backButton);
     }
 
     private void processAnswer(JLabel userChoice) {
@@ -394,6 +423,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
             AudioPlayer.play("/files/SFX_wrong_answer.wav", false);
         }
         disableChoiceButtons();
+        enableBackButton();
     }
 
     @Override
@@ -431,7 +461,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
             System.out.println("Exit Button Pressed");
             System.exit(0);
         } 
-        else if(e.getSource() == tempBackLabel) {
+        else if(e.getSource() == backButtonLabel) {
             countdownTimer.stop();
             cardLayout.show(cardPanel, "Game Panel");
             AudioPlayer.stop();
