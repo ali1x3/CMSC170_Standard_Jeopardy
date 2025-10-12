@@ -311,9 +311,9 @@ public class GamePanel extends JPanel implements MouseListener{
 
         // TODO: make this load a different question for each button
         for(int i = 0; i < 48; i++) {
-            int row = i / 8;
-            int column = (i % 6) + 1;
-            int questionValue = (row + 1) * 100;
+            int row = (i / 8) + 1;
+            int column = (i % 8) + 1;
+            int questionValue = (row) * 100;
             QuestionButton tempButton = new QuestionButton(questionValue, row, column, frameDimension);
             tempButton.setText(String.valueOf(questionValue));
             tempButton.setHorizontalTextPosition(JButton.CENTER);
@@ -418,6 +418,8 @@ public class GamePanel extends JPanel implements MouseListener{
         else if (e.getSource() instanceof QuestionButton) {
             QuestionButton clickedQuestionbutton = (QuestionButton) e.getSource();
             totalScore += clickedQuestionbutton.getQuestionValue();
+            System.out.println("row: " + clickedQuestionbutton.getRow() + " col: " + clickedQuestionbutton.getColumn());
+            System.out.println("value: " + clickedQuestionbutton.getQuestionValue());
             trackerBar.setScorePercentage((double) totalScore/16800);
 
             try {
