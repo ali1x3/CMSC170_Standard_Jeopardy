@@ -104,6 +104,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choice3.addMouseListener(this);
         choice4.addMouseListener(this);
         backButtonLabel.setIcon(backButtonClicked);
+        backButtonLabel.removeMouseListener(this);
     }
 
     private void setUpperPanel() {
