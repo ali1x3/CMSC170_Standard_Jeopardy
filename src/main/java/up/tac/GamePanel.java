@@ -301,7 +301,8 @@ public class GamePanel extends JPanel implements MouseListener{
         leftPanel.setLayout(new GridLayout(7, 8, 3, 3));
 
         for(int i = 0; i < 8; i++) {
-            JLabel category = new JLabel("CATEGORY", JLabel.CENTER);
+            String label = "Module " + (i + 1);
+            JLabel category = new JLabel(label, JLabel.CENTER);
             category.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/43.1)));
             leftPanel.add(category);
         }
@@ -312,6 +313,7 @@ public class GamePanel extends JPanel implements MouseListener{
             int row = (i / 8) + 1;
             int column = (i % 8) + 1;
             int questionValue = (row) * 100;
+            
             QuestionButton tempButton = new QuestionButton(questionValue, row, column, frameDimension, resourceManager);
             tempButton.setText(String.valueOf(questionValue));
             tempButton.setHorizontalTextPosition(JButton.CENTER);
@@ -322,6 +324,14 @@ public class GamePanel extends JPanel implements MouseListener{
             tempButton.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/43.1)));
             leftPanel.add(tempButton);
             tempButton.addMouseListener(this);
+
+
+            //disable modules 5 and above
+            if (column > 4) {
+                tempButton.setEnabled(false);
+                tempButton.setDisabledIcon(tempButton.getPressedIcon());
+                tempButton.setText(""); 
+            }
         }
 
 
