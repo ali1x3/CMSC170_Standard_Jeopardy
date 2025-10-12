@@ -524,17 +524,22 @@ public class QuestionPanel extends JPanel implements MouseListener{
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == backButtonLabel) {
+            // only respond if back button is enabled
+            if (!backEnabled) return;
             backButtonLabel.setIcon(backButtonClicked);
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
         } 
 
-        if (!(e.getSource() == backButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == backButtonLabel || e.getSource() == title)) {
+        if (!(e.getSource() == minimizeButtonLabel || e.getSource() == title)) {
             AudioPlayer.play("/files/SFX_button_1.wav", false);
         } 
         else if (e.getSource() != title) {
             AudioPlayer.play("/files/SFX_button_2.wav", false);
+        } else if (e.getSource() == backButtonLabel) {
+            if (!backEnabled) return;
+            AudioPlayer.play("/files/SFX_button_1.wav", false);
         }
 
     }
@@ -542,6 +547,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == backButtonLabel) {
+            if (!backEnabled) return;
             backButtonLabel.setIcon(backButton);
         } 
         else if (e.getSource() == minimizeButtonLabel) {
