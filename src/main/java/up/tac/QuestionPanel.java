@@ -383,7 +383,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         // --- 3. Header/Back Label (Row 2) ---
         gbc.gridx = 0;
         gbc.gridy = 2; // Move to the third row
-        gbc.gridwidth = 3; // Span all 4 columns
+        gbc.gridwidth = 4; // Span all 4 columns
         gbc.insets = new Insets((int) (frameDimension.getHeight()/45), 0, (int) (frameDimension.getHeight()/30), 0);; // Give this row the remaining 50% of available vertical space
         gbc.anchor = GridBagConstraints.CENTER; // Anchor it to the top of its cell
 
@@ -396,7 +396,15 @@ public class QuestionPanel extends JPanel implements MouseListener{
     }
 
     public void startTimer() {
-        tempBackLabel.setText("HEURISTIC ALGORITHMS FOR 200");
+        String module = clickedQuestionButton.getModule();
+        module = module.replace("_", " ");
+        module = module.replace("m", "M");
+        String classificaion = clickedQuestionButton.getClassifcation();
+        classificaion = classificaion.replace("/", " ");
+        classificaion = classificaion.replace(".csv", "");
+        classificaion = classificaion.substring(0, 1).toUpperCase() + classificaion.substring(1);
+        String value = "" + clickedQuestionButton.getQuestionValue();
+        tempBackLabel.setText(module + classificaion + " for " + value + " points");
         timer.setText("Timer: " + timeRemaining);
 
         // this timer is so ass but it works --aliba
@@ -415,6 +423,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
                 handleTimeUp(); 
                 showCorrectAnswer();
                 disableChoiceButtons();
+                gamePanel = (GamePanel) cardPanel.getComponent(3); 
+                gamePanel.disableClickedButton();
                 cardLayout.show(cardPanel, "Game Panel");
                 AudioPlayer.playBGM("/files/BGM_game_panel.wav");
             }

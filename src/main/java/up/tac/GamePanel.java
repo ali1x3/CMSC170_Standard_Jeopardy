@@ -458,7 +458,7 @@ public class GamePanel extends JPanel implements MouseListener{
             AudioPlayer.playBGM("/files/BGM_question_panel.wav");
 
             questionPanel.initializePanel(clickedQuestionbutton);
-            questionPanel.setRemainingTime(10);
+            questionPanel.setRemainingTime(30);
             questionPanel.startTimer();
         }
     }

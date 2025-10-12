@@ -79,11 +79,18 @@ public class QuestionButton extends JButton {
 		return questionValue;
 	}
 
-	public int getRow() {
-		return row;
+	public String getModule() {
+		return module;
 	}
 
-	public int getColumn() {
-		return column;
+	public String getClassifcation() {
+		return classification;
 	}
+
+    public int getRow() {
+        return row;
+    }
+    public int getColumn() {
+        return column;
+    }
 }
