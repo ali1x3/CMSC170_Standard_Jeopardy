@@ -425,6 +425,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
             if (window instanceof JFrame) {
             ((JFrame) window).setState(JFrame.ICONIFIED);
             }
+            AudioPlayer.stop();
         }
         else if (e.getSource() == exitButtonLabel) {
             System.out.println("Exit Button Pressed");
@@ -433,6 +434,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
         else if(e.getSource() == tempBackLabel) {
             countdownTimer.stop();
             cardLayout.show(cardPanel, "Game Panel");
+            AudioPlayer.stop();
         }
         
     } 
