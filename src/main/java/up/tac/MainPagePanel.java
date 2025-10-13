@@ -234,6 +234,7 @@ public class MainPagePanel extends JPanel implements MouseListener{
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == startButtonLabel) {
+            GamePanel.resetGame();
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Panel");
             AudioPlayer.play("/files/AI_voice_start_game.wav", true);
