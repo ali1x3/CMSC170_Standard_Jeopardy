@@ -174,6 +174,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private void initializeChoices() {
         choices = clickedQuestionButton.getJeopardyQuestion().getOptions();
         correctAnswer = clickedQuestionButton.getJeopardyQuestion().getCorrectAnswer();
+        System.out.println(correctAnswer);
 
         JLabel[] choiceLabels = {choice1, choice2, choice3, choice4};
 
