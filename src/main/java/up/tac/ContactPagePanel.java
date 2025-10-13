@@ -91,12 +91,12 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         homePageButton.setFont(customFont);
         homePageButton.addMouseListener(this);
 
-        contentPageButton = new JLabel("Content");
+        contentPageButton = new JLabel("Rules");
         contentPageButton.setForeground(java.awt.Color.black);
         contentPageButton.setFont(customFont);
         contentPageButton.addMouseListener(this);
 
-        contactPageButton = new JLabel("Contact");
+        contactPageButton = new JLabel("About");
         contactPageButton.setForeground(java.awt.Color.black);
         contactPageButton.setFont(boldCustomFont);
         contactPageButton.addMouseListener(this);

@@ -466,6 +466,7 @@ public class GamePanel extends JPanel implements MouseListener{
             cardLayout.show(cardPanel, "Question Panel");
             AudioPlayer.playBGM("/files/BGM_question_panel.wav");
 
+            questionPanel.setRobotIMG(robotImage, biggerRobot);
             questionPanel.initializePanel(clickedQuestionbutton);
             questionPanel.setRemainingTime(30);
             questionPanel.startTimer();

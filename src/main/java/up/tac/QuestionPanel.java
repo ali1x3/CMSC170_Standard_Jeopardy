@@ -16,6 +16,7 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.sound.sampled.AudioInputStream;
@@ -56,6 +57,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private String question, correctAnswer;
     private String[] choices;
 	private JTextArea questionArea;
+    private BufferedImage robotImage, questionIcon;
+    private boolean biggerRobot;
 
     public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
@@ -64,7 +67,12 @@ public class QuestionPanel extends JPanel implements MouseListener{
         this.resourceManager = resourceManager;
         
         bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
-
+        try {
+            questionIcon = javax.imageio.ImageIO.read(getClass().getResource("/files/questionPanel_icon.png"));
+        } catch (IOException e) {
+            questionIcon = null;
+            System.err.println("Failed to load questionPanel_icon.png: " + e.getMessage());
+        }
         this.setLayout(new BorderLayout());
 
         customFont = resourceManager.getCousineRegular();
@@ -82,6 +90,10 @@ public class QuestionPanel extends JPanel implements MouseListener{
         add(lowerPanel, BorderLayout.CENTER);
     }
 
+    public void setRobotIMG(BufferedImage robotImage, boolean biggerRobot){
+        this.biggerRobot = biggerRobot;
+        this.robotImage = robotImage;
+    }
     private void getGamePanel() {
     }
 
@@ -499,6 +511,36 @@ public class QuestionPanel extends JPanel implements MouseListener{
         g2d.drawImage(bg_image, 0, 0, getWidth(), getHeight(), this);
 
         
+    }
+    
+    @Override
+    public void paint(Graphics g) {
+        // paint the component and its children first
+        super.paint(g);
+
+        if (robotImage != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            int drawH, drawW;
+
+            if (!biggerRobot) {
+                drawH = (int) frameDimension.getHeight()/11; 
+                drawW = (int) ((double) robotImage.getWidth() * drawH / robotImage.getHeight());
+            } else {
+                drawH = (int) frameDimension.getHeight()/7; 
+                drawW = (int) ((double) robotImage.getWidth() * drawH / robotImage.getHeight());
+            }
+            
+
+
+            g2d.drawImage(robotImage, 40, 120, drawW, drawH, this);
+            g2d.dispose();
+        } else {
+            System.out.println(" Robot Image Null");
+        }
     }
 
     @Override
