@@ -663,7 +663,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
             
 
 
-            g2d.drawImage(robotImage, 40, 120, drawW, drawH, this);
+            g2d.drawImage(robotImage, (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/6.10833333333), drawW, drawH, this);
             g2d.dispose();
         } else {
             System.out.println(" Robot Image Null");

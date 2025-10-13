@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 public class MainFrame extends JFrame{
     private final ResourceManager resourceManager;
-    final int frameWidth = 1100, frameHeight = 733;
+    final int frameWidth = 1300, frameHeight = 867;
 
     public MainFrame() {
         setup();
