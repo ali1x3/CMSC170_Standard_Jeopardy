@@ -6,11 +6,10 @@
 
   <groupId>up.tac</groupId>
   <artifactId>standard-jeopardy</artifactId>
-  <version>0.0.1-DEV</version>
+  <version>0.7.3-DEV</version>
 
   <name>standard-jeopardy</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <url>https://github.com/ali1x3/CMSC170_Standard_Jeopardy</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
