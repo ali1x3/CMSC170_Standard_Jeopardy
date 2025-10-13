@@ -70,6 +70,12 @@ public class ResourceManager {
             "Contact Panel BG",
             new ImageIcon(getURLFromFiles("contactPage_bg.jpg"))
         );
+
+        imageIconHashMap.put(
+            "Description Panel BG",
+            new ImageIcon(getURLFromFiles("descriptionPage_bg.jpg"))
+        );
+
         imageIconHashMap.put(
             "Content Panel BG",
             new ImageIcon(getURLFromFiles("contentPage_bg.jpg"))
