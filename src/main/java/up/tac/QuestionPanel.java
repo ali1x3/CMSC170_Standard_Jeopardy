@@ -608,13 +608,15 @@ public class QuestionPanel extends JPanel implements MouseListener{
             showCorrectAnswer();
             AudioPlayer.play("/files/SFX_correct_answer.wav", false);
             gamePanel.onCorrectAnswer();
+            gamePanel.clickedButtonCorrect();
         }
         else {
             showCorrectAndWrongAnswer(userChoice);
             AudioPlayer.play("/files/SFX_wrong_answer.wav", false);
+            gamePanel.clickedButtonWrong();
         }
 
-        gamePanel.disableClickedButton(); 
+        // gamePanel.disableClickedButton(); 
 
         disableChoiceButtons();
         enableBackButton();

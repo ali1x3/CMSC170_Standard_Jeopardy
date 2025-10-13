@@ -599,4 +599,19 @@ public class GamePanel extends JPanel implements MouseListener{
             clickedQuestionbutton.setText(""); 
         }
     }
+    public void clickedButtonCorrect() {
+        if (clickedQuestionbutton != null) {
+            clickedQuestionbutton.setEnabled(false);
+            clickedQuestionbutton.setDisabledIcon(resourceManager.getImageIcon("Game Button Correct"));
+            clickedQuestionbutton.setText(""); 
+        }
+    }
+
+    public void clickedButtonWrong() {
+        if (clickedQuestionbutton != null) {
+            clickedQuestionbutton.setEnabled(false);
+            clickedQuestionbutton.setDisabledIcon(resourceManager.getImageIcon("Game Button Wrong"));
+            clickedQuestionbutton.setText(""); 
+        }
+    }
 }

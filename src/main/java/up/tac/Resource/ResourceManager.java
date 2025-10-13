@@ -126,6 +126,14 @@ public class ResourceManager {
             "Back Button Clicked",
             new ImageIcon(getURLFromFiles("backButton_Clicked.jpg"))
         );
+        imageIconHashMap.put(
+            "Game Button Wrong",
+            new ImageIcon(getURLFromFiles("gameButtonWrong_bg.png"))
+        );
+        imageIconHashMap.put(
+            "Game Button Correct",
+            new ImageIcon(getURLFromFiles("gameButtonCorrect_bg.png"))
+        );
         IO.println("Image Icons loaded successfully!");
     }
 
