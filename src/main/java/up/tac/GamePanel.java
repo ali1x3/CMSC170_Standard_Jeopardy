@@ -3,6 +3,7 @@ package up.tac;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -36,6 +37,7 @@ public class GamePanel extends JPanel implements MouseListener{
     private QuestionPanel questionPanel;
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
+    private static JPanel leftPanel;
     private JLabel title, exitButtonLabel, minimizeButtonLabel, endButtonLabel, scoreTracker;
     private Font customFont = new Font("Arial", Font.PLAIN, 21);
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
@@ -294,7 +296,7 @@ public class GamePanel extends JPanel implements MouseListener{
         ImageIcon rolloverIcon = new ImageIcon(getClass().getResource("/files/gameButtonClicked_bg.png"));
         Image rolloverIconResized = rolloverIcon.getImage().getScaledInstance((int) (frameDimension.getWidth()/14.66), (int) (frameDimension.getHeight()/14.66), Image.SCALE_DEFAULT);
 
-        JPanel leftPanel = new JPanel();
+        leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension((int) (frameDimension.getWidth()/1.467), (int) (frameDimension.getHeight()/1.5)));
         leftPanel.setBackground(new Color(0xd1d3d4));
         leftPanel.setBorder(combinedBorder);
@@ -355,6 +357,19 @@ public class GamePanel extends JPanel implements MouseListener{
         gbc.insets = new Insets((int) (frameDimension.getHeight()/73.3), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/18.325), (int) (frameDimension.getWidth()/110));
         lowerPanel.add(fillerPanel);
 
+    }
+
+    public static void resetGame() {
+        for(Component c : leftPanel.getComponents()) {
+            if (c instanceof QuestionButton b) {
+                if (b.getColumn() > 4) {
+                    b.setEnabled(false);
+                    continue;
+                }
+                b.setText(String.valueOf(b.getQuestionValue()));
+                b.setEnabled(true);
+            }
+        }
     }
 
     @Override
