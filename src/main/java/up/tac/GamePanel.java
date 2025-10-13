@@ -312,7 +312,7 @@ public class GamePanel extends JPanel implements MouseListener{
 
         // TODO: make this load a different question for each button
         for(int i = 0; i < 48; i++) {
-            int row = (i / 8) + 1;
+            int row = (6 - (i / 8));
             int column = (i % 8) + 1;
             int questionValue = (7 - row) * 100;
             
