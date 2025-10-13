@@ -55,7 +55,9 @@ public class MainFrame extends JFrame{
         setTitle("AI Jeopardy");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setUndecorated(false);
-        setBounds(100, 50, frameWidth, frameHeight);
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = toolkit.getScreenSize();
+        setBounds((int) ((screenSize.getWidth() - frameWidth) / 2), (int) ((screenSize.getHeight() - frameHeight) / 2), frameWidth, frameHeight);
         setResizable(false);
     }
 
