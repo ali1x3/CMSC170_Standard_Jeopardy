@@ -314,7 +314,7 @@ public class GamePanel extends JPanel implements MouseListener{
         for(int i = 0; i < 48; i++) {
             int row = (i / 8) + 1;
             int column = (i % 8) + 1;
-            int questionValue = (row) * 100;
+            int questionValue = (7 - row) * 100;
             
             QuestionButton tempButton = new QuestionButton(questionValue, row, column, frameDimension, resourceManager);
             tempButton.setText(String.valueOf(questionValue));
