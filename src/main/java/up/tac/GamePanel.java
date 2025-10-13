@@ -178,7 +178,7 @@ public class GamePanel extends JPanel implements MouseListener{
 
         trackerBar = new ScoreTrackerBar(new Dimension((int) (frameDimension.getWidth()/15), (int) (frameDimension.getHeight()/2)), border);
 
-        trackerBar.setScorePercentage(totalScore/16800);
+        trackerBar.setScorePercentage(totalScore/8400);
 
         scoreTracker = new JLabel("Score: " + Integer.toString(totalScore));
         scoreTracker.setFont(boldCustomFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/40)));
@@ -477,10 +477,10 @@ public class GamePanel extends JPanel implements MouseListener{
         totalScore += clickedQuestionbutton.getQuestionValue();
         System.out.println("row: " + clickedQuestionbutton.getRow() + " col: " + clickedQuestionbutton.getColumn());
         System.out.println("value: " + clickedQuestionbutton.getQuestionValue());
-        trackerBar.setScorePercentage((double) totalScore/16800);
+        trackerBar.setScorePercentage((double) totalScore/8400);
 
         try {
-            double percentage = (double) totalScore / 16800;
+            double percentage = (double) totalScore / 8400;
             if (percentage >= 0.95) {
                 robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_5.png"));
             } else if (percentage >= 0.75) {
@@ -510,9 +510,9 @@ public class GamePanel extends JPanel implements MouseListener{
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == endButtonLabel) {
             totalScore = 0;
-            trackerBar.setScorePercentage((double) totalScore/16800);
+            trackerBar.setScorePercentage((double) totalScore/8400);
             try {
-                double percentage = (double) totalScore / 16800;
+                double percentage = (double) totalScore / 8400;
                 if (percentage >= 0.95) {
                     robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_5.png"));
                 } else if (percentage >= 0.75) {
