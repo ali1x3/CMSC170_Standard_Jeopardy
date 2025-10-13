@@ -67,12 +67,18 @@ public class QuestionPanel extends JPanel implements MouseListener{
         this.resourceManager = resourceManager;
         
         bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
-        try {
-            questionIcon = javax.imageio.ImageIO.read(getClass().getResource("/files/questionPanel_icon.png"));
-        } catch (IOException e) {
-            questionIcon = null;
-            System.err.println("Failed to load questionPanel_icon.png: " + e.getMessage());
-        }
+        // java.net.URL questionIconUrl = getClass().getResource("/files/questionPanel_icon.png");
+        // if (questionIconUrl != null) {
+        //     try {
+        //         questionIcon = javax.imageio.ImageIO.read(questionIconUrl);
+        //     } catch (IOException e) {
+        //         questionIcon = null;
+        //         System.err.println("Failed to read questionPanel_icon.png: " + e.getMessage());
+        //     }
+        // } else {
+        //     questionIcon = null;
+        //     System.err.println("Resource not found: /files/questionPanel_icon.png");
+        // }
         this.setLayout(new BorderLayout());
 
         customFont = resourceManager.getCousineRegular();
@@ -105,7 +111,63 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
     private void initializeQuestion() {
         question = clickedQuestionButton.getJeopardyQuestion().getQuestion();
+        // compute available area from the same math used when creating the questionArea
+        int preferredW = (int) (frameDimension.getWidth()/1.15) - (int)(frameDimension.getWidth()/210);
+        int preferredH = (int) (frameDimension.getHeight()/6.5) - (int)(frameDimension.getHeight()/40);
+        int horizPadding = (int)(frameDimension.getWidth()/40);
+        int vertTop = (int)(frameDimension.getHeight()/60);
+        int vertBottom = (int)(frameDimension.getHeight()/35);
+        int availW = Math.max(50, preferredW - horizPadding * 2);
+        int availH = Math.max(30, preferredH - (vertTop + vertBottom));
+
+        int chosenSize = computeBestFontSizeForWrappedText(question, titleFont, availW, availH);
+        questionArea.setFont(titleFont.deriveFont(Font.BOLD, chosenSize));
         questionArea.setText(question);
+    }
+
+    /**
+     * Pick the largest font size (between min and start) such that the wrapped text fits within maxWidth/maxHeight.
+     */
+    private int computeBestFontSizeForWrappedText(String text, Font baseFont, int maxWidth, int maxHeight) {
+        if (text == null) text = "";
+        int startSize = (int) (frameDimension.getHeight() / 40);
+        int minSize = 10;
+
+        java.awt.image.BufferedImage bi = new java.awt.image.BufferedImage(1,1, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = bi.createGraphics();
+
+        // Try sizes from start down to min
+        for (int size = startSize; size >= minSize; size--) {
+            Font f = baseFont.deriveFont(Font.BOLD, size);
+            g2.setFont(f);
+            java.awt.FontMetrics fm = g2.getFontMetrics(f);
+
+            // estimate wrapped lines by greedy word-wrapping
+            String[] words = text.split("\\s+");
+            int lines = 1;
+            int curW = 0;
+            for (String w : words) {
+                if (w.length() == 0) continue;
+                int wWidth = fm.stringWidth(w + " ");
+                if (curW + wWidth > maxWidth) {
+                    lines++;
+                    curW = wWidth;
+                    if (wWidth > maxWidth) { // single word too long -> will exceed, keep reducing size
+                        curW = wWidth; // still count it
+                    }
+                } else {
+                    curW += wWidth;
+                }
+            }
+
+            int totalHeight = lines * fm.getHeight();
+            if (totalHeight <= maxHeight) {
+                g2.dispose();
+                return size;
+            }
+        }
+        g2.dispose();
+        return minSize;
     }
 
 
@@ -115,38 +177,103 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
         JLabel[] choiceLabels = {choice1, choice2, choice3, choice4};
 
-        int imageWidth = choiceButton.getIconWidth();
-        int horizontalPadding = 25; 
-        int textWidth = imageWidth - (horizontalPadding * 2);
+    int imageWidth = choiceButton.getIconWidth();
+    int horizontalPadding = (int) (frameDimension.getWidth() / 80.0);
+    // use a reduced fraction of the image width so text wraps inside the button nicely
+    int textWidth = Math.max(50, (int) (imageWidth * 0.78) - (horizontalPadding * 2));
+
+        // find longest plain-text choice
+        String longest = "";
+        if (choices != null) {
+            for (String s : choices) if (s != null && s.length() > longest.length()) longest = s;
+        }
+
+        if (longest == null) longest = "";
+
+        // start from a reasonable font size and decrease until all choices fit both width and height
+        int startSize = (int) (frameDimension.getHeight() / 40);
+        int minSize = 10;
+        int chosenSize = Math.max(minSize, startSize);
+
+        int iconHeight = choiceButton.getIconHeight();
+        int verticalPadding = Math.max(4, (int) (frameDimension.getHeight() / 80.0));
+        int textAvailHeight = Math.max(24, iconHeight - (verticalPadding * 2));
+
+        java.awt.image.BufferedImage bi = new java.awt.image.BufferedImage(1,1, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = bi.createGraphics();
+
+        outer: for (int size = startSize; size >= minSize; size--) {
+            java.awt.Font testFont = titleFont.deriveFont(Font.BOLD, size);
+            g2.setFont(testFont);
+            java.awt.FontMetrics fm = g2.getFontMetrics(testFont);
+
+            // check every choice (use empty string if missing)
+            for (int i = 0; i < choiceLabels.length; i++) {
+                String s = (choices != null && i < choices.length && choices[i] != null) ? choices[i] : "";
+                // greedy wrap to count lines
+                String[] words = s.split("\\s+");
+                int lines = 1;
+                int curW = 0;
+                for (String w : words) {
+                    if (w.length() == 0) continue;
+                    int wWidth = fm.stringWidth(w + " ");
+                    if (curW + wWidth > textWidth) {
+                        lines++;
+                        curW = wWidth;
+                        if (wWidth > textWidth) {
+                            // single word wider than allowed, treat as overflow (will try smaller size)
+                            // but continue counting
+                        }
+                    } else {
+                        curW += wWidth;
+                    }
+                }
+
+                int totalHeight = lines * fm.getHeight();
+                if (totalHeight > textAvailHeight) {
+                    // this size is too big for this choice, try smaller size
+                    continue outer;
+                }
+            }
+
+            // all choices fit at this size
+            chosenSize = size;
+            break;
+        }
+        g2.dispose();
+
+        java.awt.Font finalChoiceFont = titleFont.deriveFont(Font.BOLD, chosenSize);
 
         this.correctChoice = null;
         for (int i = 0; i < choiceLabels.length; i++) {
-            if (i < choices.length) {
-                String choiceText = choices[i];
-                String formattedText = "<html><body style='width: " + textWidth + "px; text-align: center; padding: 10px;'>"
-                                    + choiceText
-                                    + "</body></html>";
+            JLabel lbl = choiceLabels[i];
+            String choiceText = (choices != null && i < choices.length) ? choices[i] : "";
 
-                choiceLabels[i].setText(formattedText);
-                if (choiceText.equals(correctAnswer)) {
-                    this.correctChoice = choiceLabels[i];
-                }
+            // keep using HTML to wrap multi-line, but apply measured font for sizing
+            String formattedText = "<html><body style='width: " + textWidth + "px; text-align: center;'>" +
+                                    (choiceText == null ? "" : escapeHtml(choiceText)) +
+                                   "</body></html>";
+            lbl.setText(formattedText);
+            lbl.setFont(finalChoiceFont);
+
+            if (choiceText != null && choiceText.equals(correctAnswer)) {
+                this.correctChoice = lbl;
             }
+            lbl.setIcon(choiceButton);
+            lbl.removeMouseListener(this); // ensure no duplicate
+            lbl.addMouseListener(this);
         }
-        
-        choice1.setIcon(choiceButton);
-        choice2.setIcon(choiceButton);
-        choice3.setIcon(choiceButton);
-        choice4.setIcon(choiceButton);
-        choice1.addMouseListener(this);
-        choice2.addMouseListener(this);
-        choice3.addMouseListener(this);
-        choice4.addMouseListener(this);
 
         // disable the back button until an answer is processed
         backButtonLabel.setIcon(backButtonClicked);
         backEnabled = false;
         revalidate();
+    }
+
+    // minimal HTML-escaping for content inserted into the label HTML
+    private static String escapeHtml(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
     }
 
     private void setUpperPanel() {
