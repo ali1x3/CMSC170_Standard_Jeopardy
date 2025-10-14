@@ -552,8 +552,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
                     timer.setText("Timer: 0" + timeRemaining);
                 } 
                 else if (timeRemaining == 10) {
-                    AudioPlayer.play("/files/AI_voice_timer.wav", true);
                     timer.setText("Timer: " + timeRemaining);
+                    AudioPlayer.play("/files/AI_voice_timer.wav", true);
                 }
                 else {
                     timer.setText("Timer: " + timeRemaining);
@@ -565,7 +565,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
                 showCorrectAnswer();
                 disableChoiceButtons();
                 gamePanel = (GamePanel) cardPanel.getComponent(3); 
-                gamePanel.disableClickedButton();
+                gamePanel.clickedButtonWrong();
                 cardLayout.show(cardPanel, "Game Panel");
                 AudioPlayer.playBGM("/files/BGM_game_panel.wav");
             }
@@ -689,6 +689,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
             countdownTimer.stop();
             cardLayout.show(cardPanel, "Game Panel");
             AudioPlayer.stop();
+            AudioPlayer.playBGM("/files/BGM_game_panel.wav");
         }
         
     } 

@@ -16,16 +16,23 @@ import java.util.Random;
 public class ScoreBoardTest {
     @Test 
     public void checkReadAndWrite() {
-        HashMap<String, Integer> inputScores = new HashMap<>();
-        inputScores.put("Alice", 120);
+        Map<String, Integer> initial = ScoreBoard.loadScores();
+        Map<String, Integer> inputScores = new HashMap<>();
+        inputScores.put("bobby", 120);
         inputScores.put("Bob", 95);
 
-        inputScores.forEach((name, score) -> ScoreBoard.appendScore(name, score));
+
+        inputScores.forEach((name, score) -> {
+            initial.put(name, score);
+            ScoreBoard.appendScore(name, score);
+        });
 
         Map<String, Integer> scores = ScoreBoard.loadScores();
         scores.forEach((name, score) -> {
-            assertEquals("The input and outputs were not equal", score, inputScores.get(name));
+            assertEquals("The input and outputs were not equal", score, initial.get(name));
         });
+        
+        assertEquals("The sizes were not equal", initial.size(), initial.size());
     }
     
 }
