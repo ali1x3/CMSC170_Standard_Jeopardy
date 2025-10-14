@@ -26,7 +26,7 @@ public class AudioPlayer {
     private static float bgmVolume = 0.5f;
     private static float volume = 0.5f;
 
-    public static void play(String filePath) {
+    public static void play(String filePath, boolean isStoppable) {
         try{
             data = clipDataMap.computeIfAbsent(filePath, p -> {
                 try {
@@ -50,7 +50,6 @@ public class AudioPlayer {
             
             adjustVolume(clip, volume);
             clip.start();
-            playingClips.add(clip);
             clip.addLineListener(event -> {
                 if (event.getType() == LineEvent.Type.STOP) {
                     clip.close();
@@ -58,6 +57,10 @@ public class AudioPlayer {
                     System.out.println("clip removed");
                 }
             });
+
+            if (isStoppable) {
+                playingClips.add(clip);
+            }
 
         } catch (Exception ex) {
             System.out.println("Error with playing sound.");
@@ -99,9 +102,10 @@ public class AudioPlayer {
             ex.printStackTrace();
         }
     }
-    public static void stopAll() {
+    public static void stop() {
         for (Clip c : playingClips) {
             c.stop();
+            c.close();
         }
         playingClips.clear();
     }
