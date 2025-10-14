@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -19,10 +22,11 @@ public class AudioPlayer {
     record SoundData(AudioFormat format, byte[] pcm, int size) {}        
 
     private static AudioInputStream audioInputStream ;
-    private static ArrayList<Clip> playingClips = new ArrayList<>();
+    private static List<Clip> playingClips = Collections.synchronizedList(new ArrayList<>());
     private static Clip bgmClip;
     private static SoundData data;
     private static HashMap<String, SoundData> clipDataMap = new HashMap<>();
+    private static HashMap<String, Clip> clipMap = new HashMap<>();
     private static float bgmVolume = 0.5f;
     private static float volume = 0.5f;
 
@@ -50,17 +54,19 @@ public class AudioPlayer {
             
             adjustVolume(clip, volume);
             clip.start();
+            if (isStoppable) {
+                playingClips.add(clip);
+            }
             clip.addLineListener(event -> {
                 if (event.getType() == LineEvent.Type.STOP) {
                     clip.close();
-                    playingClips.remove(clip);
+                    if (playingClips.contains(clip)){
+                        playingClips.remove(clip);
+                    }
                     System.out.println("clip removed");
                 }
             });
 
-            if (isStoppable) {
-                playingClips.add(clip);
-            }
 
         } catch (Exception ex) {
             System.out.println("Error with playing sound.");
@@ -103,11 +109,12 @@ public class AudioPlayer {
         }
     }
     public static void stop() {
-        for (Clip c : playingClips) {
-            c.stop();
-            c.close();
+        synchronized (playingClips) {
+            for (Clip c : playingClips) {
+                c.stop();
+            }
+            playingClips.clear();
         }
-        playingClips.clear();
     }
 
     // these functions take a float between 0 and 1
