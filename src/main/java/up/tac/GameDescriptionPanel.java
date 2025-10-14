@@ -218,18 +218,15 @@ public class GameDescriptionPanel extends JPanel implements MouseListener{
             System.exit(0);
         }
         else if (e.getSource() == homePageButton) {
-            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Home Page");
-            AudioPlayer.play("/files/AI_voice_home.wav", true);
+            AudioPlayer.play("/files/AI_voice_home.wav");
         }
         else if (e.getSource() == contentPageButton) {
-            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Content Page");
-            AudioPlayer.play("/files/AI_voice_content.wav", true);
+            AudioPlayer.play("/files/AI_voice_content.wav");
         }else if (e.getSource() == contactPageButton) {
-            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Contact Page");
-            AudioPlayer.play("/files/AI_voice_contact.wav", true);
+            AudioPlayer.play("/files/AI_voice_contact.wav");
         }
     }
 
@@ -263,10 +260,10 @@ public class GameDescriptionPanel extends JPanel implements MouseListener{
         }
 
         if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton)) {
-            AudioPlayer.play("/files/SFX_button_1.wav", false);
+            AudioPlayer.play("/files/SFX_button_1.wav");
         } 
         else if (!(e.getSource() == title || e.getSource() == gamedescriptionButton)) {
-            AudioPlayer.play("/files/SFX_button_2.wav", false);
+            AudioPlayer.play("/files/SFX_button_2.wav");
         }
 
     }

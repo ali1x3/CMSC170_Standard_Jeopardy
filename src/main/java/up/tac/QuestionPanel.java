@@ -552,7 +552,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
                     timer.setText("Timer: 0" + timeRemaining);
                 } 
                 else if (timeRemaining == 10) {
-                    AudioPlayer.play("/files/AI_voice_timer.wav", true);
+                    AudioPlayer.play("/files/AI_voice_timer.wav");
                     timer.setText("Timer: " + timeRemaining);
                 }
                 else {
@@ -606,13 +606,13 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
         if (userChoice == correctChoice){
             showCorrectAnswer();
-            AudioPlayer.play("/files/SFX_correct_answer.wav", false);
+            AudioPlayer.play("/files/SFX_correct_answer.wav");
             gamePanel.onCorrectAnswer();
             gamePanel.clickedButtonCorrect();
         }
         else {
             showCorrectAndWrongAnswer(userChoice);
-            AudioPlayer.play("/files/SFX_wrong_answer.wav", false);
+            AudioPlayer.play("/files/SFX_wrong_answer.wav");
             gamePanel.clickedButtonWrong();
         }
 
@@ -681,14 +681,12 @@ public class QuestionPanel extends JPanel implements MouseListener{
             if (window instanceof JFrame) {
             ((JFrame) window).setState(JFrame.ICONIFIED);
             }
-            AudioPlayer.stop();
         }
         else if(e.getSource() == backButtonLabel) {
             // only respond if back button is enabled
             if (!backEnabled) return;
             countdownTimer.stop();
             cardLayout.show(cardPanel, "Game Panel");
-            AudioPlayer.stop();
         }
         
     } 
@@ -743,13 +741,13 @@ public class QuestionPanel extends JPanel implements MouseListener{
         } 
 
         if (!(e.getSource() == minimizeButtonLabel || e.getSource() == title)) {
-            AudioPlayer.play("/files/SFX_button_1.wav", false);
+            AudioPlayer.play("/files/SFX_button_1.wav");
         } 
         else if (e.getSource() != title) {
-            AudioPlayer.play("/files/SFX_button_2.wav", false);
+            AudioPlayer.play("/files/SFX_button_2.wav");
         } else if (e.getSource() == backButtonLabel) {
             if (!backEnabled) return;
-            AudioPlayer.play("/files/SFX_button_1.wav", false);
+            AudioPlayer.play("/files/SFX_button_1.wav");
         }
 
     }

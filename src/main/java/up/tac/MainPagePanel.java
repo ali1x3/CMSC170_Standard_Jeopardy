@@ -244,9 +244,8 @@ public class MainPagePanel extends JPanel implements MouseListener{
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == startButtonLabel) {
             GamePanel.resetGame();
-            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Panel");
-            AudioPlayer.play("/files/AI_voice_start_game.wav", true);
+            AudioPlayer.play("/files/AI_voice_start_game.wav");
             AudioPlayer.playBGM("/files/BGM_game_panel.wav");
         }
         else if (e.getSource() == minimizeButtonLabel) {
@@ -261,23 +260,18 @@ public class MainPagePanel extends JPanel implements MouseListener{
             System.exit(0);
         }
         else if (e.getSource() == contactPageButton) {
-            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Contact Page");
-            AudioPlayer.play("/files/AI_voice_contact.wav", true);
+            AudioPlayer.play("/files/AI_voice_contact.wav");
         }
         else if (e.getSource() == contentPageButton) {
-            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Content Page");
-            AudioPlayer.play("/files/AI_voice_content.wav", true);
+            AudioPlayer.play("/files/AI_voice_content.wav");
         }else if(e.getSource() == gamedescriptionButton){
-            AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Description Page");
-            AudioPlayer.play("/files/AI_voice_description.wav", true);
+            AudioPlayer.play("/files/AI_voice_description.wav");
         }
         else if (e.getSource() == homePageButton) {
-            AudioPlayer.stop();
-            cardLayout.show(cardPanel, "Home Page");
-            AudioPlayer.play("/files/AI_voice_welcome.wav", true);
+            AudioPlayer.play("/files/AI_voice_welcome.wav");
         }
         else if (e.getSource() == title){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -330,10 +324,10 @@ public class MainPagePanel extends JPanel implements MouseListener{
         }
 
         if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton)) {
-            AudioPlayer.play("/files/SFX_button_1.wav", false);
+            AudioPlayer.play("/files/SFX_button_1.wav");
         } 
         else if (!(e.getSource() == title || e.getSource() == homePageButton)) {
-            AudioPlayer.play("/files/SFX_button_2.wav", false);
+            AudioPlayer.play("/files/SFX_button_2.wav");
         }
 
     }

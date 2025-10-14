@@ -28,7 +28,7 @@ public class MainFrame extends JFrame{
 
         cardLayout.show(cardPanel, "Home Page");
         setVisible(true);
-        AudioPlayer.play("/files/AI_voice_welcome.wav", false);
+        AudioPlayer.play("/files/AI_voice_welcome.wav");
         AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
     }
 

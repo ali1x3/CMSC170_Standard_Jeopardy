@@ -550,7 +550,7 @@ public class GamePanel extends JPanel implements MouseListener{
             scoreTracker.setText("Score: " + Integer.toString(totalScore));
             repaint();
             cardLayout.show(cardPanel, "Home Page");
-            AudioPlayer.play("/files/AI_voice_end_game.wav", false);
+            AudioPlayer.play("/files/AI_voice_end_game.wav");
             AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
         }
     }
@@ -564,15 +564,15 @@ public class GamePanel extends JPanel implements MouseListener{
 
         if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButtonClicked);
-            AudioPlayer.play("/files/SFX_button_2.wav", false);
+            AudioPlayer.play("/files/SFX_button_2.wav");
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
-            AudioPlayer.play("/files/SFX_button_2.wav", false);
+            AudioPlayer.play("/files/SFX_button_2.wav");
         }
         else if(e.getSource() == endButtonLabel) {
             endButtonLabel.setIcon(endButtonClicked);
-            AudioPlayer.play("/files/SFX_button_1.wav", false);
+            AudioPlayer.play("/files/SFX_button_1.wav");
         }
 
     }
