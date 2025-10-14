@@ -88,6 +88,11 @@ public class ResourceManager {
             "Background AI GIF",
             new ImageIcon(getURLFromFiles("bg_img.gif"))
         );
+
+        imageIconHashMap.put(
+            "Leaderboards Panel BG",
+            new ImageIcon(getURLFromFiles("leaderboards_bg.gif"))
+        );
         imageIconHashMap.put(
             "Game Panel BG",
             new ImageIcon(getURLFromFiles("gamePanel_bg.jpg"))
