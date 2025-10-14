@@ -551,8 +551,8 @@ public class GamePanel extends JPanel implements MouseListener{
             }
             scoreTracker.setText("Score: " + Integer.toString(totalScore));
             repaint();
-            cardLayout.show(cardPanel, "Home Page");
-            AudioPlayer.play("/files/AI_voice_end_game.wav", false);
+            cardLayout.show(cardPanel, "Game Over Page");
+            AudioPlayer.play("/files/AI_voice_gameOver.wav", false);
             AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
         }
     }
