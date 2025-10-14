@@ -330,9 +330,7 @@ public class GamePanel extends JPanel implements MouseListener{
 
             //disable modules 5 and above
             if (column > 4) {
-                tempButton.setEnabled(false);
-                tempButton.setDisabledIcon(tempButton.getPressedIcon());
-                tempButton.setText(""); 
+                tempButton.disableButton(tempButton.getPressedIcon());
             }
         }
 
@@ -594,24 +592,18 @@ public class GamePanel extends JPanel implements MouseListener{
 
     public void disableClickedButton() {
         if (clickedQuestionbutton != null) {
-            clickedQuestionbutton.setEnabled(false);
-            clickedQuestionbutton.setDisabledIcon(clickedQuestionbutton.getPressedIcon());
-            clickedQuestionbutton.setText(""); 
+            clickedQuestionbutton.disableButton(clickedQuestionbutton.getPressedIcon());
         }
     }
     public void clickedButtonCorrect() {
         if (clickedQuestionbutton != null) {
-            clickedQuestionbutton.setEnabled(false);
-            clickedQuestionbutton.setDisabledIcon(resourceManager.getImageIcon("Game Button Correct"));
-            clickedQuestionbutton.setText(""); 
+            clickedQuestionbutton.disableButton(resourceManager.getImageIcon("Game Button Correct"));
         }
     }
 
     public void clickedButtonWrong() {
         if (clickedQuestionbutton != null) {
-            clickedQuestionbutton.setEnabled(false);
-            clickedQuestionbutton.setDisabledIcon(resourceManager.getImageIcon("Game Button Wrong"));
-            clickedQuestionbutton.setText(""); 
+            clickedQuestionbutton.disableButton(resourceManager.getImageIcon("Game Button Wrong"));
         }
     }
 }
