@@ -710,22 +710,33 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.getSource() == choice1) {
-            choice1.setIcon(choiceButton);
-            processAnswer(choice1);
-        }
-        else if (e.getSource() == choice2) {
-            choice2.setIcon(choiceButton);
-            processAnswer(choice2);
-        }
-        else if (e.getSource() == choice3) {
-            choice3.setIcon(choiceButton);
-            processAnswer(choice3);
-        }
-        else if (e.getSource() == choice4) {
-            choice4.setIcon(choiceButton);
-            processAnswer(choice4);
-        }
+        JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+                if (e.getSource() == choice1) {
+                    choice1.setIcon(choiceButton);
+                     if (CustomPopupDialog.showConfirm(parentFrame,
+                        "Confirmation",
+                        "Is this your final answer?")) processAnswer(choice1);
+                }
+                else if (e.getSource() == choice2) {
+                    choice2.setIcon(choiceButton);
+                    if (CustomPopupDialog.showConfirm(parentFrame,
+                        "Confirmation",
+                        "Is this your final answer?")) processAnswer(choice2);
+                }
+                else if (e.getSource() == choice3) {
+                    choice3.setIcon(choiceButton);
+                    if (CustomPopupDialog.showConfirm(parentFrame,
+                        "Confirmation",
+                        "Is this your final answer?")) processAnswer(choice3);
+                }
+                else if (e.getSource() == choice4) {
+                    choice4.setIcon(choiceButton);
+                    if (CustomPopupDialog.showConfirm(parentFrame,
+                        "Confirmation",
+                        "Is this your final answer?")) processAnswer(choice4);
+                }
+
+        
     }
 
 

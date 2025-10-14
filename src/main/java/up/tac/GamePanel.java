@@ -523,35 +523,14 @@ public class GamePanel extends JPanel implements MouseListener{
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == endButtonLabel) {
-            totalScore = 0;
-            trackerBar.setScorePercentage((double) totalScore/8400);
-            try {
-                double percentage = (double) totalScore / 8400;
-                if (percentage >= 0.95) {
-                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_5.png"));
-                } else if (percentage >= 0.75) {
-                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_4.png"));
-                } else if (percentage >= 0.5) {
-                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_3.png"));
-                    biggerRobot = true;
-                } else if (percentage >= 0.25) {
-                    robotImage = ImageIO.read(getClass().getResourceAsStream("/files/robot_2.png"));
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } 
-            revalidate();
-            repaint();
-
-            System.out.println("rel Y of Robot: " + (initialRobotY - robotY) + " Max Y of robot: " + frameDimension.getHeight()/2.40327868852);
-            if ((trackerBar.getScoreTrackerHeight() >= robotMidHeight) && ((initialRobotY - robotY) <= frameDimension.getHeight()/2.40327868852)){
-                setRobotPosition(robotX, initialRobotY - trackerBar.getScoreTrackerHeight() + robotMidHeight);
+            JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+            if (CustomPopupDialog.showConfirm(parentFrame,
+                        "Exiting Current Game",
+                        "You will lose your progress. Proceed?")) {
+                cardLayout.show(cardPanel, "Home Page");
+                AudioPlayer.play("/files/AI_voice_end_game.wav");
+                AudioPlayer.playBGM("/files/BGM_jeopardy.wav"); 
             }
-            scoreTracker.setText("Score: " + Integer.toString(totalScore));
-            repaint();
-            cardLayout.show(cardPanel, "Home Page");
-            AudioPlayer.play("/files/AI_voice_end_game.wav");
-            AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
         }
     }
 
@@ -597,13 +576,15 @@ public class GamePanel extends JPanel implements MouseListener{
     }
     public void clickedButtonCorrect() {
         if (clickedQuestionbutton != null) {
-            clickedQuestionbutton.disableButton(resourceManager.getImageIcon("Game Button Correct"));
+            ImageIcon iconResized = new ImageIcon(resourceManager.getImageIcon("Game Button Correct").getImage().getScaledInstance((int) (frameDimension.getWidth()/14.66), (int) (frameDimension.getHeight()/14.66), Image.SCALE_DEFAULT));
+            clickedQuestionbutton.disableButton(iconResized);
         }
     }
 
     public void clickedButtonWrong() {
         if (clickedQuestionbutton != null) {
-            clickedQuestionbutton.disableButton(resourceManager.getImageIcon("Game Button Wrong"));
+            ImageIcon iconResized = new ImageIcon(resourceManager.getImageIcon("Game Button Wrong").getImage().getScaledInstance((int) (frameDimension.getWidth()/14.66), (int) (frameDimension.getHeight()/14.66), Image.SCALE_DEFAULT));
+            clickedQuestionbutton.disableButton(iconResized);
         }
     }
 }
