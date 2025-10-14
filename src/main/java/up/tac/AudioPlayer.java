@@ -2,6 +2,7 @@ package up.tac;
 
 import java.applet.AudioClip;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.print.attribute.standard.Media;
 import javax.sound.sampled.AudioInputStream;
@@ -14,12 +15,22 @@ public class AudioPlayer {
     private static ArrayList<Clip> clips = new ArrayList<>();
     private static Clip clip;
     private static Clip bgmClip;
+    private static HashMap<String, Clip> clipMap = new HashMap<>();
 
     public static void play(String filePath, boolean isStoppable) {
         try{
-            audioInputStream = AudioSystem.getAudioInputStream(AudioPlayer.class.getResource(filePath));
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
+            clip = clipMap.computeIfAbsent(filePath, p -> {
+                try {
+                audioInputStream = AudioSystem.getAudioInputStream(AudioPlayer.class.getResource(filePath));
+                clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                return clip;
+                }
+                catch (Exception e) {
+                    return null;
+                }
+            });
+            clip.setFramePosition(0);
             clip.start();
 
             if (isStoppable) {
