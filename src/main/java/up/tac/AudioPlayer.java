@@ -1,5 +1,6 @@
 package up.tac;
 
+import java.awt.event.PaintEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,16 +12,19 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 
 public class AudioPlayer {
     record SoundData(AudioFormat format, byte[] pcm, int size) {}        
 
     private static AudioInputStream audioInputStream ;
-    private static ArrayList<Clip> clips = new ArrayList<>();
+    private static ArrayList<Clip> playingClips = new ArrayList<>();
     private static Clip bgmClip;
     private static SoundData data;
     private static HashMap<String, SoundData> clipDataMap = new HashMap<>();
+    private static float bgmVolume = 0.5f;
+    private static float volume = 0.5f;
 
     public static void play(String filePath) {
         try{
@@ -43,14 +47,20 @@ public class AudioPlayer {
             clip.open(data.format, data.pcm(), 0, data.size());
 
             clip.setFramePosition(0);
+            
+            adjustVolume(clip, volume);
             clip.start();
-            System.out.println("clone running");
             clip.addLineListener(event -> {
                 if (event.getType() == LineEvent.Type.STOP) {
                     clip.close();
-                    System.out.println("clip closed");
+                    playingClips.remove(clip);
+                    System.out.println("clip removed");
                 }
             });
+
+            if (isStoppable) {
+                playingClips.add(clip);
+            }
 
         } catch (Exception ex) {
             System.out.println("Error with playing sound.");
@@ -82,6 +92,8 @@ public class AudioPlayer {
             audioInputStream = AudioSystem.getAudioInputStream(AudioPlayer.class.getResource(filePath));
             bgmClip = AudioSystem.getClip();
             bgmClip.open(audioInputStream);
+         
+            adjustVolume(bgmClip, bgmVolume);
             bgmClip.start();
             bgmClip.loop(Clip.LOOP_CONTINUOUSLY);
 
@@ -90,5 +102,46 @@ public class AudioPlayer {
             ex.printStackTrace();
         }
     }
+    public static void stop() {
+        for (Clip c : playingClips) {
+            c.stop();
+            c.close();
+        }
+        playingClips.clear();
+    }
 
+    // these functions take a float between 0 and 1
+    // 0 being 0% and 1.0 being 100%
+    public static void setVolume(float newVal) {
+        volume = newVal;
+        volume = Math.max(0f, Math.min(volume, 1f));
+    }
+    
+    public static void setBgmVolume(float newVal) {
+        bgmVolume = newVal;
+        volume = Math.max(0f, Math.min(volume, 1f));
+    }
+
+    // DO not touch this only set the volume with the 2 methods above
+    private static void adjustVolume(Clip clip, float volume) {
+        if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+
+            float min = gainControl.getMinimum();
+            float max = gainControl.getMaximum();
+
+            float dB;
+            if (volume == 0f) {
+                dB = min;
+            } else {
+                dB = (float)(Math.log10(volume) * 20.0);
+                dB = Math.max(min, Math.min(dB, max));
+            }
+
+            gainControl.setValue(dB);
+            System.out.println(dB);
+        } else {
+            System.out.println("MASTER_GAIN not supported on this clip.");
+        }
+    }
 }
