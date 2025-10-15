@@ -59,6 +59,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
 	private JTextArea questionArea;
     private BufferedImage robotImage, questionIcon;
     private boolean biggerRobot;
+    private CustomPopupDialog activeDialog;
 	private boolean answeredCorrect = false;
 
     public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, ResourceManager resourceManager){
@@ -68,18 +69,6 @@ public class QuestionPanel extends JPanel implements MouseListener{
         this.resourceManager = resourceManager;
         
         bg_image = new ImageIcon(getClass().getResource("/files/gamePanel_bg.jpg")).getImage();
-        // java.net.URL questionIconUrl = getClass().getResource("/files/questionPanel_icon.png");
-        // if (questionIconUrl != null) {
-        //     try {
-        //         questionIcon = javax.imageio.ImageIO.read(questionIconUrl);
-        //     } catch (IOException e) {
-        //         questionIcon = null;
-        //         System.err.println("Failed to read questionPanel_icon.png: " + e.getMessage());
-        //     }
-        // } else {
-        //     questionIcon = null;
-        //     System.err.println("Resource not found: /files/questionPanel_icon.png");
-        // }
         this.setLayout(new BorderLayout());
 
         customFont = resourceManager.getCousineRegular();
@@ -100,8 +89,6 @@ public class QuestionPanel extends JPanel implements MouseListener{
     public void setRobotIMG(BufferedImage robotImage, boolean biggerRobot){
         this.biggerRobot = biggerRobot;
         this.robotImage = robotImage;
-    }
-    private void getGamePanel() {
     }
 
     public void initializePanel(QuestionButton questionButton) {
@@ -384,28 +371,10 @@ public class QuestionPanel extends JPanel implements MouseListener{
         choiceWrongIcon = new ImageIcon(choiceWrongIconResized);
         choiceWrongButton = new ImageIcon(choiceWrongIconResized); // note to myself, use this for red -- aliba
 
-        // backButton = new ImageIcon(getClass().getResource("/files/endButton.jpg"));
-        // Image endButtonImageResized = backButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_DEFAULT);
-        // backButton = new ImageIcon(endButtonImageResized);
-
-        // backButtonClicked = new ImageIcon(getClass().getResource("/files/endButton_clicked.jpg"));
-        // Image endButtonClickedImageResized = backButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/7.5), (int) (frameDimension.getHeight()/19), Image.SCALE_AREA_AVERAGING);
-        // backButtonClicked = new ImageIcon(endButtonClickedImageResized);
-
-        // backButtonLabel = new JLabel(backButtonClicked);
-        // I GOT SUPER lazy here so here's some AI SLOPPPPPPPPPPPPPPP
-        // ...
-        // Image questionLabelNormalIconResized is available here
-        // ...
-
         questionArea = new JTextArea();
         questionArea.setEditable(false);
         questionArea.setText("The fitness number, f(n), is the cost associated with a node in the A* algorithm. It is calculated as the sum of g(n) (the cost spent reaching the node from the start) and h(n) (the estimated cost of the cheapest path from the node to the goal). Therefore, f(n) = g(n) + h(n).");
 
-        // ⭐️ REMOVE the hardcoded setPreferredSize
-        // questionArea.setPreferredSize(new Dimension(800, 100)); // <-- REMOVE THIS
-
-        // Set it to wrap lines (these are correct)
         questionArea.setLineWrap(true);
         questionArea.setWrapStyleWord(true);
         questionArea.setForeground(Color.BLACK);
@@ -562,10 +531,18 @@ public class QuestionPanel extends JPanel implements MouseListener{
             } else {
                 timer.setText("Timer: 00");
                 countdownTimer.stop();
-                handleTimeUp(); 
+                if (activeDialog != null) {
+                    activeDialog.dispose();
+                    activeDialog = null;
+                }
+                handleTimeUp();
                 showCorrectAnswer();
                 disableChoiceButtons();
-                gamePanel = (GamePanel) cardPanel.getComponent(3); 
+                enableBackButton();
+                gamePanel = (GamePanel) cardPanel.getComponent(3);
+                gamePanel.clickedButtonWrong();
+                // cardLayout.show(cardPanel, "Game Panel");
+                // AudioPlayer.playBGM("/files/BGM_game_panel.wav");
                 if(answeredCorrect) {
                     gamePanel.clickedButtonCorrect();
                 }
@@ -608,7 +585,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
 
     private void processAnswer(JLabel userChoice) {
-        gamePanel = (GamePanel) cardPanel.getComponent(3); 
+        countdownTimer.stop();
+        gamePanel = (GamePanel) cardPanel.getComponent(3);
 
         if (userChoice == correctChoice){
             showCorrectAnswer();
@@ -673,7 +651,6 @@ public class QuestionPanel extends JPanel implements MouseListener{
             }
             
 
-
             g2d.drawImage(robotImage, (int) (frameDimension.getWidth()/27.5), (int) (frameDimension.getHeight()/6.10833333333), drawW, drawH, this);
             g2d.dispose();
         } else {
@@ -704,57 +681,59 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getSource() == choice1) {
+        Object source = e.getSource();
+        if (source == choice1) {
             choice1.setIcon(choiceClickedButton);
-        }
-        else if (e.getSource() == choice2) {
+        } else if (source == choice2) {
             choice2.setIcon(choiceClickedButton);
-        }
-        else if (e.getSource() == choice3) {
+        } else if (source == choice3) {
             choice3.setIcon(choiceClickedButton);
-        }
-        else if (e.getSource() == choice4) {
+        } else if (source == choice4) {
             choice4.setIcon(choiceClickedButton);
         }
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-                if (e.getSource() == choice1) {
-                    choice1.setIcon(choiceButton);
-                     if (CustomPopupDialog.showConfirm(parentFrame,
-                        "Confirmation",
-                        "Is this your final answer?")) processAnswer(choice1);
-                }
-                else if (e.getSource() == choice2) {
-                    choice2.setIcon(choiceButton);
-                    if (CustomPopupDialog.showConfirm(parentFrame,
-                        "Confirmation",
-                        "Is this your final answer?")) processAnswer(choice2);
-                }
-                else if (e.getSource() == choice3) {
-                    choice3.setIcon(choiceButton);
-                    if (CustomPopupDialog.showConfirm(parentFrame,
-                        "Confirmation",
-                        "Is this your final answer?")) processAnswer(choice3);
-                }
-                else if (e.getSource() == choice4) {
-                    choice4.setIcon(choiceButton);
-                    if (CustomPopupDialog.showConfirm(parentFrame,
-                        "Confirmation",
-                        "Is this your final answer?")) processAnswer(choice4);
-                }
+        Object source = e.getSource();
+        JLabel choiceLabel = null;
 
-        
+        if (source == choice1) {
+            choiceLabel = choice1;
+        } else if (source == choice2) {
+            choiceLabel = choice2;
+        } else if (source == choice3) {
+            choiceLabel = choice3;
+        } else if (source == choice4) {
+            choiceLabel = choice4;
+        }
+
+        if (choiceLabel != null) {
+            choiceLabel.setIcon(choiceButton);
+
+            // if a dialog is already showing, don't show another one
+            if (activeDialog != null && activeDialog.isShowing()) {
+                return;
+            }
+
+            final JLabel finalChoiceLabel = choiceLabel;
+            activeDialog = CustomPopupDialog.showConfirm(parentFrame,
+                "Confirmation",
+                "Is this your final answer?",
+                (confirmed) -> {
+                    if (confirmed) {
+                        processAnswer(finalChoiceLabel);
+                    }
+                    activeDialog = null; // a dialog can only be used once
+                });
+        }
     }
 
 
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == backButtonLabel) {
-            // only respond if back button is enabled
             if (!backEnabled) return;
             backButtonLabel.setIcon(backButtonClicked);
         }

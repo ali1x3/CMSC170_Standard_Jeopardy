@@ -1,29 +1,42 @@
 package up.tac;
 
 import javax.swing.*;
-
 import up.tac.Resource.ResourceManager;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.function.Consumer;
 
 public class CustomPopupDialog extends JDialog {
     private JLabel messageLabel;
     private JButton confirmButton;
     private JButton noButton;
     private boolean confirmed = false;
+    private Consumer<Boolean> callback;
 
     /**
-     * Construct the dialog. Use {@link #showDialog()} to display and get result.
+     * Construct a modal dialog. Use {@link #showDialog()} to display and get result.
      * @param parent parent frame, may be null
      * @param title dialog title
      * @param message html or plain text message
      */
     public CustomPopupDialog(Frame parent, String title, String message) {
-        super(parent, title, true);
+        this(parent, title, message, true, null);
+    }
+
+    /**
+     * Construct a dialog.
+     * @param parent parent frame, may be null
+     * @param title dialog title
+     * @param message html or plain text message
+     * @param modal true for a modal dialog
+     * @param callback a callback to be executed with the result (for non-modal dialogs)
+     */
+    public CustomPopupDialog(Frame parent, String title, String message, boolean modal, Consumer<Boolean> callback) {
+        super(parent, title, modal);
+        this.callback = callback;
         initUI(parent, message);
     }
 
@@ -55,8 +68,11 @@ public class CustomPopupDialog extends JDialog {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            confirmed = true;
-            dispose();
+                confirmed = true;
+                if (callback != null) {
+                    callback.accept(true);
+                }
+                dispose();
             }
         });
 
@@ -69,6 +85,9 @@ public class CustomPopupDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 confirmed = false;
+                if (callback != null) {
+                    callback.accept(false);
+                }
                 dispose();
             }
         });
@@ -87,6 +106,9 @@ public class CustomPopupDialog extends JDialog {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     confirmed = false;
+                    if (callback != null) {
+                        callback.accept(false);
+                    }
                     dispose();
                 }
             }
@@ -104,12 +126,12 @@ public class CustomPopupDialog extends JDialog {
      */
     public boolean showDialog() {
         confirmed = false; // reset
-        setVisible(true); // blocks
+        setVisible(true); // blocks if modal
         return confirmed;
     }
 
     /**
-     * Static convenience method.
+     * Static convenience method for modal dialogs.
      * @param parent parent frame (may be null)
      * @param title dialog title
      * @param message message (HTML allowed)
@@ -118,5 +140,19 @@ public class CustomPopupDialog extends JDialog {
     public static boolean showConfirm(Frame parent, String title, String message) {
         CustomPopupDialog d = new CustomPopupDialog(parent, title, message);
         return d.showDialog();
+    }
+    
+    /**
+     * Static convenience method for non-modal dialogs with a callback.
+     * @param parent parent frame (may be null)
+     * @param title dialog title
+     * @param message message (HTML allowed)
+     * @param callback callback to run with the result
+     * @return the created dialog instance
+     */
+    public static CustomPopupDialog showConfirm(Frame parent, String title, String message, Consumer<Boolean> callback) {
+        CustomPopupDialog d = new CustomPopupDialog(parent, title, message, false, callback);
+        d.setVisible(true);
+        return d;
     }
 }
