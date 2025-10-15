@@ -30,7 +30,7 @@ public class AudioPlayer {
     private static float bgmVolume = 0.5f;
     private static float volume = 0.5f;
 
-    public static void play(String filePath, boolean isStoppable) {
+    public static void play(String filePath, boolean manualStop) {
         try{
             data = clipDataMap.computeIfAbsent(filePath, p -> {
                 try {
@@ -54,18 +54,20 @@ public class AudioPlayer {
             
             adjustVolume(clip, volume);
             clip.start();
-            if (isStoppable) {
+            if (manualStop) {
                 playingClips.add(clip);
             }
-            clip.addLineListener(event -> {
-                if (event.getType() == LineEvent.Type.STOP) {
-                    clip.close();
-                    if (playingClips.contains(clip)){
-                        playingClips.remove(clip);
+            else {
+                clip.addLineListener(event -> {
+                    if (event.getType() == LineEvent.Type.STOP) {
+                        clip.close();
+                        System.out.println("clip removed automatically");
+                        if (playingClips.contains(clip)){
+                            playingClips.remove(clip);
+                        }
                     }
-                    System.out.println("clip removed");
-                }
-            });
+                });
+            }
 
 
         } catch (Exception ex) {
@@ -112,6 +114,7 @@ public class AudioPlayer {
         synchronized (playingClips) {
             for (Clip c : playingClips) {
                 c.stop();
+                System.out.println("clip removed manually");
             }
             playingClips.clear();
         }
@@ -126,7 +129,7 @@ public class AudioPlayer {
     
     public static void setBgmVolume(float newVal) {
         bgmVolume = newVal;
-        volume = Math.max(0f, Math.min(volume, 1f));
+        bgmVolume = Math.max(0f, Math.min(bgmVolume, 1f));
     }
 
     // DO not touch this only set the volume with the 2 methods above

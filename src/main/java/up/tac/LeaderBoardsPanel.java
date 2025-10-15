@@ -407,9 +407,11 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
 
         if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton || e.getSource() == leaderboardsButton)) {
             AudioPlayer.play("/files/SFX_button_1.wav", false);
+            System.out.println("sfx1");
         } 
         else if (!(e.getSource() == title || e.getSource() == leaderboardsButton) ) {
             AudioPlayer.play("/files/SFX_button_2.wav", false);
+            System.out.println("sfx2");
         }
 
     }

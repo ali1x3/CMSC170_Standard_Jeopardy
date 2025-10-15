@@ -756,12 +756,15 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
         if (!(e.getSource() == minimizeButtonLabel || e.getSource() == title)) {
             AudioPlayer.play("/files/SFX_button_1.wav", false);
+            System.out.println("sfx1");
         } 
         else if (e.getSource() != title) {
             AudioPlayer.play("/files/SFX_button_2.wav", false);
+            System.out.println("sfx2");
         } else if (e.getSource() == backButtonLabel) {
             if (!backEnabled) return;
             AudioPlayer.play("/files/SFX_button_1.wav", false);
+            System.out.println("sfx1");
         }
 
     }
