@@ -59,6 +59,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
 	private JTextArea questionArea;
     private BufferedImage robotImage, questionIcon;
     private boolean biggerRobot;
+	private boolean answeredCorrect;
 
     public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
@@ -565,7 +566,12 @@ public class QuestionPanel extends JPanel implements MouseListener{
                 showCorrectAnswer();
                 disableChoiceButtons();
                 gamePanel = (GamePanel) cardPanel.getComponent(3); 
-                gamePanel.clickedButtonWrong();
+                if(answeredCorrect) {
+                    gamePanel.clickedButtonCorrect();
+                }
+                else {
+                    gamePanel.clickedButtonWrong();
+                }
                 cardLayout.show(cardPanel, "Game Panel");
                 AudioPlayer.playBGM("/files/BGM_game_panel.wav");
             }
@@ -609,11 +615,13 @@ public class QuestionPanel extends JPanel implements MouseListener{
             AudioPlayer.play("/files/SFX_correct_answer.wav", false);
             gamePanel.onCorrectAnswer();
             gamePanel.clickedButtonCorrect();
+            answeredCorrect = true;
         }
         else {
             showCorrectAndWrongAnswer(userChoice);
             AudioPlayer.play("/files/SFX_wrong_answer.wav", false);
             gamePanel.clickedButtonWrong();
+            answeredCorrect = false;
         }
 
         // gamePanel.disableClickedButton(); 

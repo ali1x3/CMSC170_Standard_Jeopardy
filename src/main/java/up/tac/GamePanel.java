@@ -456,7 +456,8 @@ public class GamePanel extends JPanel implements MouseListener{
 
             g2d.drawImage(robotImage, robotX, robotY, drawW, drawH, this);
             g2d.dispose();
-        } else {
+        } 
+        else {
             System.out.println(" Robot Image Null");
         }
     }
