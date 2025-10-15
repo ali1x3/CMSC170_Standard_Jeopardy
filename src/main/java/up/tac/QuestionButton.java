@@ -41,7 +41,7 @@ public class QuestionButton extends JButton {
         loadQuestion();
         totalButtons += 1;
     }
-    private void loadQuestion() {
+    public void loadQuestion() {
         // TODO: load a jeopardy question and its answers
         // in the corresponding module and blooms classification
         module = "module_" + column;

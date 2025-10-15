@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -55,6 +56,7 @@ public class GamePanel extends JPanel implements MouseListener{
     private boolean biggerRobot = false;
 	private QuestionButton clickedQuestionbutton;
     private GameOverPanel gameOverPanel;
+    private ArrayList<QuestionButton> questionButtons = new ArrayList<>();
 
     public void setRobotPosition(int x, int y) {
         this.robotX = x;
@@ -328,6 +330,8 @@ public class GamePanel extends JPanel implements MouseListener{
             tempButton.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/43.1)));
             leftPanel.add(tempButton);
             tempButton.addMouseListener(this);
+            questionButtons.add(tempButton);
+
 
 
             //disable modules 5 and above
@@ -358,8 +362,14 @@ public class GamePanel extends JPanel implements MouseListener{
         lowerPanel.add(fillerPanel);
 
     }
+    
+    public void reloadQuestions() {
+        for (QuestionButton questionButton : questionButtons) {
+            questionButton.loadQuestion();
+        }
+    }
 
-    public static void resetGame() {
+    public void resetGame() {
         for(Component c : leftPanel.getComponents()) {
             if (c instanceof QuestionButton b) {
                 if (b.getColumn() > 4) {
@@ -370,6 +380,7 @@ public class GamePanel extends JPanel implements MouseListener{
                 b.setEnabled(true);
             }
         }
+        reloadQuestions();
     }
     public void reinit() {
         System.out.println(" Reinitializing values.");
