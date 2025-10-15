@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements MouseListener{
     private int robotMidHeight = 0, robotHeight = 0;
     private boolean biggerRobot = false;
 	private QuestionButton clickedQuestionbutton;
+    private GameOverPanel gameOverPanel;
 
     public void setRobotPosition(int x, int y) {
         this.robotX = x;
@@ -61,7 +62,7 @@ public class GamePanel extends JPanel implements MouseListener{
         repaint();
     }
 
-    public GamePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension, QuestionPanel questionPanel){
+    public GamePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension, QuestionPanel questionPanel, GameOverPanel gameOverPanel){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.resourceManager = resourceManager;
@@ -70,6 +71,7 @@ public class GamePanel extends JPanel implements MouseListener{
         this.robotX = (int) (frameDimension.getWidth()/1.31);
         this.robotY = (int) (frameDimension.getHeight()/1.54315789474);
         this.initialRobotY = (int) (frameDimension.getHeight()/1.54315789474);
+        this.gameOverPanel = gameOverPanel;
 
         bg_image = resourceManager.getImageIcon("Game Panel BG").getImage();
 
@@ -369,6 +371,20 @@ public class GamePanel extends JPanel implements MouseListener{
             }
         }
     }
+    public void reinit() {
+        System.out.println(" Reinitializing values.");
+        this.robotX = (int) (frameDimension.getWidth()/1.31);
+        this.robotY = (int) (frameDimension.getHeight()/1.54315789474);
+        this.initialRobotY = (int) (frameDimension.getHeight()/1.54315789474);
+        this.robotMidHeight = 0;
+        this.robotHeight = 0;
+        this.biggerRobot = false;
+        this.totalScore = 0;
+        scoreTracker.setText("");
+        trackerBar.setScorePercentage(0);
+        revalidate();
+        repaint();
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -526,16 +542,16 @@ public class GamePanel extends JPanel implements MouseListener{
             JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
             if (CustomPopupDialog.showConfirm(parentFrame,
                         "Exiting Current Game",
-                        "You will lose your progress. Proceed?")) {
-                cardLayout.show(cardPanel, "Home Page");
-                AudioPlayer.play("/files/AI_voice_end_game.wav", true);
-                AudioPlayer.playBGM("/files/BGM_jeopardy.wav"); 
+                        "Haven't finished all tiles. Proceed?")) {
+                
+                gameOverPanel.setScore(totalScore);
+                totalScore = 0;
+                gameOverPanel.reinit();
+                cardLayout.show(cardPanel, "Game Over Page");
+                AudioPlayer.play("/files/AI_voice_gameOver.wav", false);
+                AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
             }
-            scoreTracker.setText("Score: " + Integer.toString(totalScore));
-            repaint();
-            cardLayout.show(cardPanel, "Game Over Page");
-            AudioPlayer.play("/files/AI_voice_gameOver.wav", false);
-            AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
+            
         }
     }
 

@@ -68,21 +68,25 @@ public class ResourceManager {
 
         imageIconHashMap.put(
             "Contact Panel BG",
-            new ImageIcon(getURLFromFiles("contactPage_bg.jpg"))
+            new ImageIcon(getURLFromFiles("leaderboards_bg.gif"))
         );
 
         imageIconHashMap.put(
             "Description Panel BG",
-            new ImageIcon(getURLFromFiles("descriptionPage_bg.jpg"))
+            new ImageIcon(getURLFromFiles("game_desc_bg.gif"))
         );
 
         imageIconHashMap.put(
             "Content Panel BG",
-            new ImageIcon(getURLFromFiles("contentPage_bg.jpg"))
+            new ImageIcon(getURLFromFiles("contentPage_bg.gif"))
         );
         imageIconHashMap.put(
             "Main Panel BG",
             new ImageIcon(getURLFromFiles("mainPage_bg.jpg"))
+        );
+        imageIconHashMap.put(
+            "Game Over BG",
+            new ImageIcon(getURLFromFiles("leaderboards_bg.gif"))
         );
         imageIconHashMap.put(
             "Background AI GIF",

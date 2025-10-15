@@ -45,20 +45,22 @@ public class GameOverPanel extends JPanel implements MouseListener{
     private JTextField nameInputField;
     private JLabel homeButton, saveAndGoHomeButton, exitButtonLabel, minimizeButtonLabel;
     private boolean inLeaderboard = true; 
+    private int currentScore = 0;
+    private LeaderBoardsPanel leaderBoardsPanel;
 
    
     private Dimension frameDimension;
 
     private ResourceManager resourceManager;
 
-    public GameOverPanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager,
-                            Dimension frameDimension){
+    public GameOverPanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension, LeaderBoardsPanel leaderBoardsPanel){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.resourceManager = resourceManager;
-        this.frameDimension = frameDimension;
+        this.frameDimension = frameDimension; 
+        this.leaderBoardsPanel = leaderBoardsPanel;
 
-        bg_image = resourceManager.getImageIcon("Content Panel BG").getImage();
+        bg_image = resourceManager.getImageIcon("Leaderboards Panel BG").getImage();
 
         this.setLayout(new BorderLayout());
 
@@ -148,19 +150,27 @@ public class GameOverPanel extends JPanel implements MouseListener{
     private void setLowerPanel() {
         lowerPanel = new JPanel();
         lowerPanel.setOpaque(false);
-        lowerPanel.setLayout(null);
+        lowerPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
         JLabel title = new JLabel("Game Over");
         title.setForeground(new Color(0x0057cc));
         title.setFont(titleFont);
 
-        title.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/25), (int) (frameDimension.getWidth()/1.5), (int) (frameDimension.getHeight()/10));
-        lowerPanel.add(title);
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 73), 0, (int) (frameDimension.getHeight()/73), 0);
+        lowerPanel.add(title, gbc);
 
         homeButton = new JLabel("Home");
         homeButton.setForeground(java.awt.Color.black);
         homeButton.setFont(customFont);
         homeButton.addMouseListener(this);
+
+        JLabel instructions = new JLabel("Input Name for Leaderboards");
+        instructions.setForeground(java.awt.Color.black);
+        instructions.setFont(customFont);
 
         saveAndGoHomeButton = new JLabel("Save & Go Home");
         saveAndGoHomeButton.setForeground(java.awt.Color.black);
@@ -176,19 +186,30 @@ public class GameOverPanel extends JPanel implements MouseListener{
             homeButton.setVisible(true);
         }
         
-        homeButton.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/25) + 10, (int) (frameDimension.getWidth()/5), (int) (frameDimension.getHeight()/10));
-        lowerPanel.add(homeButton);
-
-        saveAndGoHomeButton.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/25) + 150, (int) (frameDimension.getWidth()/3), (int) (frameDimension.getHeight()/10));
-        lowerPanel.add(saveAndGoHomeButton);
+        gbc.gridy = 1;
+        lowerPanel.add(instructions, gbc);
 
         if (inLeaderboard) {
-        nameInputField = new JTextField("Anonymous");
-        nameInputField.setFont(customFont);
-        nameInputField.setForeground(Color.DARK_GRAY);
-        nameInputField.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/25) + 100,(int) (frameDimension.getWidth()/5),(int) (frameDimension.getHeight()/18));
-        lowerPanel.add(nameInputField);
+            nameInputField = new JTextField("Anonymous");
+            nameInputField.setFont(customFont);
+            nameInputField.setForeground(Color.DARK_GRAY);
+            gbc.gridy = 2;
+            lowerPanel.add(nameInputField, gbc);
+        }
+
+        saveAndGoHomeButton.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/25) + 150, (int) (frameDimension.getWidth()/3), (int) (frameDimension.getHeight()/10));
+        gbc.gridy = 3;
+        lowerPanel.add(saveAndGoHomeButton, gbc);
+
+        
     }
+
+    public void reinit() {
+        nameInputField.setText("Anonymous");
+    }
+
+    public void setScore(int score) {
+        this.currentScore = score;
     }
 
     @Override
@@ -229,9 +250,20 @@ public class GameOverPanel extends JPanel implements MouseListener{
             AudioPlayer.play("/files/AI_voice_home.wav", true);
         }
         else if (e.getSource() == saveAndGoHomeButton) {
-            AudioPlayer.stop();
-            cardLayout.show(cardPanel, "Home Page");
-            AudioPlayer.play("/files/AI_voice_savedToLeaderboard.wav", true);
+            JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+             if (CustomPopupDialog.showConfirm(parentFrame,
+                        "Saving Score",
+                        "This cannot be changed afterwards. Proceed?")) {
+                Score newScore = new Score();
+                newScore.setDate(java.time.LocalDate.now());
+                newScore.setName(nameInputField.getText());
+                newScore.setScore(currentScore);
+                leaderBoardsPanel.addScore(newScore);
+                leaderBoardsPanel.reinit();
+                AudioPlayer.stop();
+                cardLayout.show(cardPanel, "Home Page");
+                AudioPlayer.play("/files/AI_voice_savedToLeaderboard.wav", true);
+            }
         }
     }
 

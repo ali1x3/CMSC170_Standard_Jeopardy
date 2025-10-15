@@ -186,12 +186,6 @@ public class GameDescriptionPanel extends JPanel implements MouseListener{
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(null);
 
-        JLabel title = new JLabel("JEOPARDY GAME");
-        title.setForeground(new Color(0x0057cc));
-        title.setFont(titleFont);
-
-        title.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/25), (int) (frameDimension.getWidth()/1.5), (int) (frameDimension.getHeight()/10));
-        lowerPanel.add(title);
     }
 
     @Override

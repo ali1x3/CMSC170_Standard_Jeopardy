@@ -1,14 +1,11 @@
 package up.tac;
 
-import up.tac.Resource.ResourceManager;
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -16,19 +13,16 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
-import java.io.IOException;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URI;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import up.tac.Resource.ResourceManager;
 
 
 public class ContentPagePanel extends JPanel implements MouseListener{
@@ -198,8 +192,11 @@ public class ContentPagePanel extends JPanel implements MouseListener{
         JLabel line3 = new JLabel("ANSWER THE QUESTION.");
         line3.setFont(smallerFont);
 
-        JLabel line4 = new JLabel("AIM FOR A HIGH SCORE !!!");
+        JLabel line4 = new JLabel("IMPROVE YOUR ROBOT'S STRENGTH.");
         line4.setFont(smallerFont);
+        
+        JLabel line5 = new JLabel("POST YOUR SCORE IN THE LEADERBOARDS.");
+        line5.setFont(smallerFont);
 
         gbc.insets = new Insets(0, (int) (frameDimension.getWidth()/5.5), (int) (frameDimension.getHeight()/30), 0);
         gbc.gridx = 0;
@@ -218,8 +215,11 @@ public class ContentPagePanel extends JPanel implements MouseListener{
         lowerPanel.add(line3, gbc);
 
         gbc.gridy = 4;
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/49), (int) (frameDimension.getWidth()/5.5), (int) (frameDimension.getHeight()/4.9), 0);
         lowerPanel.add(line4, gbc);
+
+        gbc.gridy = 5;
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/49), (int) (frameDimension.getWidth()/5.5), (int) (frameDimension.getHeight()/4.9), 0);
+        lowerPanel.add(line5, gbc);
 
 
     }

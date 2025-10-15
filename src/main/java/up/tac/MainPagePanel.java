@@ -46,12 +46,14 @@ public class MainPagePanel extends JPanel implements MouseListener{
     private ResourceManager resourceManager;
     private ImageIcon bg_gif;
     private Dimension frameDimension;
+    private GamePanel gamePanel;
 
-    public MainPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension){
+    public MainPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension, GamePanel gamePanel){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.resourceManager = resourceManager;
         this.frameDimension = frameDimension;
+        this.gamePanel = gamePanel;
 
         bg_image = resourceManager.getImageIcon("Main Panel BG").getImage();
         bg_gif = resourceManager.getImageIcon("Background AI GIF");
@@ -187,11 +189,11 @@ public class MainPagePanel extends JPanel implements MouseListener{
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
 
-        JLabel title = new JLabel("ARTIFICIAL INTELLIGENCE");
+        JLabel title = new JLabel("CODE & CONQUEST");
         title.setForeground(new Color(0x0057cc));
         title.setFont(titleFont);
 
-        JLabel header1 = new JLabel("JEOPARDY GAME");
+        JLabel header1 = new JLabel("A.I. JEOPARDY");
         Font biggerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/18.325));
         header1.setFont(biggerFont);
         header1.setForeground(Color.black);
@@ -254,6 +256,7 @@ public class MainPagePanel extends JPanel implements MouseListener{
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == startButtonLabel) {
             GamePanel.resetGame();
+            gamePanel.reinit();
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Panel");
             AudioPlayer.play("/files/AI_voice_start_game.wav", true);

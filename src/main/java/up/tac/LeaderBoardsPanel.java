@@ -5,11 +5,8 @@ import up.tac.Resource.ResourceManager;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -19,16 +16,12 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
-import java.net.URI;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 
 public class LeaderBoardsPanel extends JPanel implements MouseListener{
@@ -41,9 +34,11 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
     private Font titleFont = new Font("Arial", Font.BOLD, 56);
     private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
-
-   
+    private java.util.ArrayList<Score> scores;
     private Dimension frameDimension;
+    private JPanel scoresContainerPanel;
+    private JScrollPane scoresScroll;
+    private JPanel headerPanel;
 
     private ResourceManager resourceManager;
 
@@ -67,6 +62,7 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
 
         setUpperPanel();
         setLowerPanel();
+        reinit();
 
         // add the upper and lower panels
         add(upperPanel, BorderLayout.NORTH);
@@ -183,16 +179,145 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
     }
 
     private void setLowerPanel() {
+        GridBagConstraints gbc = new GridBagConstraints();
         lowerPanel = new JPanel();
         lowerPanel.setOpaque(false);
-        lowerPanel.setLayout(null);
+        lowerPanel.setLayout(new GridBagLayout());
 
-        JLabel title = new JLabel("JEOPARDY GAME");
+        JLabel title = new JLabel("LEADERBOARDS");
+        // Move the label a little bit more up by adjusting the top inset
+        gbc.insets = new Insets(0, 10, 3, 10); // negative top inset moves it up
         title.setForeground(new Color(0x0057cc));
         title.setFont(titleFont);
+    
+        title.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/45), (int) (frameDimension.getWidth()/1.5), (int) (frameDimension.getHeight()/10));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(0, 10, 10, 10);
+        lowerPanel.add(title, gbc);
 
-        title.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/25), (int) (frameDimension.getWidth()/1.5), (int) (frameDimension.getHeight()/10));
-        lowerPanel.add(title);
+    // Panel that will contain the score rows in a grid
+    scoresContainerPanel = new JPanel(new GridBagLayout());
+    scoresContainerPanel.setOpaque(false);
+
+
+    // header panel (static height) placed directly under the title
+    headerPanel = new JPanel(new GridBagLayout());
+    headerPanel.setOpaque(false);
+    GridBagConstraints hgbc = new GridBagConstraints();
+    hgbc.gridx = 0;
+    hgbc.gridy = 0;
+    hgbc.insets = new Insets(6, 60, 6, 60);
+    hgbc.anchor = GridBagConstraints.WEST;
+    JLabel nameHeader = new JLabel("Name");
+    nameHeader.setFont(boldCustomFont);
+    // give headers a fixed preferred height so they don't resize with rows
+    nameHeader.setPreferredSize(new Dimension((int)(frameDimension.getWidth()/3.5), (int)(frameDimension.getHeight()/20)));
+    headerPanel.add(nameHeader, hgbc);
+
+    hgbc.gridx = 1;
+    JLabel dateHeader = new JLabel("Date");
+    dateHeader.setFont(boldCustomFont);
+    dateHeader.setPreferredSize(new Dimension((int)(frameDimension.getWidth()/3.5), (int)(frameDimension.getHeight()/20)));
+    headerPanel.add(dateHeader, hgbc);
+
+    hgbc.gridx = 2;
+    JLabel scoreHeader = new JLabel("Score");
+    scoreHeader.setFont(boldCustomFont);
+    scoreHeader.setPreferredSize(new Dimension((int)(frameDimension.getWidth()/6.5), (int)(frameDimension.getHeight()/20)));
+    headerPanel.add(scoreHeader, hgbc);
+
+        // ensure scores list exists
+        if (scores == null) scores = new java.util.ArrayList<>();
+
+        // populate rows from scores
+        populateScoresPanel(scoresContainerPanel, scores);
+
+        // put the scoresContainer inside a scroll pane
+    scoresScroll = new JScrollPane(scoresContainerPanel);
+    scoresScroll.setOpaque(false);
+    scoresScroll.getViewport().setOpaque(false);
+    scoresScroll.setBorder(null);
+    Dimension scrollSize = new Dimension((int)(frameDimension.getWidth()/1.2), (int)(frameDimension.getHeight()/2.5));
+    scoresScroll.setPreferredSize(scrollSize);
+
+    gbc.gridx = 0;
+        // add header panel directly under title with a small gap, then scroll below it
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(4, 10, 4, 10);
+        lowerPanel.add(headerPanel, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(0,10,10,10);
+        lowerPanel.add(scoresScroll, gbc);
+    }
+
+    public void reinit() {
+        sortScoresByScore();
+        if (scores.size() != 0) {
+            populateScoresPanel(scoresContainerPanel, scores);
+            scoresContainerPanel.setVisible(true);
+            // Remove all previous score rows except the header (row 0)
+            scoresContainerPanel.removeAll();
+
+            // Re-populate with current scores
+            populateScoresPanel(scoresContainerPanel, scores);
+
+            scoresContainerPanel.revalidate();
+            scoresContainerPanel.repaint();
+            revalidate();
+            repaint();
+        } else {
+            scoresContainerPanel.setVisible(false);
+        }
+        
+    }
+
+    private void populateScoresPanel(JPanel container, java.util.List<Score> scoreList) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 60, 6, 60);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        int row = 1; // header is row 0
+        for (Score s : scoreList) {
+            gbc.gridy = row;
+
+            gbc.gridx = 0;
+            JLabel nameLabel = new JLabel(s.getName() == null ? "-" : s.getName());
+            nameLabel.setFont(customFont);
+            container.add(nameLabel, gbc);
+
+            gbc.gridx = 1;
+            JLabel dateLabel = new JLabel(s.getDate() == null ? "-" : s.getDate());
+            dateLabel.setFont(customFont);
+            container.add(dateLabel, gbc);
+
+            gbc.gridx = 2;
+            JLabel scoreLabel = new JLabel(Integer.toString(s.getScore()));
+            scoreLabel.setFont(customFont);
+            container.add(scoreLabel, gbc);
+
+            row++;
+        }
+    }
+    public void addScore(Score score) {
+        scores.add(score);
+    }
+    /**
+     * Sort the current scores list by score (descending) and refresh the UI.
+     */
+    public void sortScoresByScore() {
+        if (scores == null || scores.isEmpty()) return;
+        scores.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
     }
 
     @Override

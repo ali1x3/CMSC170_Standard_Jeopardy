@@ -36,7 +36,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
     private CardLayout cardLayout;
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
-    private JLabel title, homePageButton, contentPageButton, contactPageButton, exitButtonLabel, minimizeButtonLabel, gamedescriptionButton, leaderboardsButton ;
+    private JLabel title, homePageButton, contentPageButton, contactPageButton, exitButtonLabel, minimizeButtonLabel, gamedescriptionButton, leaderboardsButton;
     private Font customFont = new Font("Arial", Font.PLAIN, 21);
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
     private Font titleFont = new Font("Arial", Font.BOLD, 56);
@@ -55,7 +55,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         this.resourceManager = resourceManager;
         this.frameDimension = frameDimension;
 
-        bg_image = resourceManager.getImageIcon("Contact Panel BG").getImage();
+        bg_image = resourceManager.getImageIcon("Leaderboards Panel BG").getImage();
 
         this.setLayout(new BorderLayout());
 
@@ -76,7 +76,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
     }
 
     private void setUpperPanel() {
-        GridBagConstraints gbc = new GridBagConstraints();
+          GridBagConstraints gbc = new GridBagConstraints();
         upperPanel = new JPanel();
         upperPanel.setOpaque(false);
         upperPanel.setLayout(new GridBagLayout());
@@ -93,12 +93,12 @@ public class ContactPagePanel extends JPanel implements MouseListener{
 
         contentPageButton = new JLabel("Rules");
         contentPageButton.setForeground(java.awt.Color.black);
-        contentPageButton.setFont(customFont);
+        contentPageButton.setFont(boldCustomFont);
         contentPageButton.addMouseListener(this);
 
         contactPageButton = new JLabel("About");
         contactPageButton.setForeground(java.awt.Color.black);
-        contactPageButton.setFont(boldCustomFont);
+        contactPageButton.setFont(customFont);
         contactPageButton.addMouseListener(this);
 
         gamedescriptionButton = new JLabel("Description");
@@ -176,6 +176,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         gbc.insets = new Insets((int) (frameDimension.getHeight()/91.625), (int) (frameDimension.getWidth()/110), (int) (frameDimension.getHeight()/13.4), (int) (frameDimension.getWidth()/110));
         gbc.gridx = 4;
         upperPanel.add(leaderboardsButton, gbc);
+
 
         gbc.gridx = 5;
         gbc.weightx = 1;
@@ -380,11 +381,12 @@ public class ContactPagePanel extends JPanel implements MouseListener{
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Description Page");
             AudioPlayer.play("/files/AI_voice_description.wav", true);
-        }else if (e.getSource() == leaderboardsButton) {
+        } else if(e.getSource() == leaderboardsButton){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Leaderboards Page");
             AudioPlayer.play("/files/AI_voice_leaderboards.wav", true);
-        }else if (e.getSource() == github1){
+        } 
+        else if (e.getSource() == github1){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
             if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                 try {
@@ -494,20 +496,20 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         }else if(e.getSource() == gamedescriptionButton){
             gamedescriptionButton.setFont(boldCustomFont);
 
-        }else if (e.getSource() == exitButtonLabel) {
-            exitButtonLabel.setIcon(exitButtonClicked);
-
         }else if(e.getSource() == leaderboardsButton){
             leaderboardsButton.setFont(boldCustomFont);
 
-        }else if (e.getSource() == minimizeButtonLabel) {
+        }else if (e.getSource() == exitButtonLabel) {
+            exitButtonLabel.setIcon(exitButtonClicked);
+        }
+        else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
         }
         else if (e.getSource() == github1 || e.getSource() == github2 || e.getSource() == github3 || e.getSource() == github4 || e.getSource() == github5 || e.getSource() == github6) {
             ((Component) e.getSource()).setForeground(java.awt.Color.blue);
         } 
 
-        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton || e.getSource()== leaderboardsButton)) {
+        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton)) {
             AudioPlayer.play("/files/SFX_button_1.wav", false);
         } 
         else if (!(e.getSource() == title || e.getSource() == contactPageButton)) {
@@ -529,11 +531,11 @@ public class ContactPagePanel extends JPanel implements MouseListener{
 
         }else if(e.getSource() == gamedescriptionButton){
             gamedescriptionButton.setFont(customFont);
-            
         }else if(e.getSource() == leaderboardsButton){
             leaderboardsButton.setFont(customFont);
 
-        }else if (e.getSource() == exitButtonLabel) {
+        }
+        else if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButton);
         }
         else if (e.getSource() == minimizeButtonLabel) {

@@ -35,15 +35,16 @@ public class MainFrame extends JFrame{
     private JPanel getCardPanel(CardLayout cardLayout) {
         JPanel cardPanel = new JPanel(cardLayout);
 
-        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
+        
         ContentPagePanel contentPagePanel = new ContentPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
         ContactPagePanel contactPagePanel = new ContactPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
         QuestionPanel questionPanel = new QuestionPanel(cardLayout, cardPanel, new Dimension(frameWidth, frameHeight), resourceManager);
-        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth,
-            frameHeight), questionPanel);   
         GameDescriptionPanel descriptionPanel = new GameDescriptionPanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
-        GameOverPanel gameOverPanel = new GameOverPanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
         LeaderBoardsPanel leaderBoardsPanel = new LeaderBoardsPanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
+        GameOverPanel gameOverPanel = new GameOverPanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight), leaderBoardsPanel);
+        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth,
+            frameHeight), questionPanel, gameOverPanel); 
+        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight), gamePanel);  
 
         gamePanel.setName("gamePanel");
         cardPanel.add(homePagePanel, "Home Page");
