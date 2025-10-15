@@ -59,7 +59,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
 	private JTextArea questionArea;
     private BufferedImage robotImage, questionIcon;
     private boolean biggerRobot;
-	private boolean answeredCorrect;
+	private boolean answeredCorrect = false;
 
     public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
