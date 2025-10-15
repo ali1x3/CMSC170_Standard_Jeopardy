@@ -125,11 +125,23 @@ public class AudioPlayer {
     public static void setVolume(float newVal) {
         volume = newVal;
         volume = Math.max(0f, Math.min(volume, 1f));
+        
+        // FIX: Adjust volume for currently playing sound effects
+        synchronized (playingClips) {
+            for (Clip c : playingClips) {
+                adjustVolume(c, volume);
+            }
+        }
     }
     
     public static void setBgmVolume(float newVal) {
         bgmVolume = newVal;
         bgmVolume = Math.max(0f, Math.min(bgmVolume, 1f));
+        
+        // FIX: Adjust volume for the currently playing BGM
+        if (bgmClip != null && bgmClip.isOpen()) {
+            adjustVolume(bgmClip, bgmVolume);
+        }
     }
 
     // DO not touch this only set the volume with the 2 methods above

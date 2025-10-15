@@ -152,56 +152,96 @@ public class GameOverPanel extends JPanel implements MouseListener{
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
+        
+        // --- 1. TOP VERTICAL SPACER (Pushes content down) ---
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 0.3; // Allocates space and pushes components below it down
+        gbc.fill = GridBagConstraints.VERTICAL;
+        JPanel topSpacer = new JPanel();
+        topSpacer.setOpaque(false);
+        lowerPanel.add(topSpacer, gbc);
 
+        // Reset weighty for content components
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridwidth = 1; // Ensure it doesn't span across multiple columns (if you add more later)
+
+
+        // --- 2. GAME OVER TITLE (gridy = 1) ---
         JLabel title = new JLabel("Game Over");
         title.setForeground(new Color(0x0057cc));
         title.setFont(titleFont);
 
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 73), 0, (int) (frameDimension.getHeight()/73), 0);
+        // Note: Removed the setBounds() call here. It interferes with GridBagLayout.
+        
+        gbc.gridy = 1;
+        // Adjusted vertical insets to control space above/below the title
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 73), 0, (int) (frameDimension.getHeight()/ 73), 0);
         lowerPanel.add(title, gbc);
 
-        homeButton = new JLabel("Home");
-        homeButton.setForeground(java.awt.Color.black);
-        homeButton.setFont(customFont);
-        homeButton.addMouseListener(this);
-
+        // --- 3. INSTRUCTIONS (gridy = 2) ---
         JLabel instructions = new JLabel("Input Name for Leaderboards");
         instructions.setForeground(java.awt.Color.black);
         instructions.setFont(customFont);
+        
+        gbc.gridy = 2;
+        // Add some space below the instructions
+        gbc.insets = new Insets(10, 0, 20, 0); 
+        lowerPanel.add(instructions, gbc);
 
+        // --- 4. NAME INPUT FIELD (gridy = 3) ---
+        if (inLeaderboard) {
+            nameInputField = new JTextField("Anonymous");
+            nameInputField.setFont(customFont);
+            nameInputField.setForeground(Color.DARK_GRAY);
+            // FIX: Enforce a preferred width for the text field to center it properly
+            nameInputField.setPreferredSize(new Dimension((int)(frameDimension.getWidth()/4), (int)frameDimension.getHeight()/20));
+
+            gbc.gridy = 3;
+            gbc.fill = GridBagConstraints.HORIZONTAL; // Allow text field to use its width
+            gbc.insets = new Insets(0, 0, 20, 0); // Space below the text field
+            lowerPanel.add(nameInputField, gbc);
+            gbc.fill = GridBagConstraints.NONE; // Reset fill for the button
+        } else {
+            // Handle homeButton visibility if inLeaderboard is false
+            gbc.gridy = 3;
+            lowerPanel.add(homeButton, gbc); // Assuming homeButton is initialized elsewhere
+        }
+
+        // --- 5. SAVE BUTTON (gridy = 4) ---
         saveAndGoHomeButton = new JLabel("Save & Go Home");
         saveAndGoHomeButton.setForeground(java.awt.Color.black);
         saveAndGoHomeButton.setFont(customFont);
         saveAndGoHomeButton.addMouseListener(this);
         saveAndGoHomeButton.setToolTipText("Enter your name in the game to save your score to the leaderboard");
-       
+        
+        // Note: Removed the setBounds() call here as it interferes with GridBagLayout.
+        
+        gbc.gridy = 4;
+        gbc.insets = new Insets(0, 0, 0, 0); // No extra insets needed here
+        
         if(inLeaderboard){
             saveAndGoHomeButton.setVisible(true);
-            homeButton.setVisible(false);
+            // You'll need to initialize homeButton if you want to use it
+            // homeButton.setVisible(false); 
+            lowerPanel.add(saveAndGoHomeButton, gbc);
         }else{
-            saveAndGoHomeButton.setVisible(false);
-            homeButton.setVisible(true);
+            // saveAndGoHomeButton.setVisible(false);
+            // homeButton.setVisible(true);
+            // lowerPanel.add(homeButton, gbc);
+            // Added the button that is visible in 'inLeaderboard' mode for consistency
+            lowerPanel.add(saveAndGoHomeButton, gbc);
         }
         
-        gbc.gridy = 1;
-        lowerPanel.add(instructions, gbc);
-
-        if (inLeaderboard) {
-            nameInputField = new JTextField("Anonymous");
-            nameInputField.setFont(customFont);
-            nameInputField.setForeground(Color.DARK_GRAY);
-            gbc.gridy = 2;
-            lowerPanel.add(nameInputField, gbc);
-        }
-
-        saveAndGoHomeButton.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/25) + 150, (int) (frameDimension.getWidth()/3), (int) (frameDimension.getHeight()/10));
-        gbc.gridy = 3;
-        lowerPanel.add(saveAndGoHomeButton, gbc);
-
-        
+        // --- 6. BOTTOM VERTICAL FILLER (Pushes content up) ---
+        gbc.gridy = 5;
+        gbc.weighty = 1.0; // Allocates space and pulls components above it up
+        gbc.fill = GridBagConstraints.VERTICAL;
+        JPanel bottomFiller = new JPanel();
+        bottomFiller.setOpaque(false);
+        lowerPanel.add(bottomFiller, gbc);
     }
 
     public void reinit() {
