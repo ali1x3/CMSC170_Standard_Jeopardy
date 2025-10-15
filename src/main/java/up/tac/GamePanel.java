@@ -307,7 +307,19 @@ public class GamePanel extends JPanel implements MouseListener{
         leftPanel.setLayout(new GridLayout(7, 8, 3, 3));
 
         for(int i = 0; i < 8; i++) {
-            String label = "Module " + (i + 1);
+            String label = "Locked";
+            if (i >= 4) {
+                label = "Locked";
+            } else if (i == 0) {
+                label = "Basics";
+            } else if (i == 1) {
+                label = "Knowing";
+            } else if (i == 2) {
+                label = "Solving";
+            } else if (i == 3) {
+                label = "Learning";
+            }
+            
             JLabel category = new JLabel(label, JLabel.CENTER);
             category.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/43.1)));
             leftPanel.add(category);
