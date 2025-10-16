@@ -38,8 +38,8 @@ public class ScoreBoard {
     }
 
     // Append a single score entry
-    public static void appendScore(String name, int score) {
-        String entry = name + ":" + score;
+    public static void appendScore(String name, int score, String date) {
+        String entry = name + ":" + score + ":" + date;
         try {
             Files.writeString(
                 SCORE_FILE,
@@ -55,15 +55,19 @@ public class ScoreBoard {
     }
 
     // Read all scores into a map
-    public static Map<String, Integer> loadScores() {
-        Map<String, Integer> scores = new HashMap<>();
+    public static Map<String, Map> loadScores() {
+        Map<String, Map> scores = new HashMap<>();
+        
         try {
             if (Files.exists(SCORE_FILE)) {
                 List<String> lines = Files.readAllLines(SCORE_FILE);
                 for (String line : lines) {
                     String[] parts = line.split(":");
-                    if (parts.length == 2) {
-                        scores.put(parts[0], Integer.parseInt(parts[1]));
+                    System.out.println("SCOREBOARD.LOADSCORES(): " + parts[0] + "," + parts[1] + "," + parts[2]);
+                    if (parts.length == 3) {
+                        Map<Integer, String> scoreValue = new HashMap<>();
+                        scoreValue.put(Integer.parseInt(parts[1]), parts[2]);
+                        scores.put(parts[0], scoreValue);
                     }
                 }
             }
@@ -71,17 +75,22 @@ public class ScoreBoard {
             System.err.println("Error reading scores:");
             e.printStackTrace();
         }
+
         return scores;
     }
 
     // For quick testing
     public static void main(String[] args) {
-        appendScore("Alice", 120);
-        appendScore("Bob", 95);
+        appendScore("Abby", 120, "Oct 16, 2025");
+        appendScore("Bryan", 95, "Aug 8, 2025");
 
-        Map<String, Integer> scores = loadScores();
+        Map<String, Map> scores = loadScores();
         System.out.println("Current scores:");
-        scores.forEach((name, score) -> System.out.println(name + " -> " + score));
+        scores.forEach((name, scoreValue) -> {
+            scoreValue.forEach((score, date) -> {
+                System.out.println(name + " -> " + score + ", " + date);
+            });
+        });
     }
 }
 
