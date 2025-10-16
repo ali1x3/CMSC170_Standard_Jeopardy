@@ -2,3 +2,8 @@ bobby:120:Oct 13, 2025
 Bob:300:Oct 12, 2025
 bobby:120:Oct 13, 2025
 Bob:300:Oct 12, 2025
+Vance Ortega:500:Oct 16, 2025
+Mac Alvarico:1000:Oct 16, 2025
+Bruh Moment:1100:Oct 16, 2025
+Hehe:1000:Oct 16, 2025
+Anonymous:0:Oct 16, 2025

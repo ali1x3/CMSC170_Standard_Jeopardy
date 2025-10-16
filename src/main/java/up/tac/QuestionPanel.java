@@ -60,7 +60,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
     private BufferedImage robotImage, questionIcon;
     private boolean biggerRobot;
     private CustomPopupDialog activeDialog;
-	private boolean answeredCorrect = false;
+	private boolean answeredCorrect = false, hasChosen = false;
+
 
     public QuestionPanel(CardLayout cardLayout, JPanel cardPanel, Dimension frameDimension, ResourceManager resourceManager){
         this.cardLayout = cardLayout;
@@ -539,10 +540,12 @@ public class QuestionPanel extends JPanel implements MouseListener{
                 disableChoiceButtons();
                 enableBackButton();
                 gamePanel = (GamePanel) cardPanel.getComponent(3);
-                gamePanel.clickedButtonWrong();
                 // cardLayout.show(cardPanel, "Game Panel");
                 // AudioPlayer.playBGM("/files/BGM_game_panel.wav");
-                answeredCorrect = false;
+                if(!hasChosen) {
+                    answeredCorrect = false;
+                    gamePanel.clickedButtonWrong();
+                } 
                 cardLayout.show(cardPanel, "Game Panel");
                 AudioPlayer.playBGM("/files/BGM_game_panel.wav");
             }
@@ -711,6 +714,7 @@ public class QuestionPanel extends JPanel implements MouseListener{
                 (confirmed) -> {
                     if (confirmed) {
                         processAnswer(finalChoiceLabel);
+                        hasChosen = true;
                     }
                     activeDialog = null; // a dialog can only be used once
                 });
