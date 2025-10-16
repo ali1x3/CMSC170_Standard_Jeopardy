@@ -3,8 +3,12 @@ Assignment 1 - Standard Jeopardy
 
 This is a project for compliance with CMSC 170.
 
+PREREQUISITES:
+
+- Java 25 JDK (Oracle should have one for all platforms, using OpenJDK)
+
 How to use the build tool, Maven:
-- ensure you are in the root directory of the project before running any maven commnads
+- ensure you are in the root directory of the project before running any maven commands
 
 - the root directory should have a pom.xml file
 
