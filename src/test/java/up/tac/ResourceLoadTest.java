@@ -2,7 +2,7 @@ package up.tac;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
-import up.tac.Resource.ResourceManager;
+import up.tac.model.ResourceManager;
 
 import java.awt.*;
 

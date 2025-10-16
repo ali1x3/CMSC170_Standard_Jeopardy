@@ -1,6 +1,7 @@
-package up.tac;
+package up.tac.view;
 
-import up.tac.Resource.ResourceManager;
+import up.tac.model.ResourceManager;
+import up.tac.model.AudioPlayer;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -29,35 +30,31 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 
-public class SettingsPanel extends JPanel implements MouseListener{
+public class ContactPagePanel extends JPanel implements MouseListener{
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
-    private JLabel title, homePageButton, contentPageButton, contactPageButton, gamedescriptionButton, exitButtonLabel, minimizeButtonLabel, leaderboardsButton, settingsPanelLabel;
+    private JLabel title, homePageButton, contentPageButton, contactPageButton, exitButtonLabel, minimizeButtonLabel, gamedescriptionButton, leaderboardsButton, settingsPanelLabel;
     private Font customFont = new Font("Arial", Font.PLAIN, 21);
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
-    private Font titleFont = new Font("Arial", Font.BOLD, 50);
+    private Font titleFont = new Font("Arial", Font.BOLD, 56);
     private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
-    private ResourceManager resourceManager;
-    private Dimension frameDimension;
-    private JLabel toggleSound, toggleSoundFX;
-    private boolean muted = false, mutedFX = false; 
-    private JSlider volumeSlider;
-    private float newVolume;
-   
 
-    public SettingsPanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension){
+    private JLabel github1, github2, github3, github4, github5, github6;
+    private JLabel email1, email2, email3, email4, email5, email6;
+    private Dimension frameDimension;
+
+    private ResourceManager resourceManager;
+
+    public ContactPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager,
+                            Dimension frameDimension){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.resourceManager = resourceManager;
-        this.frameDimension = frameDimension; 
+        this.frameDimension = frameDimension;
 
         bg_image = resourceManager.getImageIcon("Leaderboards Panel BG").getImage();
 
@@ -80,7 +77,7 @@ public class SettingsPanel extends JPanel implements MouseListener{
     }
 
     private void setUpperPanel() {
-        GridBagConstraints gbc = new GridBagConstraints();
+          GridBagConstraints gbc = new GridBagConstraints();
         upperPanel = new JPanel();
         upperPanel.setOpaque(false);
         upperPanel.setLayout(new GridBagLayout());
@@ -102,7 +99,7 @@ public class SettingsPanel extends JPanel implements MouseListener{
 
         contactPageButton = new JLabel("About");
         contactPageButton.setForeground(java.awt.Color.black);
-        contactPageButton.setFont(customFont);
+        contactPageButton.setFont(boldCustomFont);
         contactPageButton.addMouseListener(this);
 
         gamedescriptionButton = new JLabel("Description");
@@ -117,7 +114,7 @@ public class SettingsPanel extends JPanel implements MouseListener{
 
         settingsPanelLabel = new JLabel("Sound"); 
         settingsPanelLabel.setForeground(java.awt.Color.black); 
-        settingsPanelLabel.setFont(boldCustomFont);
+        settingsPanelLabel.setFont(customFont);
         settingsPanelLabel.addMouseListener(this);
 
         exitButton = resourceManager.getImageIcon("Exit Button");
@@ -205,91 +202,156 @@ public class SettingsPanel extends JPanel implements MouseListener{
         upperPanel.add(new JLabel(), gbc);
     }
 
-
     private void setLowerPanel() {
+        GridBagConstraints gbc = new GridBagConstraints();
         lowerPanel = new JPanel();
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        
-        // --- 1. TOP VERTICAL SPACER (Pushes content down) ---
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weighty = 0.3; // Allocates space and pushes components below it down
-        gbc.fill = GridBagConstraints.VERTICAL;
-        JPanel topSpacer = new JPanel();
-        topSpacer.setOpaque(false);
-        lowerPanel.add(topSpacer, gbc);
 
-        // Reset weighty for content components
-        gbc.weighty = 0;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridwidth = 1;
-
-
-        // --- 2. GAME OVER TITLE (gridy = 1) ---
-        JLabel title = new JLabel("Sound Settings");
+        JLabel title = new JLabel("CONTACT");
         title.setForeground(new Color(0x0057cc));
         title.setFont(titleFont);
 
-        
-        gbc.gridy = 1;
-        // Add vertical insets above and below the title
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 73), 0, (int) (frameDimension.getHeight()/ 73), 0);
+        Font smallerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/36.7));
+        // For Contact 1
+        JLabel name1 = new JLabel("ALEX AVILA");
+        github1 = new JLabel("ali1x3");
+        email1 = new JLabel("abavila@up.edu.ph");
+        name1.setFont(smallerFont);
+        github1.setFont(smallerFont);
+        email1.setFont(smallerFont);
+        github1.addMouseListener(this);
+        email1.addMouseListener(this);
+
+        // For Contact 2
+        JLabel name2 = new JLabel("ANDREI MARTILLO");
+        github2 = new JLabel("ddrhckrzz");
+        email2 = new JLabel("agmartillo@up.edu.ph");
+        name2.setFont(smallerFont);
+        github2.setFont(smallerFont);
+        email2.setFont(smallerFont);
+        github2.addMouseListener(this);
+        email2.addMouseListener(this);
+
+        // For Contact 3
+        JLabel name3 = new JLabel("DESIRRE BARBOSA");
+        github3 = new JLabel("desiredes");
+        email3 = new JLabel("dibarbosa@up.edu.ph");
+        name3.setFont(smallerFont);
+        github3.setFont(smallerFont);
+        email3.setFont(smallerFont);
+        github3.addMouseListener(this);
+        email3.addMouseListener(this);
+
+        // For Contact 4
+        JLabel name4 = new JLabel("MAC ALVARICO");
+        github4 = new JLabel("RoninMac");
+        email4 = new JLabel("mpalvarico@up.edu.ph");
+        name4.setFont(smallerFont);
+        github4.setFont(smallerFont);
+        email4.setFont(smallerFont);
+        github4.addMouseListener(this);
+        email4.addMouseListener(this);
+
+        // For Contact 5
+        JLabel name5 = new JLabel("NIKKA NAPUTO");
+        github5 = new JLabel("nikkanap");
+        email5 = new JLabel("nenaputo@up.edu.ph");
+        name5.setFont(smallerFont);
+        github5.setFont(smallerFont);
+        email5.setFont(smallerFont);
+        github5.addMouseListener(this);
+        email5.addMouseListener(this);
+
+        // For Contact 6
+        JLabel name6 = new JLabel("VANCE ORTEGA");
+        github6 = new JLabel("MoresVance");
+        email6 = new JLabel("mcortega@up.edu.ph");
+        name6.setFont(smallerFont);
+        github6.setFont(smallerFont);
+        email6.setFont(smallerFont);
+        github6.addMouseListener(this);
+        email6.addMouseListener(this);
+
+        gbc.insets = new Insets(0, 0, (int) (frameDimension.getHeight()/49), 0);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.ipady = 20;
+
         lowerPanel.add(title, gbc);
 
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.SOUTH;
+        gbc.gridy = 1;
+        gbc.ipady = 3;
 
-        gbc.gridy = 2; 
-        
-        // Reset insets or set new ones as needed for spacing between title and toggle label
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 20), 0, (int) (frameDimension.getHeight()/ 73), 0); 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/49), (int) (frameDimension.getWidth()/55), 0, (int) (frameDimension.getWidth()/55));
+        lowerPanel.add(name1, gbc);
 
-        toggleSound = new JLabel("TOGGLE BG MUSIC: ON");
-        toggleSound.setForeground(java.awt.Color.black);
-        toggleSound.setFont(customFont);
-        toggleSound.addMouseListener(this);
-        
+        gbc.gridx = 1;
+        lowerPanel.add(github1, gbc);
 
-        lowerPanel.add(toggleSound, gbc); 
-        
-        toggleSoundFX = new JLabel("TOGGLE SOUND FX: ON");
-        toggleSoundFX.setForeground(java.awt.Color.black);
-        toggleSoundFX.setFont(customFont);
-        toggleSoundFX.addMouseListener(this);
+        gbc.gridx = 2;
+        lowerPanel.add(email1, gbc);
 
-        gbc.gridy = 3; 
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 30), 0, (int) (frameDimension.getHeight()/ 73), 0); 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/73), (int) (frameDimension.getWidth()/55), 0, (int) (frameDimension.getWidth()/55));
+        gbc.gridy = 2;
 
-        lowerPanel.add(toggleSoundFX, gbc);
+        gbc.gridx = 0;
+        lowerPanel.add(name2, gbc);
 
-        volumeSlider = new JSlider(0, 100, 80); 
-        volumeSlider.setOpaque(false);
-        volumeSlider.setPreferredSize(new Dimension((int) (frameDimension.getWidth() / 3.5), (int) (frameDimension.getHeight() / 20)));
-        
-        // Add a ChangeListener to update the volume as the slider moves
-        volumeSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                // Get the slider value (0 to 100) and convert it to a float (0.0 to 1.0)
-                newVolume = volumeSlider.getValue() / 100.0f;
-                if (!mutedFX) AudioPlayer.setVolume(newVolume);
-                if (!muted) AudioPlayer.setBgmVolume(newVolume); // Assuming one slider controls both
-            }
-        });
+        gbc.gridx = 1;
+        lowerPanel.add(github2, gbc);
 
-        gbc.gridy = 4; // New row for the slider
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 73), 0, (int) (frameDimension.getHeight()/ 73), 0);
-        lowerPanel.add(volumeSlider, gbc);
+        gbc.gridx = 2;
+        lowerPanel.add(email2, gbc);
 
+        gbc.gridy = 3;
+
+        gbc.gridx = 0;
+        lowerPanel.add(name3, gbc);
+
+        gbc.gridx = 1;
+        lowerPanel.add(github3, gbc);
+
+        gbc.gridx = 2;
+        lowerPanel.add(email3, gbc);
+
+        gbc.gridy = 4;
+
+        gbc.gridx = 0;
+        lowerPanel.add(name4, gbc);
+
+        gbc.gridx = 1;
+        lowerPanel.add(github4, gbc);
+
+        gbc.gridx = 2;
+        lowerPanel.add(email4, gbc);
 
         gbc.gridy = 5;
-        gbc.weighty = 1.0; 
-        gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        JPanel bottomFiller = new JPanel();
-        bottomFiller.setOpaque(false);
-        lowerPanel.add(bottomFiller, gbc);
+
+        gbc.gridx = 0;
+        lowerPanel.add(name5, gbc);
+
+        gbc.gridx = 1;
+        lowerPanel.add(github5, gbc);
+
+        gbc.gridx = 2;
+        lowerPanel.add(email5, gbc);
+
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/73), 0, (int) (frameDimension.getHeight()/4.9), 0);
+        gbc.gridy = 6;
+
+        gbc.gridx = 0;
+        lowerPanel.add(name6, gbc);
+
+        gbc.gridx = 1;
+        lowerPanel.add(github6, gbc);
+
+        gbc.gridx = 2;
+        lowerPanel.add(email6, gbc);
 
     }
 
@@ -329,29 +391,98 @@ public class SettingsPanel extends JPanel implements MouseListener{
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Home Page");
             AudioPlayer.play("/files/AI_voice_home.wav", true);
-
-        } else if (e.getSource() == contentPageButton) {
+        }
+        else if (e.getSource() == contentPageButton) {
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Content Page");
-            AudioPlayer.play("/files/AI_voice_contact.wav", true);
-
-        }
-        else if (e.getSource() == contactPageButton) {
-            AudioPlayer.stop();
-            cardLayout.show(cardPanel, "Contact Page");
-            AudioPlayer.play("/files/AI_voice_contact.wav", true);
-
+            AudioPlayer.play("/files/AI_voice_content.wav", true);
         }else if(e.getSource() == gamedescriptionButton){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Description Page");
             AudioPlayer.play("/files/AI_voice_description.wav", true);
-
-        }else if(e.getSource() == leaderboardsButton){
+        } else if(e.getSource() == leaderboardsButton){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Leaderboards Page");
             AudioPlayer.play("/files/AI_voice_leaderboards.wav", true);
+        } else if(e.getSource() == settingsPanelLabel){
+            AudioPlayer.stop();
+            cardLayout.show(cardPanel, "Settings Page");
+            AudioPlayer.play("/files/AI_voice_leaderboards.wav", true);
         }
-        else if (e.getSource() == title){
+        else if (e.getSource() == github1){
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("https://github.com/ali1x3"));
+                }
+                catch (Exception e1) {
+                    System.out.println("Desktop browsing Failed.");
+                    e1.printStackTrace();
+                }
+            }
+        }
+        else if (e.getSource() == github2){
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("https://github.com/ddrhckrzz"));
+                }
+                catch (Exception e1) {
+                    System.out.println("Desktop browsing Failed.");
+                    e1.printStackTrace();
+                }
+            }
+
+        }
+        else if (e.getSource() == github3){
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("https://github.com/desiredes"));
+                }
+                catch (Exception e1) {
+                    System.out.println("Desktop browsing Failed.");
+                    e1.printStackTrace();
+                }
+            }
+
+        }
+        else if (e.getSource() == github4){
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("https://github.com/RoninMac"));
+                } catch (Exception e1) {
+                    System.out.println("Desktop browsing Failed.");
+                    e1.printStackTrace();
+                }
+            }
+
+        } else if (e.getSource() == github5){
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("https://github.com/nikkanap"));
+                }
+                catch (Exception e1) {
+                    System.out.println("Desktop browsing Failed.");
+                    e1.printStackTrace();
+                }
+            }
+
+        } else if (e.getSource() == github6){
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("https://github.com/MoresVance"));
+                }
+                catch (Exception e1) {
+                    System.out.println("Desktop browsing Failed.");
+                    e1.printStackTrace();
+                }
+            }
+
+        } else if (e.getSource() == title){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
             if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                 try {
@@ -368,25 +499,6 @@ public class SettingsPanel extends JPanel implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getSource() == toggleSound) {
-            if (muted) {
-                toggleSound.setText("TOGGLE BG MUSIC: ON");
-                AudioPlayer.setBgmVolume(newVolume);
-            } else {
-                toggleSound.setText("TOGGLE BG MUSIC: OFF");
-                AudioPlayer.setBgmVolume(0);
-            }
-            muted = !muted;
-        } else if (e.getSource() == toggleSoundFX) {
-            if (mutedFX) {
-                toggleSoundFX.setText("TOGGLE SOUND FX: ON");
-                AudioPlayer.setVolume(newVolume);
-            } else {
-                toggleSoundFX.setText("TOGGLE SOUND FX: OFF");
-                AudioPlayer.setVolume(0);
-            }
-            mutedFX = !mutedFX;
-        }
     }
 
     @Override
@@ -399,7 +511,7 @@ public class SettingsPanel extends JPanel implements MouseListener{
             contentPageButton.setFont(boldCustomFont);
         }
         else if (e.getSource() == contactPageButton) {
-            contactPageButton.setFont(boldCustomFont);
+            contactPageButton.setFont(customFont);
         }
         else if (e.getSource() == homePageButton) {
             homePageButton.setFont(boldCustomFont);
@@ -411,23 +523,22 @@ public class SettingsPanel extends JPanel implements MouseListener{
             leaderboardsButton.setFont(boldCustomFont);
 
         }else if(e.getSource() == settingsPanelLabel){
-            settingsPanelLabel.setFont(customFont);
+            settingsPanelLabel.setFont(boldCustomFont);
 
         }else if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButtonClicked);
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
-        } else if (e.getSource() == toggleSound) {
-            toggleSound.setFont(boldCustomFont);
-        } else if (e.getSource() == toggleSoundFX) {
-            toggleSoundFX.setFont(boldCustomFont);
         }
+        else if (e.getSource() == github1 || e.getSource() == github2 || e.getSource() == github3 || e.getSource() == github4 || e.getSource() == github5 || e.getSource() == github6) {
+            ((Component) e.getSource()).setForeground(java.awt.Color.blue);
+        } 
 
-        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton || e.getSource() == leaderboardsButton || e.getSource() == settingsPanelLabel || e.getSource() == toggleSound || e.getSource() == toggleSoundFX)) {
+        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton || e.getSource() == leaderboardsButton || e.getSource() == settingsPanelLabel)) {
             AudioPlayer.play("/files/SFX_button_1.wav", false);
         } 
-        else if (!(e.getSource() == title || e.getSource() == contentPageButton)) {
+        else if (!(e.getSource() == title || e.getSource() == contactPageButton)) {
             AudioPlayer.play("/files/SFX_button_2.wav", false);
         }
 
@@ -437,33 +548,30 @@ public class SettingsPanel extends JPanel implements MouseListener{
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == contentPageButton) {
             contentPageButton.setFont(customFont);
-        }else if (e.getSource() == toggleSound) {
-            toggleSound.setFont(customFont);
-        }else if (e.getSource() == toggleSoundFX) {
-            toggleSoundFX.setFont(customFont);
         }
         else if (e.getSource() == contactPageButton) {
-            contactPageButton.setFont(customFont);
+            contactPageButton.setFont(boldCustomFont);
         }
         else if (e.getSource() == homePageButton){
             homePageButton.setFont(customFont);
-            
+
+        }else if(e.getSource() == gamedescriptionButton){
+            gamedescriptionButton.setFont(customFont);
         }else if(e.getSource() == leaderboardsButton){
             leaderboardsButton.setFont(customFont);
 
         }else if(e.getSource() == settingsPanelLabel){
-            settingsPanelLabel.setFont(boldCustomFont);
+            settingsPanelLabel.setFont(customFont);
 
-        }else if (e.getSource() == exitButtonLabel) {
+        }
+        else if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButton);
-
-        }else if(e.getSource() == gamedescriptionButton){
-            gamedescriptionButton.setFont(customFont);
         }
         else if (e.getSource() == minimizeButtonLabel) {
-            minimizeButtonLabel.setIcon(minimizeButton);
-
+            minimizeButtonLabel.setIcon(minimizeButton);       
         }
+        else if (e.getSource() == github1 || e.getSource() == github2 || e.getSource() == github3 || e.getSource() == github4 || e.getSource() == github5 || e.getSource() == github6) {
+            ((Component) e.getSource()).setForeground(java.awt.Color.black);
+        } 
     }
 }
-

@@ -1,4 +1,4 @@
-package up.tac;
+package up.tac.model;
 
 import java.io.IOException;
 import java.nio.file.*;

@@ -1,4 +1,4 @@
-package up.tac;
+package up.tac.model;
 
 import java.util.Arrays;
 

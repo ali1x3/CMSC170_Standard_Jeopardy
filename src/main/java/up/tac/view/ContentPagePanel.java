@@ -1,6 +1,4 @@
-package up.tac;
-
-import up.tac.Resource.ResourceManager;
+package up.tac.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -8,7 +6,6 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -16,47 +13,39 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
-import java.io.File;
-import java.io.IOException;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URI;
-import java.util.Scanner;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import up.tac.model.AudioPlayer;
+import up.tac.model.ResourceManager;
 
 
-public class MainPagePanel extends JPanel implements MouseListener{
+public class ContentPagePanel extends JPanel implements MouseListener{
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
-    private JLabel title, homePageButton, contentPageButton, contactPageButton, startButtonLabel, exitButtonLabel, minimizeButtonLabel, gamedescriptionButton, leaderboardsButton, settingsPanelLabel;
-    private Font customFont = new Font("Arial", Font.PLAIN, 30);
-    private Font boldCustomFont = new Font("Arial", Font.BOLD, 30);
-    private Font titleFont = new Font("Arial", Font.BOLD, 72);
-    private ImageIcon startButton, startButtonClicked, exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
+    private JLabel title, homePageButton, contentPageButton, contactPageButton, gamedescriptionButton, exitButtonLabel, minimizeButtonLabel, leaderboardsButton, settingsPanelLabel;
+    private Font customFont = new Font("Arial", Font.PLAIN, 21);
+    private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
+    private Font titleFont = new Font("Arial", Font.BOLD, 50);
+    private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
     private ResourceManager resourceManager;
-    private ImageIcon bg_gif;
     private Dimension frameDimension;
-    private GamePanel gamePanel;
 
-    public MainPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension, GamePanel gamePanel){
+    public ContentPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.resourceManager = resourceManager;
         this.frameDimension = frameDimension;
-        this.gamePanel = gamePanel;
 
-        bg_image = resourceManager.getImageIcon("Main Panel BG").getImage();
-        bg_gif = resourceManager.getImageIcon("Background AI GIF");
+        bg_image = resourceManager.getImageIcon("Content Panel BG").getImage();
 
         this.setLayout(new BorderLayout());
 
@@ -73,6 +62,7 @@ public class MainPagePanel extends JPanel implements MouseListener{
         // add the upper and lower panels
         add(upperPanel, BorderLayout.NORTH);
         add(lowerPanel, BorderLayout.CENTER);
+
     }
 
     private void setUpperPanel() {
@@ -88,12 +78,12 @@ public class MainPagePanel extends JPanel implements MouseListener{
 
         homePageButton = new JLabel("Home");
         homePageButton.setForeground(java.awt.Color.black);
-        homePageButton.setFont(boldCustomFont);
+        homePageButton.setFont(customFont);
         homePageButton.addMouseListener(this);
 
         contentPageButton = new JLabel("Rules");
         contentPageButton.setForeground(java.awt.Color.black);
-        contentPageButton.setFont(customFont);
+        contentPageButton.setFont(boldCustomFont);
         contentPageButton.addMouseListener(this);
 
         contactPageButton = new JLabel("About");
@@ -101,13 +91,13 @@ public class MainPagePanel extends JPanel implements MouseListener{
         contactPageButton.setFont(customFont);
         contactPageButton.addMouseListener(this);
 
-        gamedescriptionButton = new JLabel("Description"); 
+        gamedescriptionButton = new JLabel("Description");
         gamedescriptionButton.setForeground(java.awt.Color.black);
         gamedescriptionButton.setFont(customFont);
         gamedescriptionButton.addMouseListener(this);
 
         leaderboardsButton = new JLabel("Leaderboards");
-        leaderboardsButton.setForeground(java.awt.Color.black); 
+        leaderboardsButton.setForeground(java.awt.Color.black);
         leaderboardsButton.setFont(customFont);
         leaderboardsButton.addMouseListener(this);
 
@@ -207,80 +197,74 @@ public class MainPagePanel extends JPanel implements MouseListener{
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
 
-        JLabel title = new JLabel("CODE & CONQUEST");
+        JLabel title = new JLabel("HOW TO PLAY");
         title.setForeground(new Color(0x0057cc));
         title.setFont(titleFont);
 
-        JLabel header1 = new JLabel("A.I. JEOPARDY");
-        Font biggerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/18.325));
-        header1.setFont(biggerFont);
-        header1.setForeground(Color.black);
+        JLabel line1 = new JLabel("PICK A CATEGORY AND A POINT VALUE.");
+        Font smallerFont = customFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/30));
+        line1.setFont(smallerFont);
 
-        startButton = resourceManager.getImageIcon("Start Button");
-        Image startButtonImageResized = startButton.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_DEFAULT);
-        startButton = new ImageIcon(startButtonImageResized);
+        JLabel line2 = new JLabel("CLICK ON THE CHOSEN BOX FOR THE QUESTION.");
+        line2.setFont(smallerFont);
 
-        startButtonClicked = resourceManager.getImageIcon("Start Button Clicked");
-        // Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance(150, 41, Image.SCALE_SMOOTH);
-        Image startButtonClickedImageResized = startButtonClicked.getImage().getScaledInstance((int) (frameDimension.getWidth()/6.2), (int) (frameDimension.getHeight()/15.7), Image.SCALE_SMOOTH);
-        startButtonClicked = new ImageIcon(startButtonClickedImageResized);        
+        JLabel line3 = new JLabel("ANSWER THE QUESTION.");
+        line3.setFont(smallerFont);
 
-        startButtonLabel = new JLabel(startButton);
-        startButtonLabel.addMouseListener(this);
+        JLabel line4 = new JLabel("IMPROVE YOUR ROBOT'S STRENGTH.");
+        line4.setFont(smallerFont);
+        
+        JLabel line5 = new JLabel("POST YOUR SCORE IN THE LEADERBOARDS.");
+        line5.setFont(smallerFont);
 
+        gbc.insets = new Insets(0, (int) (frameDimension.getWidth()/5.5), (int) (frameDimension.getHeight()/30), 0);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.anchor = GridBagConstraints.EAST;
         lowerPanel.add(title, gbc);
 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/49), (int) (frameDimension.getWidth()/5.5), 0, 0);
         gbc.gridy = 1;
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/24.5), 0, 0, 0);
-        lowerPanel.add(header1, gbc);
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/14.7), 0, (int) (frameDimension.getHeight()/4.9), 0);
+        lowerPanel.add(line1, gbc);
+
         gbc.gridy = 2;
-        lowerPanel.add(startButtonLabel, gbc);
+        lowerPanel.add(line2, gbc);
+
+        gbc.gridy = 3;
+        lowerPanel.add(line3, gbc);
+
+        gbc.gridy = 4;
+        lowerPanel.add(line4, gbc);
+
+        gbc.gridy = 5;
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/49), (int) (frameDimension.getWidth()/5.5), (int) (frameDimension.getHeight()/4.9), 0);
+        lowerPanel.add(line5, gbc);
+
+
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // // don't proceed if bg_image is null
-        // if (bg_image == null) {
-        //     // System.out.println("Background Image failed to Load");
-        //     // return;
-        // }
-
-
-        // // proceed if bg_image is not null
-        // // Graphics2D g2d = (Graphics2D) g;
-        // // g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        // // g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        // // g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // // g2d.drawImage(bg_image, 0, 0, getWidth(), getHeight(), this);
-
-        if(bg_gif != null){
-            Graphics2D g2d = (Graphics2D) g;
-            // Add rendering hints for better image quality when scaled
-            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            // Draw the GIF from position (0,0) and scale it to the panel's full width and height
-            g2d.drawImage(bg_gif.getImage(), 0, 0, getWidth(), getHeight(), this);
+        // don't proceed if bg_image is null
+        if (bg_image == null) {
+            System.out.println("Background Image failed to Load");
+            return;
         }
+
+
+        // proceed if bg_image is not null
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.drawImage(bg_image, 0, 0, getWidth(), getHeight(), this);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getSource() == startButtonLabel) {
-            gamePanel.resetGame();
-            gamePanel.reinit();
-            AudioPlayer.stop();
-            cardLayout.show(cardPanel, "Game Panel");
-            AudioPlayer.play("/files/AI_voice_start_game.wav", true);
-            AudioPlayer.playBGM("/files/BGM_game_panel.wav");
-        }
-        else if (e.getSource() == minimizeButtonLabel) {
+        if (e.getSource() == minimizeButtonLabel) {
             System.out.println("Minimize Button Pressed");
             java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
             if (window instanceof JFrame) {
@@ -291,31 +275,30 @@ public class MainPagePanel extends JPanel implements MouseListener{
             System.out.println("Exit Button Pressed");
             System.exit(0);
         }
+        else if (e.getSource() == homePageButton) {
+            AudioPlayer.stop();
+            cardLayout.show(cardPanel, "Home Page");
+            AudioPlayer.play("/files/AI_voice_home.wav", true);
+
+        }
         else if (e.getSource() == contactPageButton) {
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Contact Page");
             AudioPlayer.play("/files/AI_voice_contact.wav", true);
-        }
-        else if (e.getSource() == contentPageButton) {
-            AudioPlayer.stop();
-            cardLayout.show(cardPanel, "Content Page");
-            AudioPlayer.play("/files/AI_voice_content.wav", true);
+
         }else if(e.getSource() == gamedescriptionButton){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Description Page");
             AudioPlayer.play("/files/AI_voice_description.wav", true);
+
         }else if(e.getSource() == leaderboardsButton){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Leaderboards Page");
-            AudioPlayer.play("/files/AI_voice_leaderboards.wav",true);
-        }else if (e.getSource() == homePageButton) {
-            AudioPlayer.stop();
-            cardLayout.show(cardPanel, "Home Page");
-            AudioPlayer.play("/files/AI_voice_welcome.wav", true);
-        } else if (e.getSource() == settingsPanelLabel) {
+            AudioPlayer.play("/files/AI_voice_leaderboards.wav", true);
+        }else if(e.getSource() == settingsPanelLabel){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Settings Page");
-            AudioPlayer.play("/files/AI_voice_leaderboards.wav",true);
+            AudioPlayer.play("/files/AI_voice_leaderboards.wav", true);
         }
         else if (e.getSource() == title){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -338,33 +321,29 @@ public class MainPagePanel extends JPanel implements MouseListener{
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.getSource() == startButtonLabel){
-            startButtonLabel.setIcon(startButton);
-        }
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == contentPageButton) {
-            contentPageButton.setFont(boldCustomFont);
+            contentPageButton.setFont(customFont);
         }
         else if (e.getSource() == contactPageButton) {
             contactPageButton.setFont(boldCustomFont);
         }
         else if (e.getSource() == homePageButton) {
-            homePageButton.setFont(customFont);
-            
+            homePageButton.setFont(boldCustomFont);
+
         }else if(e.getSource() == gamedescriptionButton){
             gamedescriptionButton.setFont(boldCustomFont);
+
         }else if(e.getSource() == leaderboardsButton){
             leaderboardsButton.setFont(boldCustomFont);
-        } else if(e.getSource() == settingsPanelLabel){
+
+        }else if(e.getSource() == settingsPanelLabel){
             settingsPanelLabel.setFont(boldCustomFont);
-        }
-        else if (e.getSource() == startButtonLabel) {
-            startButtonLabel.setIcon(startButtonClicked);
-        }
-        else if (e.getSource() == exitButtonLabel) {
+
+        }else if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButtonClicked);
         }
         else if (e.getSource() == minimizeButtonLabel) {
@@ -374,37 +353,38 @@ public class MainPagePanel extends JPanel implements MouseListener{
         if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton || e.getSource() == leaderboardsButton || e.getSource() == settingsPanelLabel)) {
             AudioPlayer.play("/files/SFX_button_1.wav", false);
         } 
-        else if (!(e.getSource() == title || e.getSource() == homePageButton)) {
+        else if (!(e.getSource() == title || e.getSource() == contentPageButton)) {
             AudioPlayer.play("/files/SFX_button_2.wav", false);
         }
+
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == contentPageButton) {
-            contentPageButton.setFont(customFont);
+            contentPageButton.setFont(boldCustomFont);
         }
         else if (e.getSource() == contactPageButton) {
             contactPageButton.setFont(customFont);
+        }
+        else if (e.getSource() == homePageButton){
+            homePageButton.setFont(customFont);
             
-        }else if(e.getSource() == gamedescriptionButton){
-            gamedescriptionButton.setFont(customFont);
-
-        }else if (e.getSource() == homePageButton){
-            homePageButton.setFont(boldCustomFont);
         }else if(e.getSource() == leaderboardsButton){
             leaderboardsButton.setFont(customFont);
-        } else if(e.getSource() == settingsPanelLabel){
+
+        }else if(e.getSource() == settingsPanelLabel){
             settingsPanelLabel.setFont(customFont);
-        }
-        else if (e.getSource() == startButtonLabel){
-            startButtonLabel.setIcon(startButton);
-        }
-        else if (e.getSource() == exitButtonLabel) {
+
+        }else if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButton);
+
+        }else if(e.getSource() == gamedescriptionButton){
+            gamedescriptionButton.setFont(customFont);
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButton);
+
         }
     }
 }

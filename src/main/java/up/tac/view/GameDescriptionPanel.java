@@ -1,6 +1,7 @@
-package up.tac;
+package up.tac.view;
 
-import up.tac.Resource.ResourceManager;
+import up.tac.model.ResourceManager;
+import up.tac.model.AudioPlayer;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -31,7 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class ContactPagePanel extends JPanel implements MouseListener{
+public class GameDescriptionPanel extends JPanel implements MouseListener{
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private Image bg_image;
@@ -42,20 +43,19 @@ public class ContactPagePanel extends JPanel implements MouseListener{
     private Font titleFont = new Font("Arial", Font.BOLD, 56);
     private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
 
-    private JLabel github1, github2, github3, github4, github5, github6;
-    private JLabel email1, email2, email3, email4, email5, email6;
+   
     private Dimension frameDimension;
 
     private ResourceManager resourceManager;
 
-    public ContactPagePanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager,
+    public GameDescriptionPanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager,
                             Dimension frameDimension){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.resourceManager = resourceManager;
         this.frameDimension = frameDimension;
 
-        bg_image = resourceManager.getImageIcon("Leaderboards Panel BG").getImage();
+        bg_image = resourceManager.getImageIcon("Description Panel BG").getImage();
 
         this.setLayout(new BorderLayout());
 
@@ -76,7 +76,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
     }
 
     private void setUpperPanel() {
-          GridBagConstraints gbc = new GridBagConstraints();
+        GridBagConstraints gbc = new GridBagConstraints();
         upperPanel = new JPanel();
         upperPanel.setOpaque(false);
         upperPanel.setLayout(new GridBagLayout());
@@ -98,12 +98,12 @@ public class ContactPagePanel extends JPanel implements MouseListener{
 
         contactPageButton = new JLabel("About");
         contactPageButton.setForeground(java.awt.Color.black);
-        contactPageButton.setFont(boldCustomFont);
+        contactPageButton.setFont(customFont);
         contactPageButton.addMouseListener(this);
 
         gamedescriptionButton = new JLabel("Description");
         gamedescriptionButton.setForeground(java.awt.Color.black);
-        gamedescriptionButton.setFont(customFont);
+        gamedescriptionButton.setFont(boldCustomFont);
         gamedescriptionButton.addMouseListener(this);
 
         leaderboardsButton = new JLabel("Leaderboards");
@@ -202,155 +202,9 @@ public class ContactPagePanel extends JPanel implements MouseListener{
     }
 
     private void setLowerPanel() {
-        GridBagConstraints gbc = new GridBagConstraints();
         lowerPanel = new JPanel();
         lowerPanel.setOpaque(false);
-        lowerPanel.setLayout(new GridBagLayout());
-
-        JLabel title = new JLabel("CONTACT");
-        title.setForeground(new Color(0x0057cc));
-        title.setFont(titleFont);
-
-        Font smallerFont = customFont.deriveFont(Font.PLAIN, (int) (frameDimension.getHeight()/36.7));
-        // For Contact 1
-        JLabel name1 = new JLabel("ALEX AVILA");
-        github1 = new JLabel("ali1x3");
-        email1 = new JLabel("abavila@up.edu.ph");
-        name1.setFont(smallerFont);
-        github1.setFont(smallerFont);
-        email1.setFont(smallerFont);
-        github1.addMouseListener(this);
-        email1.addMouseListener(this);
-
-        // For Contact 2
-        JLabel name2 = new JLabel("ANDREI MARTILLO");
-        github2 = new JLabel("ddrhckrzz");
-        email2 = new JLabel("agmartillo@up.edu.ph");
-        name2.setFont(smallerFont);
-        github2.setFont(smallerFont);
-        email2.setFont(smallerFont);
-        github2.addMouseListener(this);
-        email2.addMouseListener(this);
-
-        // For Contact 3
-        JLabel name3 = new JLabel("DESIRRE BARBOSA");
-        github3 = new JLabel("desiredes");
-        email3 = new JLabel("dibarbosa@up.edu.ph");
-        name3.setFont(smallerFont);
-        github3.setFont(smallerFont);
-        email3.setFont(smallerFont);
-        github3.addMouseListener(this);
-        email3.addMouseListener(this);
-
-        // For Contact 4
-        JLabel name4 = new JLabel("MAC ALVARICO");
-        github4 = new JLabel("RoninMac");
-        email4 = new JLabel("mpalvarico@up.edu.ph");
-        name4.setFont(smallerFont);
-        github4.setFont(smallerFont);
-        email4.setFont(smallerFont);
-        github4.addMouseListener(this);
-        email4.addMouseListener(this);
-
-        // For Contact 5
-        JLabel name5 = new JLabel("NIKKA NAPUTO");
-        github5 = new JLabel("nikkanap");
-        email5 = new JLabel("nenaputo@up.edu.ph");
-        name5.setFont(smallerFont);
-        github5.setFont(smallerFont);
-        email5.setFont(smallerFont);
-        github5.addMouseListener(this);
-        email5.addMouseListener(this);
-
-        // For Contact 6
-        JLabel name6 = new JLabel("VANCE ORTEGA");
-        github6 = new JLabel("MoresVance");
-        email6 = new JLabel("mcortega@up.edu.ph");
-        name6.setFont(smallerFont);
-        github6.setFont(smallerFont);
-        email6.setFont(smallerFont);
-        github6.addMouseListener(this);
-        email6.addMouseListener(this);
-
-        gbc.insets = new Insets(0, 0, (int) (frameDimension.getHeight()/49), 0);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 3;
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.ipady = 20;
-
-        lowerPanel.add(title, gbc);
-
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.SOUTH;
-        gbc.gridy = 1;
-        gbc.ipady = 3;
-
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/49), (int) (frameDimension.getWidth()/55), 0, (int) (frameDimension.getWidth()/55));
-        lowerPanel.add(name1, gbc);
-
-        gbc.gridx = 1;
-        lowerPanel.add(github1, gbc);
-
-        gbc.gridx = 2;
-        lowerPanel.add(email1, gbc);
-
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/73), (int) (frameDimension.getWidth()/55), 0, (int) (frameDimension.getWidth()/55));
-        gbc.gridy = 2;
-
-        gbc.gridx = 0;
-        lowerPanel.add(name2, gbc);
-
-        gbc.gridx = 1;
-        lowerPanel.add(github2, gbc);
-
-        gbc.gridx = 2;
-        lowerPanel.add(email2, gbc);
-
-        gbc.gridy = 3;
-
-        gbc.gridx = 0;
-        lowerPanel.add(name3, gbc);
-
-        gbc.gridx = 1;
-        lowerPanel.add(github3, gbc);
-
-        gbc.gridx = 2;
-        lowerPanel.add(email3, gbc);
-
-        gbc.gridy = 4;
-
-        gbc.gridx = 0;
-        lowerPanel.add(name4, gbc);
-
-        gbc.gridx = 1;
-        lowerPanel.add(github4, gbc);
-
-        gbc.gridx = 2;
-        lowerPanel.add(email4, gbc);
-
-        gbc.gridy = 5;
-
-        gbc.gridx = 0;
-        lowerPanel.add(name5, gbc);
-
-        gbc.gridx = 1;
-        lowerPanel.add(github5, gbc);
-
-        gbc.gridx = 2;
-        lowerPanel.add(email5, gbc);
-
-        gbc.insets = new Insets((int) (frameDimension.getHeight()/73), 0, (int) (frameDimension.getHeight()/4.9), 0);
-        gbc.gridy = 6;
-
-        gbc.gridx = 0;
-        lowerPanel.add(name6, gbc);
-
-        gbc.gridx = 1;
-        lowerPanel.add(github6, gbc);
-
-        gbc.gridx = 2;
-        lowerPanel.add(email6, gbc);
+        lowerPanel.setLayout(null);
 
     }
 
@@ -395,105 +249,19 @@ public class ContactPagePanel extends JPanel implements MouseListener{
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Content Page");
             AudioPlayer.play("/files/AI_voice_content.wav", true);
-        }else if(e.getSource() == gamedescriptionButton){
+        }else if (e.getSource() == contactPageButton) {
             AudioPlayer.stop();
-            cardLayout.show(cardPanel, "Game Description Page");
-            AudioPlayer.play("/files/AI_voice_description.wav", true);
-        } else if(e.getSource() == leaderboardsButton){
+            cardLayout.show(cardPanel, "Contact Page");
+            AudioPlayer.play("/files/AI_voice_contact.wav", true);
+        }else if(e.getSource() == leaderboardsButton){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Leaderboards Page");
             AudioPlayer.play("/files/AI_voice_leaderboards.wav", true);
-        } else if(e.getSource() == settingsPanelLabel){
+        }else if(e.getSource() == settingsPanelLabel){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Settings Page");
             AudioPlayer.play("/files/AI_voice_leaderboards.wav", true);
         }
-        else if (e.getSource() == github1){
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI("https://github.com/ali1x3"));
-                }
-                catch (Exception e1) {
-                    System.out.println("Desktop browsing Failed.");
-                    e1.printStackTrace();
-                }
-            }
-        }
-        else if (e.getSource() == github2){
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI("https://github.com/ddrhckrzz"));
-                }
-                catch (Exception e1) {
-                    System.out.println("Desktop browsing Failed.");
-                    e1.printStackTrace();
-                }
-            }
-
-        }
-        else if (e.getSource() == github3){
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI("https://github.com/desiredes"));
-                }
-                catch (Exception e1) {
-                    System.out.println("Desktop browsing Failed.");
-                    e1.printStackTrace();
-                }
-            }
-
-        }
-        else if (e.getSource() == github4){
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI("https://github.com/RoninMac"));
-                } catch (Exception e1) {
-                    System.out.println("Desktop browsing Failed.");
-                    e1.printStackTrace();
-                }
-            }
-
-        } else if (e.getSource() == github5){
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI("https://github.com/nikkanap"));
-                }
-                catch (Exception e1) {
-                    System.out.println("Desktop browsing Failed.");
-                    e1.printStackTrace();
-                }
-            }
-
-        } else if (e.getSource() == github6){
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI("https://github.com/MoresVance"));
-                }
-                catch (Exception e1) {
-                    System.out.println("Desktop browsing Failed.");
-                    e1.printStackTrace();
-                }
-            }
-
-        } else if (e.getSource() == title){
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI("https://github.com/ali1x3/CMSC170_Standard_Jeopardy"));
-                }
-                catch (Exception e1) {
-                    System.out.println("Desktop browsing Failed.");
-                    e1.printStackTrace();
-                }
-            }
-        }
-
     }
 
     @Override
@@ -510,19 +278,19 @@ public class ContactPagePanel extends JPanel implements MouseListener{
             contentPageButton.setFont(boldCustomFont);
         }
         else if (e.getSource() == contactPageButton) {
-            contactPageButton.setFont(customFont);
+            contactPageButton.setFont(boldCustomFont);
+            
+        }else if(e.getSource() == leaderboardsButton){
+            leaderboardsButton.setFont(boldCustomFont);
+        }
+        else if(e.getSource() == settingsPanelLabel){
+            settingsPanelLabel.setFont(boldCustomFont);
         }
         else if (e.getSource() == homePageButton) {
             homePageButton.setFont(boldCustomFont);
 
         }else if(e.getSource() == gamedescriptionButton){
-            gamedescriptionButton.setFont(boldCustomFont);
-
-        }else if(e.getSource() == leaderboardsButton){
-            leaderboardsButton.setFont(boldCustomFont);
-
-        }else if(e.getSource() == settingsPanelLabel){
-            settingsPanelLabel.setFont(boldCustomFont);
+            gamedescriptionButton.setFont(customFont);
 
         }else if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButtonClicked);
@@ -530,14 +298,11 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
         }
-        else if (e.getSource() == github1 || e.getSource() == github2 || e.getSource() == github3 || e.getSource() == github4 || e.getSource() == github5 || e.getSource() == github6) {
-            ((Component) e.getSource()).setForeground(java.awt.Color.blue);
-        } 
 
         if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton || e.getSource() == leaderboardsButton || e.getSource() == settingsPanelLabel)) {
             AudioPlayer.play("/files/SFX_button_1.wav", false);
         } 
-        else if (!(e.getSource() == title || e.getSource() == contactPageButton)) {
+        else if (!(e.getSource() == title || e.getSource() == gamedescriptionButton)) {
             AudioPlayer.play("/files/SFX_button_2.wav", false);
         }
 
@@ -549,19 +314,19 @@ public class ContactPagePanel extends JPanel implements MouseListener{
             contentPageButton.setFont(customFont);
         }
         else if (e.getSource() == contactPageButton) {
-            contactPageButton.setFont(boldCustomFont);
-        }
-        else if (e.getSource() == homePageButton){
-            homePageButton.setFont(customFont);
+            contactPageButton.setFont(customFont);
 
-        }else if(e.getSource() == gamedescriptionButton){
-            gamedescriptionButton.setFont(customFont);
         }else if(e.getSource() == leaderboardsButton){
             leaderboardsButton.setFont(customFont);
 
         }else if(e.getSource() == settingsPanelLabel){
             settingsPanelLabel.setFont(customFont);
 
+        }else if (e.getSource() == homePageButton){
+            homePageButton.setFont(customFont);
+
+        }else if(e.getSource() == gamedescriptionButton){
+            gamedescriptionButton.setFont(boldCustomFont);
         }
         else if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButton);
@@ -569,8 +334,5 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButton);       
         }
-        else if (e.getSource() == github1 || e.getSource() == github2 || e.getSource() == github3 || e.getSource() == github4 || e.getSource() == github5 || e.getSource() == github6) {
-            ((Component) e.getSource()).setForeground(java.awt.Color.black);
-        } 
     }
 }

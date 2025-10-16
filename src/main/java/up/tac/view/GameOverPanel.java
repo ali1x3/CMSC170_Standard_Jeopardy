@@ -1,6 +1,8 @@
-package up.tac;
+package up.tac.view;
 
-import up.tac.Resource.ResourceManager;
+import up.tac.model.ResourceManager;
+import up.tac.model.AudioPlayer;
+import up.tac.model.Score;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -355,4 +357,3 @@ public class GameOverPanel extends JPanel implements MouseListener{
         }
     }
 }
-

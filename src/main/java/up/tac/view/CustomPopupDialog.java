@@ -1,7 +1,7 @@
-package up.tac;
+package up.tac.view;
 
 import javax.swing.*;
-import up.tac.Resource.ResourceManager;
+import up.tac.model.ResourceManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

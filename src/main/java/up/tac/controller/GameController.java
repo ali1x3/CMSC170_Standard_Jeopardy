@@ -1,50 +1,59 @@
-package up.tac;
-import up.tac.Resource.ResourceManager;
+package up.tac.controller;
 
-import java.awt.*;
+import java.awt.CardLayout;
+import java.awt.Dimension;
 
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import up.tac.model.AudioPlayer;
+import up.tac.model.ResourceManager;
+import up.tac.view.ContactPagePanel;
+import up.tac.view.ContentPagePanel;
+import up.tac.view.GameDescriptionPanel;
+import up.tac.view.GameOverPanel;
+import up.tac.view.GamePanel;
+import up.tac.view.LeaderBoardsPanel;
+import up.tac.view.MainFrame;
+import up.tac.view.MainPagePanel;
+import up.tac.view.QuestionPanel;
+import up.tac.view.SettingsPanel;
 
-public class MainFrame extends JFrame{
-    private final ResourceManager resourceManager;
-    final int frameWidth = 1100, frameHeight = 733;
+public class GameController {
 
-    public MainFrame() {
-        setup();
+    private MainFrame mainFrame;
+    private ResourceManager resourceManager;
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
+
+    public GameController() {
         resourceManager = new ResourceManager();
-        setCursor(resourceManager.getCursor()); // load custom cursor
-        setIconImage(resourceManager.getLogo()); // load the logo
-        
-        CardLayout cardLayout = new CardLayout();
-        JPanel cardPanel = getCardPanel(cardLayout);
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
 
-        add(cardPanel);
+        mainFrame = new MainFrame(cardLayout, cardPanel);
+        mainFrame.setCursor(resourceManager.getCursor());
+        mainFrame.setIconImage(resourceManager.getLogo());
 
-        cardLayout.show(cardPanel, "Home Page");
-        setVisible(true);
+        addPanels();
+
+        mainFrame.setVisible(true);
         AudioPlayer.play("/files/AI_voice_welcome.wav", false);
         AudioPlayer.playBGM("/files/BGM_jeopardy.wav");
     }
 
-    private JPanel getCardPanel(CardLayout cardLayout) {
-        JPanel cardPanel = new JPanel(cardLayout);
+    private void addPanels() {
+        int frameWidth = 1100;
+        int frameHeight = 733;
 
-        
         ContentPagePanel contentPagePanel = new ContentPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
         ContactPagePanel contactPagePanel = new ContactPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
         QuestionPanel questionPanel = new QuestionPanel(cardLayout, cardPanel, new Dimension(frameWidth, frameHeight), resourceManager);
         GameDescriptionPanel descriptionPanel = new GameDescriptionPanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
         LeaderBoardsPanel leaderBoardsPanel = new LeaderBoardsPanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
         GameOverPanel gameOverPanel = new GameOverPanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight), leaderBoardsPanel);
-        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth,
-            frameHeight), questionPanel, gameOverPanel); 
-        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight), gamePanel);  
+        GamePanel gamePanel = new GamePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight), questionPanel, gameOverPanel);
+        MainPagePanel homePagePanel = new MainPagePanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight), gamePanel);
         SettingsPanel settingsPanel = new SettingsPanel(cardLayout, cardPanel, resourceManager, new Dimension(frameWidth, frameHeight));
 
         gamePanel.setName("gamePanel");
@@ -57,18 +66,5 @@ public class MainFrame extends JFrame{
         cardPanel.add(gameOverPanel, "Game Over Page");
         cardPanel.add(leaderBoardsPanel, "Leaderboards Page");
         cardPanel.add(settingsPanel, "Settings Page");
-        return cardPanel;
     }
-
-    private void setup() {
-        // Set Up Jframe
-        setTitle("AI Jeopardy");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setUndecorated(false);
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Dimension screenSize = toolkit.getScreenSize();
-        setBounds((int) ((screenSize.getWidth() - frameWidth) / 2), (int) ((screenSize.getHeight() - frameHeight) / 2), frameWidth, frameHeight);
-        setResizable(false);
-    }
-
 }

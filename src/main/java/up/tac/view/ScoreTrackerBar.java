@@ -1,4 +1,4 @@
-package up.tac;
+package up.tac.view;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -1,4 +1,4 @@
-package up.tac;
+package up.tac.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

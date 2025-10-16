@@ -1,7 +1,8 @@
 package up.tac;
 import org.junit.Test;
 
-import up.tac.Resource.ResourceManager;
+import up.tac.model.ResourceManager;
+import up.tac.model.ScoreBoard;
 
 import static org.junit.Assert.*; // Imports static methods like assertEquals, assertTrue, etc.
 

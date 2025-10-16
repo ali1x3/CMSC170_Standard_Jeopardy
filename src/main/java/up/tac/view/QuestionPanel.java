@@ -1,4 +1,4 @@
-package up.tac;
+package up.tac.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -32,7 +32,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
-import up.tac.Resource.ResourceManager;
+import up.tac.model.ResourceManager;
+import up.tac.model.AudioPlayer;
 
 
 public class QuestionPanel extends JPanel implements MouseListener{

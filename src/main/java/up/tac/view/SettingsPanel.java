@@ -1,10 +1,16 @@
-package up.tac;
+package up.tac.view;
+
+import up.tac.model.ResourceManager;
+import up.tac.model.AudioPlayer;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -14,40 +20,45 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URI;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import up.tac.Resource.ResourceManager;
 
-
-public class LeaderBoardsPanel extends JPanel implements MouseListener{
+public class SettingsPanel extends JPanel implements MouseListener{
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private Image bg_image;
     private JPanel upperPanel, lowerPanel;
-    private JLabel title, homePageButton, contentPageButton, contactPageButton, exitButtonLabel, minimizeButtonLabel, gamedescriptionButton, leaderboardsButton, settingsPanelLabel;
+    private JLabel title, homePageButton, contentPageButton, contactPageButton, gamedescriptionButton, exitButtonLabel, minimizeButtonLabel, leaderboardsButton, settingsPanelLabel;
     private Font customFont = new Font("Arial", Font.PLAIN, 21);
     private Font boldCustomFont = new Font("Arial", Font.BOLD, 21);
-    private Font titleFont = new Font("Arial", Font.BOLD, 56);
+    private Font titleFont = new Font("Arial", Font.BOLD, 50);
     private ImageIcon exitButton, exitButtonClicked, minimizeButton, minimizeButtonClicked;
-    private java.util.ArrayList<Score> scores;
-    private Dimension frameDimension;
-    private JPanel scoresContainerPanel;
-    private JScrollPane scoresScroll;
-    private JPanel headerPanel;
-
     private ResourceManager resourceManager;
+    private Dimension frameDimension;
+    private JLabel toggleSound, toggleSoundFX;
+    private boolean muted = false, mutedFX = false; 
+    private JSlider volumeSlider;
+    private float newVolume;
+   
 
-    public LeaderBoardsPanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager,
-                            Dimension frameDimension){
+    public SettingsPanel(CardLayout cardLayout, JPanel cardPanel, ResourceManager resourceManager, Dimension frameDimension){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.resourceManager = resourceManager;
-        this.frameDimension = frameDimension;
+        this.frameDimension = frameDimension; 
 
         bg_image = resourceManager.getImageIcon("Leaderboards Panel BG").getImage();
 
@@ -62,7 +73,6 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
 
         setUpperPanel();
         setLowerPanel();
-        reinit();
 
         // add the upper and lower panels
         add(upperPanel, BorderLayout.NORTH);
@@ -103,12 +113,12 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
 
         leaderboardsButton = new JLabel("Leaderboards");
         leaderboardsButton.setForeground(java.awt.Color.black);
-        leaderboardsButton.setFont(boldCustomFont);
+        leaderboardsButton.setFont(customFont);
         leaderboardsButton.addMouseListener(this);
 
         settingsPanelLabel = new JLabel("Sound"); 
         settingsPanelLabel.setForeground(java.awt.Color.black); 
-        settingsPanelLabel.setFont(customFont);
+        settingsPanelLabel.setFont(boldCustomFont);
         settingsPanelLabel.addMouseListener(this);
 
         exitButton = resourceManager.getImageIcon("Exit Button");
@@ -196,216 +206,92 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
         upperPanel.add(new JLabel(), gbc);
     }
 
+
     private void setLowerPanel() {
-        GridBagConstraints gbc = new GridBagConstraints();
         lowerPanel = new JPanel();
         lowerPanel.setOpaque(false);
         lowerPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        
+        // --- 1. TOP VERTICAL SPACER (Pushes content down) ---
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 0.3; // Allocates space and pushes components below it down
+        gbc.fill = GridBagConstraints.VERTICAL;
+        JPanel topSpacer = new JPanel();
+        topSpacer.setOpaque(false);
+        lowerPanel.add(topSpacer, gbc);
 
-        JLabel title = new JLabel("LEADERBOARDS");
-        // Move the label a little bit more up by adjusting the top inset
-        gbc.insets = new Insets(0, 10, 3, 10); // negative top inset moves it up
+        // Reset weighty for content components
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridwidth = 1;
+
+
+        // --- 2. GAME OVER TITLE (gridy = 1) ---
+        JLabel title = new JLabel("Sound Settings");
         title.setForeground(new Color(0x0057cc));
         title.setFont(titleFont);
-    
-        title.setBounds((int) (frameDimension.getWidth()/ 17), (int) (frameDimension.getHeight()/45), (int) (frameDimension.getWidth()/1.5), (int) (frameDimension.getHeight()/10));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.insets = new Insets(0, 10, 10, 10);
+
+        
+        gbc.gridy = 1;
+        // Add vertical insets above and below the title
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 73), 0, (int) (frameDimension.getHeight()/ 73), 0);
         lowerPanel.add(title, gbc);
 
-    // Panel that will contain the score rows in a grid
-    scoresContainerPanel = new JPanel(new GridBagLayout());
-    scoresContainerPanel.setOpaque(false);
+
+        gbc.gridy = 2; 
+        
+        // Reset insets or set new ones as needed for spacing between title and toggle label
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 20), 0, (int) (frameDimension.getHeight()/ 73), 0); 
+
+        toggleSound = new JLabel("TOGGLE BG MUSIC: ON");
+        toggleSound.setForeground(java.awt.Color.black);
+        toggleSound.setFont(customFont);
+        toggleSound.addMouseListener(this);
+        
+
+        lowerPanel.add(toggleSound, gbc); 
+        
+        toggleSoundFX = new JLabel("TOGGLE SOUND FX: ON");
+        toggleSoundFX.setForeground(java.awt.Color.black);
+        toggleSoundFX.setFont(customFont);
+        toggleSoundFX.addMouseListener(this);
+
+        gbc.gridy = 3; 
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 30), 0, (int) (frameDimension.getHeight()/ 73), 0); 
+
+        lowerPanel.add(toggleSoundFX, gbc);
+
+        volumeSlider = new JSlider(0, 100, 80); 
+        volumeSlider.setOpaque(false);
+        volumeSlider.setPreferredSize(new Dimension((int) (frameDimension.getWidth() / 3.5), (int) (frameDimension.getHeight() / 20)));
+        
+        // Add a ChangeListener to update the volume as the slider moves
+        volumeSlider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                // Get the slider value (0 to 100) and convert it to a float (0.0 to 1.0)
+                newVolume = volumeSlider.getValue() / 100.0f;
+                if (!mutedFX) AudioPlayer.setVolume(newVolume);
+                if (!muted) AudioPlayer.setBgmVolume(newVolume); // Assuming one slider controls both
+            }
+        });
+
+        gbc.gridy = 4; // New row for the slider
+        gbc.insets = new Insets((int) (frameDimension.getHeight()/ 73), 0, (int) (frameDimension.getHeight()/ 73), 0);
+        lowerPanel.add(volumeSlider, gbc);
 
 
-        // ensure scores list exists
-        if (scores == null) scores = new java.util.ArrayList<>();
-
-        // populate rows from scores
-        populateScoresPanel(scoresContainerPanel, scores);
-
-        // put the scoresContainer inside a scroll pane
-    scoresScroll = new JScrollPane(scoresContainerPanel);
-    scoresScroll.setOpaque(false);
-    scoresScroll.getViewport().setOpaque(false);
-    scoresScroll.setBorder(null);
-    Dimension scrollSize = new Dimension((int)(frameDimension.getWidth()/1.2), (int)(frameDimension.getHeight()/3.5));
-    scoresScroll.setPreferredSize(scrollSize);
-
-         gbc.gridx = 0;
-        gbc.gridy = 1; // Now occupying gridy 1
-        gbc.fill = GridBagConstraints.BOTH; // Expand both ways
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0; // IMPORTANT: Take up all remaining vertical space!
-        gbc.insets = new Insets(10, 10, (int)(frameDimension.getHeight()/12.0), 10);
-        lowerPanel.add(scoresScroll, gbc);
-
-        // --- 4. ADD VERTICAL FILLER at the bottom ---
-        // You now need a filler to absorb the extra vertical space below the scroll pane.
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.weighty = 1.0; // This filler takes all the rest of the vertical space
+        gbc.gridy = 5;
+        gbc.weighty = 1.0; 
         gbc.fill = GridBagConstraints.VERTICAL;
-        JPanel finalFiller = new JPanel();
-        finalFiller.setOpaque(false);
-        lowerPanel.add(finalFiller, gbc);
-    }
+        gbc.insets = new Insets(0, 0, 0, 0);
+        JPanel bottomFiller = new JPanel();
+        bottomFiller.setOpaque(false);
+        lowerPanel.add(bottomFiller, gbc);
 
-    public void reinit() {
-        sortScoresByScore();
-        if (scores.size() != 0) {
-            populateScoresPanel(scoresContainerPanel, scores);
-            scoresContainerPanel.setVisible(true);
-            // Remove all previous score rows except the header (row 0)
-            scoresContainerPanel.removeAll();
-
-            // Re-populate with current scores
-            populateScoresPanel(scoresContainerPanel, scores);
-
-            scoresContainerPanel.revalidate();
-            scoresContainerPanel.repaint();
-            revalidate();
-            repaint();
-        } else {
-            scoresContainerPanel.setVisible(false);
-        }
-        
-    }
-
-    private void populateScoresPanel(JPanel container, java.util.List<Score> scoreList) {
-        container.removeAll();
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.CENTER; 
-        gbc.fill = GridBagConstraints.NONE;
-
-        // --- Define Column Dimensions ---
-        // These dimensions enforce the column widths to prevent overlap.
-        Dimension nameDim = new Dimension((int)(frameDimension.getWidth()/3.5), (int)(frameDimension.getHeight()/20));
-        Dimension dateDim = new Dimension((int)(frameDimension.getWidth()/3.5), (int)(frameDimension.getHeight()/20));
-        Dimension scoreDim = new Dimension((int)(frameDimension.getWidth()/6.5), (int)(frameDimension.getHeight()/20));
-
-        // --- 1. ADD HORIZONTAL FILLER 1 (LEFT SIDE) ---
-        // This spacer takes up extra space on the left to push the content block right.
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0; 
-        gbc.gridheight = GridBagConstraints.REMAINDER; // Span all rows to the bottom
-        
-        JPanel leftSpacer = new JPanel();
-        leftSpacer.setOpaque(false);
-        container.add(leftSpacer, gbc);
-        
-        // Reset constraints for content area
-        gbc.weightx = 0;
-        gbc.gridheight = 1; // Reset height to 1 for standard rows
-        int content_start_x = 1;
-        int row = 0; 
-        
-        // --- 2. ADD HEADERS (Row 0) ---
-        
-        // Header 1: Name
-        gbc.gridx = content_start_x; 
-        gbc.gridy = row;
-        gbc.insets = new Insets(6, 0, 6, 6); 
-        JLabel nameHeader = new JLabel("Name");
-        nameHeader.setFont(boldCustomFont);
-        nameHeader.setHorizontalAlignment(JLabel.CENTER);
-        nameHeader.setPreferredSize(nameDim); 
-        container.add(nameHeader, gbc);
-
-        // Header 2: Date
-        gbc.gridx = content_start_x + 1; 
-        gbc.insets = new Insets(6, 6, 6, 6);
-        JLabel dateHeader = new JLabel("Date");
-        dateHeader.setFont(boldCustomFont);
-        dateHeader.setHorizontalAlignment(JLabel.CENTER);
-        dateHeader.setPreferredSize(dateDim);
-        container.add(dateHeader, gbc);
-
-        // Header 3: Score
-        gbc.gridx = content_start_x + 2; 
-        int last_content_x = gbc.gridx; 
-        gbc.insets = new Insets(6, 6, 6, 0);
-        JLabel scoreHeader = new JLabel("Score");
-        scoreHeader.setFont(boldCustomFont);
-        scoreHeader.setHorizontalAlignment(JLabel.CENTER);
-        scoreHeader.setPreferredSize(scoreDim);
-        container.add(scoreHeader, gbc);
-
-        row++; // Move to the next row for the scores
-
-        // --- 3. ADD SCORE ROWS (Starting Row 1) ---
-        gbc.insets = new Insets(6, 0, 6, 0);
-
-        for (Score s : scoreList) {
-            gbc.gridy = row;
-
-            gbc.gridx = content_start_x;
-            JLabel nameLabel = new JLabel(s.getName() == null ? "-" : s.getName());
-            nameLabel.setFont(customFont);
-            nameLabel.setHorizontalAlignment(JLabel.CENTER);
-            nameLabel.setPreferredSize(nameDim); 
-            container.add(nameLabel, gbc);
-
-            gbc.gridx = content_start_x + 1;
-            JLabel dateLabel = new JLabel(s.getDate() == null ? "-" : s.getDate());
-            dateLabel.setFont(customFont);
-            dateLabel.setHorizontalAlignment(JLabel.CENTER);
-            dateLabel.setPreferredSize(dateDim);
-            container.add(dateLabel, gbc);
-
-            gbc.gridx = content_start_x + 2;
-            JLabel scoreLabel = new JLabel(Integer.toString(s.getScore()));
-            scoreLabel.setFont(customFont);
-            scoreLabel.setHorizontalAlignment(JLabel.CENTER);
-            scoreLabel.setPreferredSize(scoreDim);
-            container.add(scoreLabel, gbc);
-
-            row++;
-        }
-
-        // --- 4. ADD VERTICAL FILLER (The Expansion/Collapse Fix) ---
-        // This MUST be added after all rows to push them up, and before the right spacer
-        // to correctly define the boundary of the grid.
-        gbc.gridx = content_start_x; 
-        gbc.gridy = row; // Starts immediately after the last score row
-        gbc.weighty = 1.0; // IMPORTANT: Takes up all vertical remainder
-        gbc.weightx = 0;
-        gbc.gridwidth = 3; // Spans the three content columns
-        gbc.gridheight = 1; 
-        gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.anchor = GridBagConstraints.NORTH; 
-        
-        JPanel verticalFiller = new JPanel();
-        verticalFiller.setOpaque(false);
-        container.add(verticalFiller, gbc);
-
-        // --- 5. ADD HORIZONTAL FILLER 2 (RIGHT SIDE) ---
-        // This spacer must be added last to fill the right side and balance the left spacer.
-        gbc.gridx = last_content_x + 1; 
-        gbc.gridy = 0; // Starts at row 0
-        gbc.weightx = 1.0; 
-        gbc.weighty = 0; 
-        gbc.gridwidth = 1;
-        gbc.gridheight = GridBagConstraints.REMAINDER; // Spans all rows
-        gbc.anchor = GridBagConstraints.WEST;
-        
-        JPanel rightSpacer = new JPanel();
-        rightSpacer.setOpaque(false);
-        container.add(rightSpacer, gbc);
-    }
-    public void addScore(Score score) {
-        scores.add(score);
-    }
-    /**
-     * Sort the current scores list by score (descending) and refresh the UI.
-     */
-    public void sortScoresByScore() {
-        if (scores == null || scores.isEmpty()) return;
-        scores.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
     }
 
     @Override
@@ -444,28 +330,64 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Home Page");
             AudioPlayer.play("/files/AI_voice_home.wav", true);
-        }
-        else if (e.getSource() == contentPageButton) {
+
+        } else if (e.getSource() == contentPageButton) {
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Content Page");
-            AudioPlayer.play("/files/AI_voice_content.wav", true);
-        }else if (e.getSource() == contactPageButton) {
+            AudioPlayer.play("/files/AI_voice_contact.wav", true);
+
+        }
+        else if (e.getSource() == contactPageButton) {
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Contact Page");
             AudioPlayer.play("/files/AI_voice_contact.wav", true);
-        }else if (e.getSource() == gamedescriptionButton) {
+
+        }else if(e.getSource() == gamedescriptionButton){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Game Description Page");
             AudioPlayer.play("/files/AI_voice_description.wav", true);
-        }else if(e.getSource() == settingsPanelLabel){
+
+        }else if(e.getSource() == leaderboardsButton){
             AudioPlayer.stop();
-            cardLayout.show(cardPanel, "Settings Page");
+            cardLayout.show(cardPanel, "Leaderboards Page");
             AudioPlayer.play("/files/AI_voice_leaderboards.wav", true);
         }
+        else if (e.getSource() == title){
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("https://github.com/ali1x3/CMSC170_Standard_Jeopardy"));
+                }
+                catch (Exception e1) {
+                    System.out.println("Desktop browsing Failed.");
+                    e1.printStackTrace();
+                }
+            }
+        }
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (e.getSource() == toggleSound) {
+            if (muted) {
+                toggleSound.setText("TOGGLE BG MUSIC: ON");
+                AudioPlayer.setBgmVolume(newVolume);
+            } else {
+                toggleSound.setText("TOGGLE BG MUSIC: OFF");
+                AudioPlayer.setBgmVolume(0);
+            }
+            muted = !muted;
+        } else if (e.getSource() == toggleSoundFX) {
+            if (mutedFX) {
+                toggleSoundFX.setText("TOGGLE SOUND FX: ON");
+                AudioPlayer.setVolume(newVolume);
+            } else {
+                toggleSoundFX.setText("TOGGLE SOUND FX: OFF");
+                AudioPlayer.setVolume(0);
+            }
+            mutedFX = !mutedFX;
+        }
     }
 
     @Override
@@ -487,26 +409,27 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
             gamedescriptionButton.setFont(boldCustomFont);
 
         }else if(e.getSource() == leaderboardsButton){
-            leaderboardsButton.setFont(customFont);
+            leaderboardsButton.setFont(boldCustomFont);
 
-        } else if(e.getSource() == settingsPanelLabel){
-            settingsPanelLabel.setFont(boldCustomFont );
+        }else if(e.getSource() == settingsPanelLabel){
+            settingsPanelLabel.setFont(customFont);
 
-        }
-        else if (e.getSource() == exitButtonLabel) {
+        }else if (e.getSource() == exitButtonLabel) {
             exitButtonLabel.setIcon(exitButtonClicked);
         }
         else if (e.getSource() == minimizeButtonLabel) {
             minimizeButtonLabel.setIcon(minimizeButtonClicked);
+        } else if (e.getSource() == toggleSound) {
+            toggleSound.setFont(boldCustomFont);
+        } else if (e.getSource() == toggleSoundFX) {
+            toggleSoundFX.setFont(boldCustomFont);
         }
 
-        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton || e.getSource() == leaderboardsButton || e.getSource() == settingsPanelLabel)) {
+        if (!(e.getSource() == exitButtonLabel || e.getSource() == minimizeButtonLabel || e.getSource() == title || e.getSource() == contentPageButton || e.getSource() == contactPageButton || e.getSource() == homePageButton || e.getSource() == gamedescriptionButton || e.getSource() == leaderboardsButton || e.getSource() == settingsPanelLabel || e.getSource() == toggleSound || e.getSource() == toggleSoundFX)) {
             AudioPlayer.play("/files/SFX_button_1.wav", false);
-            System.out.println("sfx1");
         } 
-        else if (!(e.getSource() == title)) {
+        else if (!(e.getSource() == title || e.getSource() == contentPageButton)) {
             AudioPlayer.play("/files/SFX_button_2.wav", false);
-            System.out.println("sfx2");
         }
 
     }
@@ -515,28 +438,32 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == contentPageButton) {
             contentPageButton.setFont(customFont);
+        }else if (e.getSource() == toggleSound) {
+            toggleSound.setFont(customFont);
+        }else if (e.getSource() == toggleSoundFX) {
+            toggleSoundFX.setFont(customFont);
         }
         else if (e.getSource() == contactPageButton) {
             contactPageButton.setFont(customFont);
         }
         else if (e.getSource() == homePageButton){
             homePageButton.setFont(customFont);
-
+            
         }else if(e.getSource() == leaderboardsButton){
-            leaderboardsButton.setFont(boldCustomFont);
+            leaderboardsButton.setFont(customFont);
 
         }else if(e.getSource() == settingsPanelLabel){
-            settingsPanelLabel.setFont(customFont);
+            settingsPanelLabel.setFont(boldCustomFont);
+
+        }else if (e.getSource() == exitButtonLabel) {
+            exitButtonLabel.setIcon(exitButton);
 
         }else if(e.getSource() == gamedescriptionButton){
             gamedescriptionButton.setFont(customFont);
         }
-        else if (e.getSource() == exitButtonLabel) {
-            exitButtonLabel.setIcon(exitButton);
-        }
         else if (e.getSource() == minimizeButtonLabel) {
-            minimizeButtonLabel.setIcon(minimizeButton);       
+            minimizeButtonLabel.setIcon(minimizeButton);
+
         }
     }
 }
-

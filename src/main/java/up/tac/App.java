@@ -1,34 +1,32 @@
 package up.tac;
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
+import up.tac.controller.GameController;
 
 /**
- * Hello world!
- *
+ * Main entry point for the AI Jeopardy application.
  */
 public class App {
 
     public static void main(String[] args) {
-          try {
-            // Option 1: Light theme
+        // Set up the FlatLaf look and feel for a modern UI
+        try {
             FlatLightLaf.setup();
-
-            // Option 2: Dark theme
-            // UIManager.setLookAndFeel(new FlatDarkLaf());
-
-            // Option 3: IntelliJ themes (FlatLaf IntelliJ extension needed)
-            // UIManager.setLookAndFeel(new FlatDarculaLaf());
-
         } catch (Exception ex) {
-            System.err.println("Failed to initialize LaF");
+            System.err.println("Failed to initialize LaF: " + ex.getMessage());
         }
 
-        javax.swing.SwingUtilities.invokeLater(MainFrame::new);
-        System.out.println( "Hello World!" );
+        // Schedule the GUI creation and display for the Event Dispatch Thread
+        javax.swing.SwingUtilities.invokeLater(GameController::new);
     }
-    
+
+    /**
+     * A simple test method.
+     * @param x an integer
+     * @param y an integer
+     * @return the sum of x and y
+     */
     public int add(int x, int y) {
         return x + y;
     }

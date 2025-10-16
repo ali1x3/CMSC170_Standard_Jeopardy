@@ -1,4 +1,4 @@
-package up.tac;
+package up.tac.model;
 
 import java.awt.event.PaintEvent;
 import java.io.ByteArrayInputStream;

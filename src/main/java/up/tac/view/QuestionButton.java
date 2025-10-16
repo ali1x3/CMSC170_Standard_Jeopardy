@@ -1,4 +1,4 @@
-package up.tac;
+package up.tac.view;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -10,7 +10,9 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import up.tac.Resource.ResourceManager;
+import up.tac.model.Backend;
+import up.tac.model.JeopardyQuestion;
+import up.tac.model.ResourceManager;
 
 /**
  * QuestionButton

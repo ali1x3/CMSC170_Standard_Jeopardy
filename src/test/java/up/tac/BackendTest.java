@@ -2,7 +2,9 @@ package up.tac;
 
 import org.junit.Test;
 
-import up.tac.Resource.ResourceManager;
+import up.tac.model.Backend;
+import up.tac.model.JeopardyQuestion;
+import up.tac.model.ResourceManager;
 
 import static org.junit.Assert.*; // Imports static methods like assertEquals, assertTrue, etc.
 
