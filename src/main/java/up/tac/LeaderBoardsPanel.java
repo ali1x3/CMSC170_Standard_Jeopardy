@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import up.tac.Resource.ResourceManager;
+import up.tac.ScoreBoard.ScoreData;
 
 
 public class LeaderBoardsPanel extends JPanel implements MouseListener{
@@ -219,28 +220,28 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
         gbc.insets = new Insets(0, 10, 10, 10);
         lowerPanel.add(title, gbc);
 
-    // Panel that will contain the score rows in a grid
-    scoresContainerPanel = new JPanel(new GridBagLayout());
-    scoresContainerPanel.setOpaque(false);
+        // Panel that will contain the score rows in a grid
+        scoresContainerPanel = new JPanel(new GridBagLayout());
+        scoresContainerPanel.setOpaque(false);
 
-    // ensure scores list exists
-    if (scores == null) {
-        System.out.println("SCORES IS EMPTY. LOADING.");
-        scores = loadScores(); //new java.util.ArrayList<>();
-    }
-    
-    // populate rows from scores
-    populateScoresPanel(scoresContainerPanel, scores);
+        // ensure scores list exists
+        if (scores == null) {
+            System.out.println("SCORES IS EMPTY. LOADING.");
+            scores = loadScores(); //new java.util.ArrayList<>();
+        }
 
-    // put the scoresContainer inside a scroll pane
-    scoresScroll = new JScrollPane(scoresContainerPanel);
-    scoresScroll.setOpaque(false);
-    scoresScroll.getViewport().setOpaque(false);
-    scoresScroll.setBorder(null);
-    Dimension scrollSize = new Dimension((int)(frameDimension.getWidth()/1.2), (int)(frameDimension.getHeight()/3.5));
-    scoresScroll.setPreferredSize(scrollSize);
+        // populate rows from scores
+        populateScoresPanel(scoresContainerPanel, scores);
 
-         gbc.gridx = 0;
+        // put the scoresContainer inside a scroll pane
+        scoresScroll = new JScrollPane(scoresContainerPanel);
+        scoresScroll.setOpaque(false);
+        scoresScroll.getViewport().setOpaque(false);
+        scoresScroll.setBorder(null);
+        Dimension scrollSize = new Dimension((int)(frameDimension.getWidth()/1.2), (int)(frameDimension.getHeight()/3.5));
+        scoresScroll.setPreferredSize(scrollSize);
+
+        gbc.gridx = 0;
         gbc.gridy = 1; // Now occupying gridy 1
         gbc.fill = GridBagConstraints.BOTH; // Expand both ways
         gbc.weightx = 1.0;
@@ -281,6 +282,7 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
     }
 
     private void populateScoresPanel(JPanel container, java.util.List<Score> scoreList) {
+        loadScores();
         container.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.CENTER; 
@@ -410,18 +412,15 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
 
     private ArrayList<Score> loadScores() {
         ArrayList<Score> scorelist = new ArrayList<>();
-        Map<String, Map> loadedScores = ScoreBoard.loadScores();
-        loadedScores.forEach((name, scoreValue) -> {
-            scoreValue.forEach((score, date) -> {
-                System.out.println("Loading: " + name + ", " + score + ", " + date);
-                scorelist.add(new Score(name, (String) date, (int) score));
-            });
+        Map<String, ScoreData> loadedScores = ScoreBoard.loadScores();
+        loadedScores.forEach((name, scoreData) -> {
+                System.out.println("Loading: " + name + ", " + scoreData.score() + ", " + scoreData.date());
+                scorelist.add(new Score(name, scoreData.date(), scoreData.score()));
         });
         return scorelist;
     }
 
     public void addScore(Score score) {
-        scores.add(score);
         ScoreBoard.appendScore(score.getName(), score.getScore(), score.getDate());
     }
     /**

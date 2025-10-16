@@ -5,6 +5,7 @@ import java.nio.file.*;
 import java.util.*;
 
 public class ScoreBoard {
+    record ScoreData(int score, String date) {}        
 
     // The scoreboard file (stored beside your JAR)
     private static final Path SCORE_FILE = Paths.get("data", "scores.txt");
@@ -23,10 +24,10 @@ public class ScoreBoard {
     }
 
     // Write (replace) all scores
-    public static void saveScores(Map<String, Integer> scores) {
+    public static void saveScores(Map<String, ScoreData> scores) {
         List<String> lines = new ArrayList<>();
         for (var entry : scores.entrySet()) {
-            lines.add(entry.getKey() + ":" + entry.getValue());
+            lines.add(entry.getKey() + ":" + entry.getValue().score() + ":" + entry.getValue().date());
         }
         try {
             Files.write(SCORE_FILE, lines, StandardOpenOption.TRUNCATE_EXISTING);
@@ -39,24 +40,22 @@ public class ScoreBoard {
 
     // Append a single score entry
     public static void appendScore(String name, int score, String date) {
-        String entry = name + ":" + score + ":" + date;
-        try {
-            Files.writeString(
-                SCORE_FILE,
-                entry + System.lineSeparator(),
-                StandardOpenOption.CREATE,
-                StandardOpenOption.APPEND
-            );
-            System.out.println("Added new score: " + entry);
-        } catch (IOException e) {
-            System.err.println("Error appending score:");
-            e.printStackTrace();
-        }
-    }
+        Map<String, ScoreData> scores = loadScores();
 
+        // Update only if player doesn't exist or has a lower score
+        if (!scores.containsKey(name) || score > scores.get(name).score()) {
+            scores.put(name, new ScoreData(score, date));
+            System.out.println("Updated high score for " + name + ": " + score);
+        } else {
+            System.out.println("No update. Existing score is higher or equal.");
+        }
+
+        // Now write the entire map back to the file
+        saveScores(scores);
+    }
     // Read all scores into a map
-    public static Map<String, Map> loadScores() {
-        Map<String, Map> scores = new HashMap<>();
+    public static Map<String, ScoreData> loadScores() {
+        Map<String, ScoreData> scores = new HashMap<>();
         
         try {
             if (Files.exists(SCORE_FILE)) {
@@ -65,9 +64,7 @@ public class ScoreBoard {
                     String[] parts = line.split(":");
                     System.out.println("SCOREBOARD.LOADSCORES(): " + parts[0] + "," + parts[1] + "," + parts[2]);
                     if (parts.length == 3) {
-                        Map<Integer, String> scoreValue = new HashMap<>();
-                        scoreValue.put(Integer.parseInt(parts[1]), parts[2]);
-                        scores.put(parts[0], scoreValue);
+                        scores.put(parts[0], new ScoreData(Integer.parseInt(parts[1]), parts[2]));
                     }
                 }
             }
@@ -77,20 +74,6 @@ public class ScoreBoard {
         }
 
         return scores;
-    }
-
-    // For quick testing
-    public static void main(String[] args) {
-        appendScore("Abby", 120, "Oct 16, 2025");
-        appendScore("Bryan", 95, "Aug 8, 2025");
-
-        Map<String, Map> scores = loadScores();
-        System.out.println("Current scores:");
-        scores.forEach((name, scoreValue) -> {
-            scoreValue.forEach((score, date) -> {
-                System.out.println(name + " -> " + score + ", " + date);
-            });
-        });
     }
 }
 
