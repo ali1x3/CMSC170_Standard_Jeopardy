@@ -14,6 +14,9 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -220,14 +223,16 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
     scoresContainerPanel = new JPanel(new GridBagLayout());
     scoresContainerPanel.setOpaque(false);
 
+    // ensure scores list exists
+    if (scores == null) {
+        System.out.println("SCORES IS EMPTY. LOADING.");
+        scores = loadScores(); //new java.util.ArrayList<>();
+    }
+    
+    // populate rows from scores
+    populateScoresPanel(scoresContainerPanel, scores);
 
-        // ensure scores list exists
-        if (scores == null) scores = new java.util.ArrayList<>();
-
-        // populate rows from scores
-        populateScoresPanel(scoresContainerPanel, scores);
-
-        // put the scoresContainer inside a scroll pane
+    // put the scoresContainer inside a scroll pane
     scoresScroll = new JScrollPane(scoresContainerPanel);
     scoresScroll.setOpaque(false);
     scoresScroll.getViewport().setOpaque(false);
@@ -341,6 +346,11 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
         gbc.insets = new Insets(6, 0, 6, 0);
 
         for (Score s : scoreList) {
+            System.out.println("ENTERED FOR LOOP");
+            System.out.println("name = " + s.getName());
+            System.out.println("score = " + s.getScore());
+            System.out.println("date = " + s.getDate());
+            
             gbc.gridy = row;
 
             gbc.gridx = content_start_x;
@@ -397,8 +407,22 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
         rightSpacer.setOpaque(false);
         container.add(rightSpacer, gbc);
     }
+
+    private ArrayList<Score> loadScores() {
+        ArrayList<Score> scorelist = new ArrayList<>();
+        Map<String, Map> loadedScores = ScoreBoard.loadScores();
+        loadedScores.forEach((name, scoreValue) -> {
+            scoreValue.forEach((score, date) -> {
+                System.out.println("Loading: " + name + ", " + score + ", " + date);
+                scorelist.add(new Score(name, (String) date, (int) score));
+            });
+        });
+        return scorelist;
+    }
+
     public void addScore(Score score) {
         scores.add(score);
+        ScoreBoard.appendScore(score.getName(), score.getScore(), score.getDate());
     }
     /**
      * Sort the current scores list by score (descending) and refresh the UI.
@@ -417,7 +441,6 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
             System.out.println("Background Image failed to Load");
             return;
         }
-
 
         // proceed if bg_image is not null
         Graphics2D g2d = (Graphics2D) g;
