@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class ResourceManager {
     protected static final String FILES_PATH = "files/";
-    protected static final String KNOWLEDGEBASE_PATH = "knowledge_base/";
+    protected static final String KNOWLEDGEBASE_PATH = "MCQ/";
     private Cursor cursor;
     private HashMap<String, ImageIcon> imageIconHashMap;
     private Image logo;
