@@ -406,7 +406,7 @@ public class ContactPagePanel extends JPanel implements MouseListener{
         } else if(e.getSource() == settingsPanelLabel){
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Settings Page");
-            AudioPlayer.play("/files/AI_voice_leaderboards.wav", true);
+            AudioPlayer.play("/files/AI_voice_sound.wav", true);
         }
         else if (e.getSource() == github1){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;

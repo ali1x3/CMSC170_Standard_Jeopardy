@@ -315,7 +315,7 @@ public class MainPagePanel extends JPanel implements MouseListener{
         } else if (e.getSource() == settingsPanelLabel) {
             AudioPlayer.stop();
             cardLayout.show(cardPanel, "Settings Page");
-            AudioPlayer.play("/files/AI_voice_leaderboards.wav",true);
+            AudioPlayer.play("/files/AI_voice_sound.wav",true);
         }
         else if (e.getSource() == title){
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
