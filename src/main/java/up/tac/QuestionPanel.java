@@ -13,11 +13,14 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.List;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -164,12 +167,19 @@ public class QuestionPanel extends JPanel implements MouseListener{
         correctAnswer = clickedQuestionButton.getJeopardyQuestion().getCorrectAnswer();
         System.out.println(correctAnswer);
 
-        JLabel[] choiceLabels = {choice1, choice2, choice3, choice4};
+        ArrayList<JLabel> choiceList = new ArrayList<>();
+        choiceList.add(choice1);
+        choiceList.add(choice2);
+        choiceList.add(choice3);
+        choiceList.add(choice4);
+        Collections.shuffle(choiceList);
 
-    int imageWidth = choiceButton.getIconWidth();
-    int horizontalPadding = (int) (frameDimension.getWidth() / 80.0);
-    // use a reduced fraction of the image width so text wraps inside the button nicely
-    int textWidth = Math.max(50, (int) (imageWidth * 0.78) - (horizontalPadding * 2));
+        JLabel[] choiceLabels = choiceList.toArray(new JLabel[0]);
+
+        int imageWidth = choiceButton.getIconWidth();
+        int horizontalPadding = (int) (frameDimension.getWidth() / 80.0);
+        // use a reduced fraction of the image width so text wraps inside the button nicely
+        int textWidth = Math.max(50, (int) (imageWidth * 0.78) - (horizontalPadding * 2));
 
         // find longest plain-text choice
         String longest = "";
@@ -240,8 +250,8 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
             // keep using HTML to wrap multi-line, but apply measured font for sizing
             String formattedText = "<html><body style='width: " + textWidth + "px; text-align: center;'>" +
-                                    (choiceText == null ? "" : escapeHtml(choiceText)) +
-                                   "</body></html>";
+        (choiceText == null ? "" : escapeHtml(choiceText)) +
+            "</body></html>";
             lbl.setText(formattedText);
             lbl.setFont(finalChoiceFont);
 
