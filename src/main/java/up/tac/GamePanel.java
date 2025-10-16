@@ -52,6 +52,7 @@ public class GamePanel extends JPanel implements MouseListener{
     private int robotX = 0;
     private int robotY = 0;
     private int initialRobotY = 0;
+    private final int MAX_MODULES = 5;
     private int robotMidHeight = 0, robotHeight = 0;
     private boolean biggerRobot = false;
 	private QuestionButton clickedQuestionbutton;
@@ -308,7 +309,7 @@ public class GamePanel extends JPanel implements MouseListener{
 
         for(int i = 0; i < 8; i++) {
             String label = "Locked";
-            if (i >= 4) {
+            if (i >= 5) {
                 label = "Locked";
             } else if (i == 0) {
                 label = "Basics";
@@ -318,6 +319,9 @@ public class GamePanel extends JPanel implements MouseListener{
                 label = "Solving";
             } else if (i == 3) {
                 label = "Learning";
+            } else if (i == 4) {
+                // temporary name, change it if you guys think of something better
+                label = "Modeling";
             }
             
             JLabel category = new JLabel(label, JLabel.CENTER);
@@ -346,8 +350,8 @@ public class GamePanel extends JPanel implements MouseListener{
 
 
 
-            //disable modules 5 and above
-            if (column > 4) {
+            //disable modules 6 and above
+            if (column > MAX_MODULES) {
                 tempButton.disableButton(tempButton.getPressedIcon());
             }
         }
@@ -384,7 +388,7 @@ public class GamePanel extends JPanel implements MouseListener{
     public void resetGame() {
         for(Component c : leftPanel.getComponents()) {
             if (c instanceof QuestionButton b) {
-                if (b.getColumn() > 4) {
+                if (b.getColumn() > MAX_MODULES) {
                     b.setEnabled(false);
                     continue;
                 }
