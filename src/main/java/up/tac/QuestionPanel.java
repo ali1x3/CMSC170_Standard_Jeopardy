@@ -535,7 +535,6 @@ public class QuestionPanel extends JPanel implements MouseListener{
                     activeDialog.dispose();
                     activeDialog = null;
                 }
-                handleTimeUp();
                 showCorrectAnswer();
                 disableChoiceButtons();
                 enableBackButton();
@@ -543,24 +542,13 @@ public class QuestionPanel extends JPanel implements MouseListener{
                 gamePanel.clickedButtonWrong();
                 // cardLayout.show(cardPanel, "Game Panel");
                 // AudioPlayer.playBGM("/files/BGM_game_panel.wav");
-                if(answeredCorrect) {
-                    gamePanel.clickedButtonCorrect();
-                }
-                else {
-                    gamePanel.clickedButtonWrong();
-                }
+                answeredCorrect = false;
                 cardLayout.show(cardPanel, "Game Panel");
                 AudioPlayer.playBGM("/files/BGM_game_panel.wav");
             }
         });
         countdownTimer.start();
     }
-
-    private void handleTimeUp() {
-        System.out.println("Time is up!");
-        tempBackLabel.setText("TIME IS UP! GO BACK NOW!!!");
-    }
-
     private void showCorrectAnswer() {
         correctChoice.setIcon(choiceCorrectButton);
     }
@@ -585,7 +573,6 @@ public class QuestionPanel extends JPanel implements MouseListener{
 
 
     private void processAnswer(JLabel userChoice) {
-        countdownTimer.stop();
         gamePanel = (GamePanel) cardPanel.getComponent(3);
 
         if (userChoice == correctChoice){
