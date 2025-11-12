@@ -1,6 +1,7 @@
 package up.tac;
 import org.junit.Test;
 
+import up.tac.ScoreBoard.ScoreData;
 import up.tac.Resource.ResourceManager;
 
 import static org.junit.Assert.*; // Imports static methods like assertEquals, assertTrue, etc.
@@ -16,31 +17,23 @@ import java.util.Random;
 public class ScoreBoardTest {
     @Test 
     public void checkReadAndWrite() {
-        Map<String, Map> initial = ScoreBoard.loadScores();
-        Map<String, Map> inputScores = new HashMap<>();
+        Map<String, ScoreData> initial = ScoreBoard.loadScores();
+        Map<String, ScoreData> inputScores = new HashMap<>();
 
-        Map<Integer, String> scoreValues = new HashMap<>();
-        scoreValues.put(120, "Oct 13, 2025");
-        inputScores.put("bobby", scoreValues);
+        inputScores.put("bobby", new ScoreData(120, "Oct 13, 2025"));
+        inputScores.put("Bob", new ScoreData(300, "Oct 12, 2025"));
 
-        scoreValues = new HashMap<>();
-        scoreValues.put(300, "Oct 12, 2025");
-        inputScores.put("Bob", scoreValues);
-
-        inputScores.forEach((name, scoreValue) -> {
-            initial.put(name, scoreValue);
-
-            scoreValue.forEach((score, date) -> {
-                ScoreBoard.appendScore(name, (int) score, (String) date);
-            });
+        inputScores.forEach((name, scoreData) -> {
+            initial.put(name, scoreData);
+                ScoreBoard.appendScore(name, scoreData.score(), scoreData.date());
         });
 
-        Map<String, Map> scores = ScoreBoard.loadScores();
+        Map<String, ScoreData> scores = ScoreBoard.loadScores();
         scores.forEach((name, scoreValue) -> {
             assertEquals("The input and outputs were not equal", scoreValue, initial.get(name));
         });
         
-        assertEquals("The sizes were not equal", initial.size(), initial.size());
+        assertEquals("The sizes were not equal", initial.size(), scores.size());
     }
     
 }
