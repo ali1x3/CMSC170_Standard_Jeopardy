@@ -421,6 +421,7 @@ public class LeaderBoardsPanel extends JPanel implements MouseListener{
     }
 
     public void addScore(Score score) {
+        scores.add(score);
         ScoreBoard.appendScore(score.getName(), score.getScore(), score.getDate());
     }
     /**
