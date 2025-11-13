@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements MouseListener{
     private int robotX = 0;
     private int robotY = 0;
     private int initialRobotY = 0;
-    private final int MAX_MODULES = 5;
+    private final int MAX_MODULES = 8;
     private int robotMidHeight = 0, robotHeight = 0;
     private boolean biggerRobot = false;
 	private QuestionButton clickedQuestionbutton;
@@ -308,9 +308,9 @@ public class GamePanel extends JPanel implements MouseListener{
         leftPanel.setLayout(new GridLayout(7, 8, 3, 3));
 
         for(int i = 0; i < 8; i++) {
-            String label = "Locked";
-            if (i >= 5) {
-                label = "Locked";
+            String label = "";
+            if (i == 7) {
+                label = "Concluding";
             } else if (i == 0) {
                 label = "Basics";
             } else if (i == 1) {
@@ -322,10 +322,14 @@ public class GamePanel extends JPanel implements MouseListener{
             } else if (i == 4) {
                 // temporary name, change it if you guys think of something better
                 label = "Modeling";
+            } else if (i == 5) {
+                label = "Analysing";
+            } else if (i == 6) {
+                label = "Applying";
             }
             
             JLabel category = new JLabel(label, JLabel.CENTER);
-            category.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/43.1)));
+            category.setFont(titleFont.deriveFont(Font.BOLD, (int) (frameDimension.getHeight()/45)));
             leftPanel.add(category);
         }
 
